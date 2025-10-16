@@ -1,0 +1,640 @@
+/* ================ Dashboard Styles ================= */
+.dashboard-container {
+  padding: 30px 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  background-color: #ffffff;
+  min-height: calc(100vh - 40px);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-title h2 {
+  margin: 0;
+  color: #2a2185;
+  font-size: 28px;
+}
+
+.dashboard-controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.period-filters {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 25px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.period-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #666;
+}
+
+.period-btn.active,
+.period-btn:hover {
+  background: linear-gradient(135deg, #2a2185, #28a745);
+  color: white;
+}
+
+.pdf-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.pdf-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.summary-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.summary-card.income .summary-icon {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.summary-card.expense .summary-icon {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
+}
+
+.summary-card.balance .summary-icon {
+  background: linear-gradient(135deg, #2a2185, #667eea);
+  color: white;
+}
+
+.summary-card.plans .summary-icon {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+}
+
+.summary-card.savings .summary-icon {
+  background: linear-gradient(135deg, #17a2b8, #20c997);
+  color: white;
+}
+
+.summary-card.investments .summary-icon {
+  background: linear-gradient(135deg, #6f42c1, #e83e8c);
+  color: white;
+}
+
+.summary-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.summary-card.income .summary-value {
+  color: #28a745;
+}
+
+.summary-card.expense .summary-value {
+  color: #dc3545;
+}
+
+.summary-card.balance .summary-value {
+  color: #2a2185;
+}
+
+.summary-card.plans .summary-value {
+  color: #ff6b35;
+  text-shadow: 0 2px 4px rgba(255, 107, 53, 0.2);
+}
+
+.summary-card.savings .summary-value {
+  color: #17a2b8;
+  text-shadow: 0 2px 4px rgba(23, 162, 184, 0.2);
+}
+
+.summary-card.investments .summary-value {
+  color: #6f42c1;
+  text-shadow: 0 2px 4px rgba(111, 66, 193, 0.2);
+}
+
+.summary-period {
+  font-size: 12px;
+  color: #999;
+}
+
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chart-header h3 {
+  margin: 0 0 20px 0;
+  color: #2a2185;
+  font-size: 18px;
+}
+
+.chart-content {
+  position: relative;
+  height: 300px;
+}
+
+/* Estilos para legendas dos gráficos */
+.chart-content canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Melhor alinhamento das legendas Chart.js */
+.chartjs-legend,
+.chartjs-legend ul {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  margin: 0 auto !important;
+}
+
+.chartjs-legend li {
+  margin: 5px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Legenda específica do gráfico temporal - 2 linhas organizadas */
+#timelineChart + .chartjs-legend ul,
+canvas[id="timelineChart"] ~ .chartjs-legend ul {
+  max-width: 600px !important;
+  justify-content: center !important;
+}
+
+#timelineChart + .chartjs-legend li:nth-child(4),
+canvas[id="timelineChart"] ~ .chartjs-legend li:nth-child(4) {
+  width: 100% !important;
+  margin-top: 8px !important;
+}
+
+/* Legenda customizada do gráfico temporal */
+#timelineChartLegend {
+  max-width: 100% !important;
+  margin: 8px 0 0 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+#timelineChartLegend > div {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 5px 10px !important;
+}
+
+.dashboard-table {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table-header h3 {
+  margin: 0 0 20px 0;
+  color: #2a2185;
+  font-size: 18px;
+}
+
+#top-categories-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#top-categories-table th,
+#top-categories-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+#top-categories-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2a2185;
+}
+
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2a2185;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animações e Transições */
+.dashboard-container {
+  animation: dashboardFadeIn 0.6s ease-out;
+}
+
+@keyframes dashboardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.summary-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.summary-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.chart-container {
+  transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.period-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.period-btn:active {
+  transform: scale(0.95);
+}
+
+.dashboard-table {
+  transition: all 0.3s ease;
+}
+
+#top-categories-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+#top-categories-table tbody tr:hover {
+  background-color: rgba(42, 33, 133, 0.05);
+}
+
+/* Loading States Melhorados */
+.dashboard-loading {
+  backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* Feedback Visual Melhorado */
+.pdf-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.summary-value {
+  transition: all 0.3s ease;
+}
+
+.summary-card.income .summary-value {
+  text-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.summary-card.expense .summary-value {
+  text-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.summary-card.balance .summary-value {
+  text-shadow: 0 2px 4px rgba(42, 33, 133, 0.3);
+}
+
+/* Melhorias nos Gráficos */
+.chart-content canvas {
+  transition: opacity 0.3s ease;
+}
+
+.chart-content:hover canvas {
+  opacity: 0.95;
+}
+
+/* Scrollbar Personalizada */
+.table-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-content::-webkit-scrollbar-track {
+  background: #f1f3f4;
+  border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #2a2185, #667eea);
+  border-radius: 4px;
+}
+
+.table-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #1a1470, #5a6fd8);
+}
+
+/* Sistema de Toast Notifications */
+.toast {
+  background: white;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #2a2185;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 350px;
+  pointer-events: auto;
+  animation: toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.toast.success {
+  border-left-color: #28a745;
+}
+
+.toast.error {
+  border-left-color: #dc3545;
+}
+
+.toast.warning {
+  border-left-color: #ffc107;
+}
+
+.toast.info {
+  border-left-color: #17a2b8;
+}
+
+.toast:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.toast-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.toast.success .toast-icon {
+  color: #28a745;
+}
+
+.toast.error .toast-icon {
+  color: #dc3545;
+}
+
+.toast.warning .toast-icon {
+  color: #ffc107;
+}
+
+.toast.info .toast-icon {
+  color: #17a2b8;
+}
+
+.toast-content {
+  flex-grow: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  color: #2a2185;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.toast-message {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.toast-close {
+  color: #999;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.toast-close:hover {
+  color: #666;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast.fade-out {
+  animation: toastSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Força fundo branco sempre */
+body,
+html {
+  background-color: #ffffff !important;
+}
+
+.main {
+  background-color: #ffffff !important;
+}
+
+.dashboard-container {
+  background-color: #ffffff !important;
+}
+
+/* Estilos para Ações Rápidas */
+.quick-actions {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.quick-actions h3 {
+  color: #2a2185;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.card2Box {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card2 {
+  transition: all 0.3s ease;
+}
+
+.card2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Container de Toast Notifications */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+/* Estilos para elementos com display: none por padrão */
+.dashboard-loading,
+.ai-loading {
+  display: none;
+}
+
+/* Estilos específicos para botão diagnóstico */
+.quick-question-btn.diagnostic {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f) !important;
+  color: white !important;
+}
+
+/* Responsividade do Modal */
+.modal {
+  max-width: 90vw;
+  width: auto;
+  margin: 20px;
+}
+
+.modal #form {
+  padding: 20px;
+}

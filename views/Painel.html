@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>PayFly</title>
+    
+    <!-- ======= Estilos ====== -->
+    <link rel="icon" type="image/png" href="../views/imgs/Favicon.png">
+    <link rel="stylesheet" href="../views/css/style.css">
+    <link rel="stylesheet" href="../views/css/dashboard.css">
+    
+    <!-- Estilos para gráfico interativo -->
+    <style>
+        /* Cards clicáveis para alternar gráfico */
+        .summary-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .summary-card.chart-active {
+            border: 2px solid #007bff;
+            background: linear-gradient(135deg, rgba(0,123,255,0.1), rgba(0,123,255,0.05));
+            box-shadow: 0 6px 20px rgba(0,123,255,0.3);
+        }
+        
+        .summary-card.chart-active::after {
+            content: "📊";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .chart-selector {
+            margin-top: 8px;
+        }
+        
+        .chart-selector-info {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        #chartTitle {
+            transition: color 0.3s ease;
+        }
+    </style>
+    
+
+</head>
+
+<body>
+    <!-- Script de funções críticas - carrega PRIMEIRO -->
+    <script>
+        console.log('🚀 Carregando funções críticas...');
+        
+        // Funções de QR Code removidas
+    </script>
+
+    <!-- =============== Menu Navegação ================ -->
+
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <img src="../views/imgs/logo.svg" alt="Logo">
+                        </span>
+                        <span class="title">PayFly</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Painel Principal</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Despesas.html">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Despesas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Receitas.html">
+                        <span class="icon">
+                            <ion-icon name="card-outline"></ion-icon>
+                        </span>
+                        <span class="title">Receitas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Planos.html">
+                        <span class="icon">
+                            <ion-icon name="airplane-outline"></ion-icon>
+                        </span>
+                        <span class="title">Planos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Poupanca.html">
+                        <span class="icon">
+                            <ion-icon name="wallet-outline"></ion-icon>
+                        </span>
+                        <span class="title">Poupança</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Investimentos.html">
+                        <span class="icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </span>
+                        <span class="title">Investimentos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Configurações.html">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Configurações</span>
+                    </a>
+                </li>
+
+
+                <li>
+                <a onclick="logout()">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" >Sair</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Informação do usuário no rodapé do sidebar -->
+            <div class="user-sidebar-footer">
+                <div class="user-info-display">
+                    <ion-icon name="person-circle-outline"></ion-icon>
+                    <span id="user-sidebar-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Principal ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <!-- Botão AI Insights -->
+                <div class="ai-insights-button" onclick="openAIInsights()">
+                    <ion-icon name="bulb-outline"></ion-icon>
+                    <span>AI Insights</span>
+                </div>
+
+                <!-- <div class="search">
+                    <label>
+                        <input type="text" placeholder="Pesquise aqui">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>-->
+            </div>
+
+            <!-- Cards antigos removidos - usando apenas o dashboard novo -->
+
+            <!-- ================ Dashboard Interativo ================= -->
+
+            <div class="dashboard-container">
+                <!-- Controles do Dashboard -->
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h2>📊 Dashboard Financeiro</h2>
+                    </div>
+                    <div class="dashboard-controls">
+                        <div class="period-filters">
+                            <button class="period-btn active" data-period="week">Semanal</button>
+                            <button class="period-btn" data-period="month">Mensal</button>
+                            <button class="period-btn" data-period="6months">6 Meses</button>
+                            <button class="period-btn" data-period="futuros">Lançamentos Futuros</button>
+                        </div>
+                        <button class="pdf-btn" onclick="generateDashboardPDF()">
+                            <ion-icon name="download-outline"></ion-icon>
+                            Gerar PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cards de Resumo -->
+                <div class="dashboard-summary">
+                    <div class="summary-card income" id="card-income" data-chart-type="income">
+                        <div class="summary-icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Total de Entradas</h3>
+                            <div class="summary-value" id="summary-income">R$ 0,00</div>
+                            <div class="summary-period" id="summary-income-period">Esta semana</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card expense" id="card-expense" data-chart-type="expense">
+                        <div class="summary-icon">
+                            <ion-icon name="trending-down-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Total de Saídas</h3>
+                            <div class="summary-value" id="summary-expense">R$ 0,00</div>
+                            <div class="summary-period" id="summary-expense-period">Esta semana</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card balance chart-active" id="card-balance" data-chart-type="balance">
+                        <div class="summary-icon">
+                            <ion-icon name="wallet-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Saldo Líquido</h3>
+                            <div class="summary-value" id="summary-balance">R$ 0,00</div>
+                            <div class="summary-period" id="summary-balance-period">Esta semana</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card plans" id="card-plans" data-chart-type="plans">
+                        <div class="summary-icon">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Planos</h3>
+                            <div class="summary-value" id="summary-plans">R$ 0,00</div>
+                            <div class="summary-period" id="summary-plans-period">Esta semana</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card savings" id="card-savings" data-chart-type="savings">
+                        <div class="summary-icon">
+                            <ion-icon name="card-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Poupança</h3>
+                            <div class="summary-value" id="summary-savings">R$ 0,00</div>
+                            <div class="summary-period" id="summary-savings-period">Esta semana</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card investments" id="card-investments" data-chart-type="investments">
+                        <div class="summary-icon">
+                            <ion-icon name="bar-chart-outline"></ion-icon>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Investimentos</h3>
+                            <div class="summary-value" id="summary-investments">R$ 0,00</div>
+                            <div class="summary-period" id="summary-investments-period">Esta semana</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos -->
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 id="chartTitle">💰 Gastos por Categoria</h3>
+                            <div class="chart-selector">
+                                <span class="chart-selector-info">📊 Clique nos cards acima para alternar</span>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>📈 Evolução Temporal</h3>
+                            <div id="timelineChartLegend"></div>
+                        </div>
+                        <div class="chart-content">
+                            <canvas id="timelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela Top Categorias -->
+                <div class="dashboard-table">
+                    <div class="table-header">
+                        <h3>🏆 Top Categorias</h3>
+                    </div>
+                    <div class="table-content">
+                        <table id="top-categories-table">
+                            <thead>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <th>Valor Total</th>
+                                    <th>Porcentagem</th>
+                                    <th>Transações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-categories-body">
+                                <!-- Dados inseridos dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="dashboard-loading" id="dashboard-loading">
+                    <div class="loading-spinner"></div>
+                    <span>Carregando dados do dashboard...</span>
+                </div>
+            </div>
+
+            <!-- Sistema de Notificações Toast -->
+            <div id="toast-container"></div>      
+                
+                
+                <!-- Seção de ações rápidas (pagamento/recebimento) removida -->
+            </div>
+
+                 <!-- Modal Boleto removido -->
+
+    <!-- Modals de Boleto e QR Code removidos -->
+
+    <!-- =============== Modal AI Insights ================= -->
+    <div class="ai-modal-overlay" id="aiInsightsModal">
+        <div class="ai-modal">
+            <div class="ai-modal-header">
+                <h2>
+                    <ion-icon name="bulb"></ion-icon>
+                    AI Insights Financeiros
+                </h2>
+                <button class="ai-modal-close" onclick="closeAIInsights()">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+            
+            <div class="ai-chat-container">
+                <div class="ai-chat-messages" id="aiChatMessages">
+                    <div class="ai-welcome-message">
+                        <ion-icon name="robot-outline"></ion-icon>
+                        <div class="message-content">
+                            <p>Olá! 👋 Sou seu assistente financeiro com IA.</p>
+                            <p>Posso analisar seus dados e responder perguntas como:</p>
+                            <ul>
+                                <li>"Como estão meus gastos este mês?"</li>
+                                <li>"Vou conseguir alcançar meus planos?"</li>
+                                <li>"Onde posso economizar mais?"</li>
+                            </ul>
+                            <p>O que você gostaria de saber? 🤔</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-quick-questions">
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus gastos este mês?')">
+                        Como estão meus gastos?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Onde posso economizar mais dinheiro?')">
+                        Onde posso economizar?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus planos de economia?')">
+                        Status dos meus planos
+                    </div>
+                    <div class="quick-question-btn diagnostic" onclick="diagnosticAI()">
+                        🔧 Testar Sistema IA
+                    </div>
+                </div>
+                
+                <div class="ai-chat-input">
+                    <input type="text" id="aiChatInput" placeholder="Digite sua pergunta sobre finanças..." maxlength="200">
+                    <button onclick="sendAIMessage()" id="aiSendBtn">
+                        <ion-icon name="send"></ion-icon>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ai-loading" id="aiLoading">
+                <div class="loading-spinner"></div>
+                <span>Analisando seus dados...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+
+    <!-- QR Code API removida -->
+
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <!-- Dashboard Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+   <script>
+    // Debug: Verificar carregamento das bibliotecas
+    console.log('🔍 Verificando bibliotecas...');
+    console.log('Chart:', typeof Chart);
+    console.log('jsPDF:', typeof window.jspdf);
+    console.log('html2canvas:', typeof html2canvas);
+
+    // Fallback para Chart.js se não carregou
+    if (typeof Chart === 'undefined') {
+        console.warn('⚠️ Chart.js não carregou pelo CDN, tentando carregar de outro fonte...');
+        
+        // Tenta carregar de outra CDN
+        const chartScript = document.createElement('script');
+        chartScript.src = 'https://unpkg.com/chart.js@3.9.1/dist/chart.min.js';
+        chartScript.onload = function() {
+            console.log('✅ Chart.js carregado via fallback');
+        };
+        chartScript.onerror = function() {
+            console.error('❌ Falha ao carregar Chart.js - Dashboard não funcionará');
+        };
+        document.head.appendChild(chartScript);
+    } else {
+        console.log('✅ Chart.js carregado com sucesso');
+    }
+
+    // Fallback para jsPDF se não carregou
+    if (typeof window.jspdf === 'undefined') {
+        console.warn('⚠️ jsPDF não carregou pelo CDN, tentando carregar de outro fonte...');
+        
+        const jspdfScript = document.createElement('script');
+        jspdfScript.src = 'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js';
+        jspdfScript.onload = function() {
+            console.log('✅ jsPDF carregado via fallback');
+        };
+        jspdfScript.onerror = function() {
+            console.error('❌ Falha ao carregar jsPDF - Geração de PDF não funcionará');
+        };
+        document.head.appendChild(jspdfScript);
+    } else {
+        console.log('✅ jsPDF carregado com sucesso');
+    }
+
+    // Modais de pagamento removidos
+    </script>
+    
+    <script>
+    console.log('Script do painel carregando...');
+    
+    // Tratamento global de erros - Ultra Silencioso
+    window.addEventListener('error', function(e) {
+        // Filtra erros conhecidos e não críticos (incluindo ionicons)
+        const errorMsg = e.message || '';
+        const isNonCritical = errorMsg.includes('Failed to fetch') || 
+                             errorMsg.includes('CORS') ||
+                             errorMsg.includes('ionicons') ||
+                             errorMsg.includes('net::ERR_FAILED') ||
+                             (e.filename && e.filename.includes('ionicons'));
+        
+        if (isNonCritical) {
+            // Silencioso total - sem logs
+            e.preventDefault();
+            return true; // Previne o erro de aparecer no console
+        }
+        console.error('🚨 Erro capturado:', e.error);
+        return false; // Permite outros erros aparecerem
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+        // Filtra erros conhecidos de recursos externos (incluindo ionicons específicos)
+        const reason = e.reason?.message || e.reason || '';
+        const isNonCritical = reason.includes('Failed to fetch') || 
+                              reason.includes('Load failed') ||
+                              reason.includes('net::ERR_FAILED') ||
+                              reason.includes('CORS') ||
+                              reason.includes('ionicons') ||
+                              reason.includes('Ionicon SVG blocked') ||
+                              reason.includes('Access-Control-Allow-Origin');
+        
+        if (isNonCritical) {
+            // Silencioso total - sem logs para erros não críticos
+            e.preventDefault();
+            return;
+        }
+        
+        // Apenas erros realmente críticos aparecem
+        console.error('🚨 Promise rejeitada:', e.reason);
+        e.preventDefault();
+    });
+    
+    // Tratar callback do OAuth do Google
+    window.addEventListener('DOMContentLoaded', function() {
+        console.log('🔍 Verificando callback OAuth...');
+        
+        // Verifica se há hash ou search params que indicam callback do OAuth
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        
+        if (urlParams.get('access_token') || hashParams.get('access_token') || 
+            urlParams.get('code') || hashParams.get('code')) {
+            console.log('🎉 Callback OAuth detectado!');
+            
+            // Aguarda o Supabase processar o callback
+            setTimeout(() => {
+                if (window.supabase) {
+                    window.supabase.auth.getSession().then(({ data, error }) => {
+                        if (error) {
+                            console.error('❌ Erro no callback:', error);
+                        } else if (data?.session) {
+                            console.log('✅ Sessão ativa após callback:', data.session.user.email);
+                            showSuccessToast('Login realizado!', 'Bem-vindo ao PayFly!');
+                        }
+                    });
+                }
+            }, 1000);
+        }
+    });
+    
+    // Função de alerta personalizada
+    function showAlert(title, message) {
+        alert(title + ': ' + message);
+    }
+
+
+
+
+    // QR Code System removido
+
+    // Funções de monitoramento de pagamento removidas
+
+    // Funções PIX QR Code removidas
+
+    // Sistema de Boletos removido
+    </script>
+
+    <!-- Script de inicialização de pagamentos removido -->
+    
+    <!-- Carregar configurações e sistemas -->
+    <script src="../controllers/supabase-init.env"></script>
+    <!-- Payment config removido -->
+    <!-- QR System removido -->
+    <script src="../models/despesa.js"></script>
+
+    <script src="../controllers/main.js"></script>
+    <script src="../models/painel.js"></script>
+      
+    <!-- Toast System -->
+    <script src="../controllers/toast-system.js"></script>
+    
+    <!-- Dashboard Scripts -->
+    <script src="../models/dashboard.js"></script>
+    <script src="../controllers/pdf-generator.js"></script>
+      
+    <!-- AI Insights Scripts -->
+    <script src="../ai-insights/ai-service.js"></script>
+    <script src="../ai-insights/data-analyzer.js"></script>
+    <script src="../ai-insights/chat-interface.js"></script>
+    <script src="../ai-insights/diagnostic.js"></script>
+
+    <script src="../controllers/supabase-guard.env"></script>
+       
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- Tratamento silencioso de erros -->
+    <script>
+        // Tratamento global de erros - Ultra Silencioso
+        window.addEventListener('error', function(e) {
+            const errorMsg = e.message || '';
+            const isNonCritical = errorMsg.includes('Failed to fetch') || 
+                                 errorMsg.includes('CORS') ||
+                                 errorMsg.includes('ionicons') ||
+                                 errorMsg.includes('net::ERR_FAILED') ||
+                                 (e.filename && e.filename.includes('ionicons'));
+            
+            if (isNonCritical) {
+                e.preventDefault();
+                return true;
+            }
+            return false;
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            const reason = e.reason?.message || e.reason || '';
+            const isNonCritical = reason.includes('Failed to fetch') || 
+                                  reason.includes('Load failed') ||
+                                  reason.includes('net::ERR_FAILED') ||
+                                  reason.includes('CORS') ||
+                                  reason.includes('ionicons') ||
+                                  reason.includes('Ionicon SVG blocked') ||
+                                  reason.includes('Access-Control-Allow-Origin');
+            
+            if (isNonCritical) {
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+
+    <script>
+                async function logout () {
+                    if (window.supabase) {
+                        await window.supabase.auth.signOut();
+                        window.location.replace("../index.html");
+                    }
+                }
+    </script>
+    
+    <!-- Sistema de Gráfico Interativo -->
+    <script>
+        // Sistema de alternância de gráficos
+        let currentChartType = 'balance'; // Começa com saldo total
+        let currentPeriod = 'week'; // Período atual
+        
+        // Configurações dos tipos de gráfico
+        const chartConfigs = {
+            income: {
+                title: '📈 Entradas por Categoria',
+                emoji: '💰',
+                colors: ['#28a745', '#20c997', '#17a2b8', '#6f42c1', '#fd7e14', '#dc3545'],
+                description: 'Receitas e ganhos organizados por fonte'
+            },
+            expense: {
+                title: '💸 Gastos por Categoria', 
+                emoji: '🛒',
+                colors: ['#dc3545', '#fd7e14', '#ffc107', '#28a745', '#17a2b8', '#6f42c1'],
+                description: 'Despesas organizadas por tipo de gasto'
+            },
+            balance: {
+                title: '💰 Resumo Financeiro Total',
+                emoji: '👛',
+                colors: ['#007bff', '#28a745', '#dc3545', '#17a2b8', '#6f42c1', '#fd7e14'],
+                description: 'Visão geral das finanças por categoria'
+            },
+            plans: {
+                title: '📅 Planos por Categoria',
+                emoji: '📋',
+                colors: ['#6f42c1', '#007bff', '#28a745', '#ffc107', '#fd7e14', '#dc3545'],
+                description: 'Planejamentos futuros organizados'
+            },
+            savings: {
+                title: '💳 Poupança por Tipo',
+                emoji: '🏦',
+                colors: ['#17a2b8', '#28a745', '#007bff', '#6f42c1', '#ffc107', '#fd7e14'],
+                description: 'Valores poupados por categoria'
+            },
+            investments: {
+                title: '📊 Investimentos por Categoria',
+                emoji: '📈',
+                colors: ['#007bff', '#6f42c1', '#28a745', '#17a2b8', '#ffc107', '#fd7e14'],
+                description: 'Investimentos organizados por tipo'
+            }
+        };
+        
+        // Inicializar sistema de cards clicáveis
+        function initInteractiveChart() {
+            console.log('🎯 Inicializando gráfico interativo...');
+            
+            // Detectar período atual dos botões
+            const activePeriodbtn = document.querySelector('.period-btn.active');
+            if (activePeriodbtn) {
+                currentPeriod = activePeriodbtn.dataset.period;
+            }
+            
+            // Adicionar event listeners aos botões de período
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentPeriod = this.dataset.period;
+                    console.log(`📅 Período alterado para: ${currentPeriod}`);
+                    // Atualizar gráfico para o novo período
+                    setTimeout(() => updateChartData(currentChartType), 100);
+                });
+            });
+            
+            // Adicionar event listeners aos cards
+            document.querySelectorAll('.summary-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const chartType = this.dataset.chartType;
+                    if (chartType) {
+                        console.log(`🎯 Card clicado: ${chartType} (período: ${currentPeriod})`);
+                        switchChart(chartType);
+                    }
+                });
+            });
+            
+            // Inicializar com saldo total ativo
+            switchChart('balance');
+            console.log('✅ Gráfico interativo inicializado - mostrando saldo total');
+        }
+        
+        // Alternar tipo de gráfico
+        function switchChart(newType) {
+            if (!chartConfigs[newType]) {
+                console.warn('⚠️ Tipo de gráfico desconhecido:', newType);
+                return;
+            }
+            
+            // Obter nome do período em português
+            const periodNames = {
+                'week': 'Semanal',
+                'month': 'Mensal', 
+                '6months': '6 Meses',
+                'futuros': 'Futuros'
+            };
+            
+            const periodName = periodNames[currentPeriod] || 'Período Atual';
+            
+            console.log(`📊 Alternando gráfico para: ${newType} (${periodName})`);
+            
+            // Atualizar variável atual
+            currentChartType = newType;
+            
+            // Atualizar indicadores visuais dos cards
+            document.querySelectorAll('.summary-card').forEach(card => {
+                card.classList.remove('chart-active');
+            });
+            
+            const activeCard = document.querySelector(`[data-chart-type="${newType}"]`);
+            if (activeCard) {
+                activeCard.classList.add('chart-active');
+            }
+            
+            // Atualizar título do gráfico com período
+            const config = chartConfigs[newType];
+            const titleElement = document.getElementById('chartTitle');
+            if (titleElement) {
+                titleElement.textContent = `${config.title} - ${periodName}`;
+                titleElement.style.color = config.colors[0];
+            }
+            
+            // Atualizar info do seletor
+            const selectorInfo = document.querySelector('.chart-selector-info');
+            if (selectorInfo) {
+                selectorInfo.textContent = `📊 Exibindo: ${config.description}`;
+            }
+            
+            // Recarregar dados do gráfico
+            updateChartData(newType);
+        }
+        
+        // Atualizar dados do gráfico conforme tipo selecionado
+        function updateChartData(type) {
+            console.log(`🔄 Atualizando dados do gráfico: ${type} (${currentPeriod})`);
+            
+            // Preparar dados para o dashboard.js
+            const chartContext = {
+                type: type,
+                period: currentPeriod,
+                config: chartConfigs[type],
+                colors: chartConfigs[type].colors
+            };
+            
+            // Esta função será chamada pelo dashboard.js
+            if (window.updateCategoryChart) {
+                window.updateCategoryChart(chartContext);
+            } else if (window.updateInteractiveChart) {
+                window.updateInteractiveChart(chartContext);
+            } else {
+                // Se ainda não carregou, agenda para quando carregar
+                console.log('⏳ Dashboard.js ainda não carregou, agendando atualização...');
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        if (window.updateCategoryChart) {
+                            window.updateCategoryChart(chartContext);
+                        } else if (window.updateInteractiveChart) {
+                            window.updateInteractiveChart(chartContext);
+                        }
+                    }, 1500);
+                });
+            }
+        }
+        
+        // Função para obter estado atual do gráfico
+        function getCurrentChartState() {
+            return {
+                type: currentChartType,
+                period: currentPeriod,
+                config: chartConfigs[currentChartType]
+            };
+        }
+        
+        // Expor funções globalmente para uso no dashboard.js
+        window.chartConfigs = chartConfigs;
+        window.getCurrentChartState = getCurrentChartState;
+        window.switchChart = switchChart;
+        window.updateChartData = updateChartData;
+        
+        // Inicializar quando DOM carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initInteractiveChart, 500); // Aguarda um pouco para garantir que tudo carregou
+        });
+        
+        console.log('🎨 Sistema de gráfico interativo carregado');
+    </script>
+    
+
+
+</body>
+
+</html>
+

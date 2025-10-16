@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFly</title>
+    
+    <!-- ======= Estilos ====== -->
+    <link rel="icon" type="image/png" href="../views/imgs/Favicon.png">
+    <link rel="stylesheet" href="../views/css/style.css">
+    <link rel="stylesheet" href="../views/css/config-utils.css">
+</head>
+
+<body>
+    <!-- =============== Menu Navegação ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <img src="../views/imgs/logo.svg" alt="Logo">
+                        </span>
+                        <span class="title">PayFly</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Painel.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Painel Principal</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Despesas.html">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Despesas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Receitas.html">
+                        <span class="icon">
+                            <ion-icon name="card-outline"></ion-icon>
+                        </span>
+                        <span class="title">Receitas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Planos.html">
+                        <span class="icon">
+                            <ion-icon name="airplane-outline"></ion-icon>
+                        </span>
+                        <span class="title">Planos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Poupanca.html">
+                        <span class="icon">
+                            <ion-icon name="wallet-outline"></ion-icon>
+                        </span>
+                        <span class="title">Poupança</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Investimentos.html">
+                        <span class="icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </span>
+                        <span class="title">Investimentos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Configurações.html">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Configurações</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a onclick="logout()">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sair</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Informação do usuário no rodapé do sidebar -->
+            <div class="user-sidebar-footer">
+                <div class="user-info-display">
+                    <ion-icon name="person-circle-outline"></ion-icon>
+                    <span id="user-sidebar-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Principal ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <!-- Botão AI Insights -->
+                <div class="ai-insights-button" onclick="openAIInsights()">
+                    <ion-icon name="bulb-outline"></ion-icon>
+                    <span>AI Insights</span>
+                </div>
+
+                <!-- <div class="search">
+                    <label>
+                        <input type="text" placeholder="">
+                        <ion-icon name=""></ion-icon>
+                    </label>
+                </div> -->
+            </div>
+
+                   
+
+            <!-- ================ Dashboard ================= -->
+
+            <div class="Configuration">
+                <div class="data">
+                    <div id="form1">
+                        <h2>Dados Pessoais</h2>
+            
+                        <form onsubmit="saveUserName(event)">
+                            <div class="input-group1">
+                                <label for="descricao">Nome</label>
+                                <input type="text" id="descricao" name="descricao" placeholder="Nome Completo">
+                            </div>
+            
+                            <div class="input-group1">
+                                <label for="email">Email</label>
+                                <input type="text" id="email" name="email" placeholder="Endereço de Email" disabled>
+                            </div>
+            
+                            <div class="input-group1">
+                                <label for="current-password">Senha Atual</label>
+                                <input type="password" id="current-password" name="current-password" placeholder="Senha Atual">
+                            </div>
+            
+                            <div class="input-group1">
+                                <label for="password">Nova Senha</label>
+                                <input type="password" id="password" name="password" placeholder="Nova Senha">
+                            </div>
+            
+                            <div class="input-group1 actions">
+                                <a onclick="openDeleteAccountModal()" class="button cancel">Excluir Conta</a>
+                                <button type="submit">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- ================ Configurações de Conta Fictícia ================= -->
+                    <div id="form2">
+                        <h2>Conta Bancária</h2>
+                        <p class="config-description">Configure os dados de pagamento:</p>
+            
+                        <form onsubmit="saveFakeAccountData(event)">
+                            <div class="input-group1">
+                                <label for="fake-pix-key">Chave PIX</label>
+                                <input type="text" id="fake-pix-key" name="fake-pix-key" 
+                                       placeholder="exemplo@email.com ou CPF ou telefone" 
+                                       value="simulacao@payfly.com">
+                            </div>
+            
+                            <div class="input-group1">
+                                <label for="fake-merchant-name">Nome do Recebedor</label>
+                                <input type="text" id="fake-merchant-name" name="fake-merchant-name" 
+                                       placeholder="Seu nome ou empresa" 
+                                       value="PayFly Simulação">
+                            </div>
+            
+                            <div class="input-group1">
+                                <label for="fake-merchant-city">Cidade</label>
+                                <input type="text" id="fake-merchant-city" name="fake-merchant-city" 
+                                       placeholder="Sua cidade" 
+                                       value="SAO PAULO">
+                            </div>
+
+                            <div class="input-group1">
+                                <label for="fake-bank-name">Nome do Banco (Boleto)</label>
+                                <input type="text" id="fake-bank-name" name="fake-bank-name" 
+                                       placeholder="Nome do banco" 
+                                       value="Banco Simulação S.A.">
+                            </div>
+
+                            <div class="input-group1">
+                                <label for="fake-bank-code">Código do Banco</label>
+                                <input type="text" id="fake-bank-code" name="fake-bank-code" 
+                                       placeholder="Ex: 341, 237, 001" 
+                                       value="999">
+                            </div>
+            
+                            <div class="input-group1 actions">
+                                <button type="submit">Salvar Configurações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+    <!-- =============== Modal AI Insights ================= -->
+    <div class="ai-modal-overlay" id="aiInsightsModal">
+        <div class="ai-modal">
+            <div class="ai-modal-header">
+                <h2>
+                    <ion-icon name="bulb"></ion-icon>
+                    AI Insights Financeiros
+                </h2>
+                <button class="ai-modal-close" onclick="closeAIInsights()">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+            
+            <div class="ai-chat-container">
+                <div class="ai-chat-messages" id="aiChatMessages">
+                    <div class="ai-welcome-message">
+                        <ion-icon name="robot-outline"></ion-icon>
+                        <div class="message-content">
+                            <p>Olá! 👋 Sou seu assistente financeiro com IA.</p>
+                            <p>Posso analisar seus dados e responder perguntas como:</p>
+                            <ul>
+                                <li>"Como estão meus gastos este mês?"</li>
+                                <li>"Vou conseguir alcançar meus planos?"</li>
+                                <li>"Onde posso economizar mais?"</li>
+                            </ul>
+                            <p>O que você gostaria de saber? 🤔</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-quick-questions">
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus gastos este mês?')">
+                        Como estão meus gastos?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Onde posso economizar mais dinheiro?')">
+                        Onde posso economizar?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus planos de economia?')">
+                        Status dos meus planos
+                    </div>
+                </div>
+                
+                <div class="ai-chat-input">
+                    <input type="text" id="aiChatInput" placeholder="Digite sua pergunta sobre finanças..." maxlength="200">
+                    <button onclick="sendAIMessage()" id="aiSendBtn">
+                        <ion-icon name="send"></ion-icon>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ai-loading" id="aiLoading">
+                <div class="loading-spinner"></div>
+                <span>Analisando seus dados...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =============== Modal de Confirmação de Exclusão ================= -->
+    <!-- ================ Modal Excluir Conta (Design Premium) ================= -->
+    <div class="standardized-modal-overlay delete-account-overlay" id="deleteAccountModal">
+        <div class="standardized-modal delete-account-modal">
+            <!-- Cabeçalho Impactante -->
+            <div class="delete-account-header">
+                <div class="delete-warning-icon">
+                    <div class="warning-pulse">⚠️</div>
+                </div>
+                <h2>Excluir Conta Permanentemente</h2>
+                <button class="standardized-modal-close" onclick="closeDeleteAccountModal()">×</button>
+            </div>
+            
+            <div class="standardized-modal-body">
+                <!-- Alerta Principal -->
+                <div class="delete-main-warning">
+                    <div class="warning-title">
+                        <span class="danger-icon">🚨</span>
+                        <h3>ATENÇÃO: Ação Irreversível</h3>
+                    </div>
+                    <p class="warning-description">
+                        Uma vez excluída, sua conta <strong>não poderá ser recuperada</strong>. 
+                        Todos os dados serão permanentemente removidos de nossos servidores.
+                    </p>
+                </div>
+                
+                <!-- Lista de Dados que Serão Excluídos -->
+                <div class="delete-data-list">
+                    <h4>📋 O que será excluído:</h4>
+                    <div class="data-items">
+                        <div class="data-item">
+                            <span class="item-icon">👤</span>
+                            <div class="item-content">
+                                <strong>Perfil e Configurações</strong>
+                                <small>Dados pessoais, preferências e configurações</small>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <span class="item-icon">💰</span>
+                            <div class="item-content">
+                                <strong>Receitas</strong>
+                                <small>Todas as receitas cadastradas e histórico</small>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <span class="item-icon">💸</span>
+                            <div class="item-content">
+                                <strong>Despesas</strong>
+                                <small>Todas as despesas registradas</small>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <span class="item-icon">🏦</span>
+                            <div class="item-content">
+                                <strong>Dados Bancários</strong>
+                                <small>Informações de conta e cartões</small>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <span class="item-icon">📊</span>
+                            <div class="item-content">
+                                <strong>Relatórios e Análises</strong>
+                                <small>Histórico completo e estatísticas</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Confirmação Final -->
+                <div class="delete-confirmation">
+                    <div class="confirmation-question">
+                        <span class="question-icon">❓</span>
+                        <h4>Tem absoluta certeza que deseja continuar?</h4>
+                    </div>
+                    <p class="final-warning">
+                        Esta ação <strong>não pode ser desfeita</strong>. Recomendamos fazer backup de dados importantes antes de prosseguir.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Botões fixos na parte inferior -->
+            <div class="standardized-modal-actions delete-actions">
+                <a onclick="closeDeleteAccountModal()" class="standardized-button standardized-button-secondary safe-button">
+                    🛡️ Manter Minha Conta
+                </a>
+                <button type="button" onclick="confirmDeleteAccount()" class="standardized-button standardized-button-danger delete-button">
+                    🗑️ Excluir Permanentemente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+
+    <!-- Sistema de Toast Global -->
+    <script src="../controllers/toast-system.js"></script>
+    
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <script src="../controllers/supabase-init.env"></script>
+    
+    <script src="../controllers/main.js"></script>   
+    <script src="../models/configuracoes.js"></script> 
+
+    <!-- AI Insights Scripts -->
+    <script src="../ai-insights/ai-service.js"></script>
+    <script src="../ai-insights/data-analyzer.js"></script>
+    <script src="../ai-insights/chat-interface.js"></script>
+
+    <script src="../controllers/supabase-guard.env"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+        <script>
+                async function logout () {
+            if (window.supabase) {
+                await window.supabase.auth.signOut();
+            }
+            window.location.replace("../index.html");
+        }
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFly</title>
+    <link rel="icon" type="image/png" href="../views/imgs/Favicon.png">
+    <!-- ======= Estilos ====== -->
+    <link rel="stylesheet" href="../views/css/style.css">
+    <link rel="stylesheet" href="../views/css/data-tables.css">
+    <link rel="stylesheet" href="../views/css/config-utils.css">
+    
+    <!-- Sistema inteligente de estilos de tabela -->
+    <script>
+        // Sistema único de limpeza - SEM LOOPS
+        let tableStylesFixed = false;
+        
+        function cleanTableStyles() {
+            if (tableStylesFixed) return; // Executa apenas UMA vez
+            
+            console.debug('🧹 Limpando estilos de tabela...');
+            
+            // Remove backgrounds apenas das linhas de dados (tbody tr)
+            const dataRows = document.querySelectorAll('tbody tr');
+            dataRows.forEach(row => {
+                row.style.setProperty('background', '#ffffff', 'important');
+                row.style.setProperty('background-image', 'none', 'important');
+            });
+            
+            // Marca como concluído
+            tableStylesFixed = true;
+            console.debug('✅ Estilos limpos');
+        }
+        
+        // Executa apenas uma vez após DOM carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(cleanTableStyles, 500); // Aguarda carregamento completo
+        });
+    </script>
+</head>
+
+<body>
+    <!-- =============== Menu Navegação ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <img src="../views/imgs/logo.svg" alt="Logo">
+                        </span>
+                        <span class="title">PayFly</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Painel.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Painel Principal</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Despesas.html">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Despesas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Receitas.html">
+                        <span class="icon">
+                            <ion-icon name="card-outline"></ion-icon>
+                        </span>
+                        <span class="title">Receitas</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Planos.html">
+                        <span class="icon">
+                            <ion-icon name="airplane-outline"></ion-icon>
+                        </span>
+                        <span class="title">Planos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Poupanca.html">
+                        <span class="icon">
+                            <ion-icon name="wallet-outline"></ion-icon>
+                        </span>
+                        <span class="title">Poupança</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Investimentos.html">
+                        <span class="icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </span>
+                        <span class="title">Investimentos</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Configurações.html">
+                        <span class="icon">
+                            <ion-icon name="settings-outline"></ion-icon>
+                        </span>
+                        <span class="title">Configurações</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a onclick="logout()">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sair</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Informação do usuário no rodapé do sidebar -->
+            <div class="user-sidebar-footer">
+                <div class="user-info-display">
+                    <ion-icon name="person-circle-outline"></ion-icon>
+                    <span id="user-sidebar-name">Usuário</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Principal ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <!-- Botão AI Insights -->
+                <div class="ai-insights-button" onclick="openAIInsights()">
+                    <ion-icon name="bulb-outline"></ion-icon>
+                    <span>AI Insights</span>
+                </div>
+
+                <!-- <div class="search">
+                    <label>
+                        <input type="text" placeholder="Pesquise aqui">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>-->
+            </div>
+
+            <!-- ======================= Cartões ================== -->
+            <div class="cardBox">
+                
+                <div class="card">
+                    <div>
+                        <div class="numbers"><p id="totalPlanoDisplay">R$ 0,00</p></div>
+                        <div class="cardName">Total Planos</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="cash-outline"></ion-icon>
+                    </div>
+                </div>                
+            
+            
+                <!-- Novo cartão para exibir o valor das receitas filtradas -->
+                <div class="card">
+                    <div>
+                        <div class="numbers"><p id="filteredPlanoDisplay">R$ 0,00</p></div>
+                        <div class="cardName">Planos Filtrados</div>
+                    </div>
+                    <div class="iconBx">
+                        <ion-icon name="filter-outline"></ion-icon>
+                    </div>
+                </div>
+            
+            </div>
+
+            <!-- ================ Dashboard ================= -->
+            <section id="transaction">
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <a onclick="Modal.open()" class="add-transaction-button">+ Adicionar Objetivo</a>
+                        <a href="#" onclick="FilterModal.open()" class="btn1"><i class=" filter fas fa-sort-down"></i><ion-icon name="filter-outline"></ion-icon> Filtrar</a>
+                        
+                    </div>
+
+                    <div class="table-container">
+                        <table id='data-table'>
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Data</th>
+                                    <th>Categoria</th>
+                                    <th>Editar</th>
+                                    <th>Excluir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dados inseridos dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="footOptions">
+                        <a href="#" onclick="filterClear()" class="btn1">Limpar Filtro</a>
+                </div> 
+            </section>
+
+              <!-- =========== Modal Adicionar (Padronizado) =========  -->
+
+    <div class="standardized-modal-overlay">
+        <div class="standardized-modal">
+            <div class="standardized-modal-header">
+                <h2>🎯 Adicionar Objetivo</h2>
+                <button class="standardized-modal-close" onclick="Modal.close()">×</button>
+            </div>
+            
+            <div class="standardized-modal-body">
+                <form onsubmit="Form.submit(event)" id="form">
+                    <div class="standardized-input-group">
+                        <label for="descricao">Nome do Objetivo</label>
+                        <input type="text" id="descricao" name="descricao" placeholder="Ex: Viagem para Europa, Comprar carro...">
+                    </div>
+
+                    <div class="standardized-input-group">
+                        <label for="valor">Valor do Objetivo (R$)</label>
+                        <input type="number" id="valor" name="valor" placeholder="0,00" step="0.01">
+                    </div>
+
+                    <div class="standardized-help-text">Digite o valor total que deseja alcançar para este objetivo.</div>
+
+                    <div class="standardized-input-group">
+                        <label for="data">Data Meta</label>
+                        <input type="date" id="data" name="data">
+                    </div>
+
+                    <div class="standardized-input-group categoria-group">
+                        <label for="categoria">Tipo de Objetivo</label>
+                        <div class="categoria-input-wrapper">
+                            <input type="text" id="categoria" name="categoria" placeholder="Ex: Viagem para Europa, Carro novo...">
+                            <button type="button" class="ia-suggest-btn" onclick="suggestCategorySimple()" title="Sugestão com IA">
+                                🤖 IA
+                            </button>
+                        </div>
+                        <div class="categoria-suggestions" id="categoria-suggestions"></div>
+                        <div class="predefined-categories">
+                            <span class="category-tag" onclick="selectCategory('Viagem')">✈️ Viagem</span>
+                            <span class="category-tag" onclick="selectCategory('Veículo')">🚗 Veículo</span>
+                            <span class="category-tag" onclick="selectCategory('Casa Própria')">🏠 Casa Própria</span>
+                            <span class="category-tag" onclick="selectCategory('Educação')">🎓 Educação</span>
+                            <span class="category-tag" onclick="selectCategory('Casamento')">💍 Casamento</span>
+                            <span class="category-tag" onclick="selectCategory('Aposentadoria')">👴 Aposentadoria</span>
+                            <span class="category-tag" onclick="selectCategory('Reserva Emergência')">🛡️ Reserva Emergência</span>
+                            <span class="category-tag" onclick="selectCategory('Negócio Próprio')">💼 Negócio Próprio</span>
+                        </div>
+                    </div>
+
+                    <div class="standardized-modal-actions">
+                        <a onclick="Modal.close()" class="standardized-button standardized-button-secondary">Cancelar</a>
+                        <button type="submit" class="standardized-button standardized-button-primary">💾 Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast">
+        <div class="img"><h1>×</h1></div>
+        <div class="description">Por favor, preencha todos os campos!</div>
+    </div>
+
+    <!-- =============================  Modal do Filtro (Padronizado) ============================-->
+
+<div class="standardized-modal-overlay filter-modal-overlay">
+    <div class="standardized-modal">
+        <div class="standardized-modal-header">
+            <h2>🔍 Filtrar Objetivos</h2>
+            <button class="standardized-modal-close" onclick="FilterModal.close()">×</button>
+        </div>
+        
+        <div class="standardized-modal-body">
+            <form id="filter-form-submit" onsubmit="filterPlanos(event)">
+                <div class="standardized-input-group">
+                    <label for="filter-descricao">Descrição</label>
+                    <input type="text" id="filter-descricao" name="descricao" placeholder="Ex: Viagem, Casa... (busca parcial)">
+                </div>
+
+                <div class="standardized-input-group">
+                    <label for="filter-valor">Valor (R$)</label>
+                    <input type="number" id="filter-valor" name="valor" placeholder="Ex: 2500.00 (valor exato)" step="0.01">
+                </div>
+
+                <div class="standardized-input-group">
+                    <label for="filter-data">Data</label>
+                    <input type="date" id="filter-data" name="data">
+                </div>
+
+                <div class="standardized-input-group">
+                    <label for="filter-categoria">Tipo de Objetivo</label>
+                    <input type="text" id="filter-categoria" name="categoria" placeholder="Ex: Viagem, Veículo, Casa... (busca parcial)">
+                    <div class="predefined-categories filter-categories">
+                        <span class="category-tag" onclick="selectFilterCategory('Viagem')">✈️ Viagem</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Veículo')">🚗 Veículo</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Casa Própria')">🏠 Casa Própria</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Educação')">🎓 Educação</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Casamento')">💍 Casamento</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Aposentadoria')">👴 Aposentadoria</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Reserva Emergência')">🛡️ Reserva Emergência</span>
+                        <span class="category-tag" onclick="selectFilterCategory('Negócio Próprio')">💼 Negócio Próprio</span>
+                    </div>
+                </div>
+
+                <div class="standardized-modal-actions">
+                    <a onclick="FilterModal.close()" class="standardized-button standardized-button-secondary">Cancelar</a>
+                    <button type="submit" class="standardized-button standardized-button-primary">🔍 Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- =========================== Modal de Editar (Padronizado) ============================-->
+
+<div class="standardized-modal-overlay edit-modal-overlay">
+    <div class="standardized-modal">
+        <div class="standardized-modal-header">
+            <h2>✏️ Editar Objetivo</h2>
+            <button class="standardized-modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        
+        <div class="standardized-modal-body">
+            <form id="edit-form" onsubmit="submitEditForm(event)">
+                <div class="standardized-input-group">
+                    <label for="edit-description">Descrição</label>
+                    <input type="text" id="edit-description" name="description" placeholder="Descrição do plano">
+                </div>
+
+                <div class="standardized-input-group">
+                    <label for="edit-amount">Valor Mensal (R$)</label>
+                    <input type="number" id="edit-amount" name="amount" placeholder="0,00" step="0.01">
+                </div>
+
+                <div class="standardized-help-text">Use o sinal (-) para saldos negativos.</div>
+
+                <div class="standardized-input-group">
+                    <label for="edit-date">Data de Vencimento</label>
+                    <input type="date" id="edit-date" name="date">
+                </div>
+
+                <div class="standardized-input-group categoria-group">
+                    <label for="edit-categoria">Categoria</label>
+                    <input type="text" id="edit-categoria" name="categoria" placeholder="Digite ou selecione uma categoria...">
+                </div>
+
+                <div class="standardized-modal-actions">
+                    <a onclick="closeEditModal()" class="standardized-button standardized-button-secondary">Cancelar</a>
+                    <button type="submit" class="standardized-button standardized-button-primary">💾 Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- =============== Modal AI Insights ================= -->
+    <div class="ai-modal-overlay" id="aiInsightsModal">
+        <div class="ai-modal">
+            <div class="ai-modal-header">
+                <h2>
+                    <ion-icon name="bulb"></ion-icon>
+                    AI Insights Financeiros
+                </h2>
+                <button class="ai-modal-close" onclick="closeAIInsights()">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+            
+            <div class="ai-chat-container">
+                <div class="ai-chat-messages" id="aiChatMessages">
+                    <div class="ai-welcome-message">
+                        <ion-icon name="robot-outline"></ion-icon>
+                        <div class="message-content">
+                            <p>Olá! 👋 Sou seu assistente financeiro com IA.</p>
+                            <p>Posso analisar seus dados e responder perguntas como:</p>
+                            <ul>
+                                <li>"Como estão meus gastos este mês?"</li>
+                                <li>"Vou conseguir alcançar meus planos?"</li>
+                                <li>"Onde posso economizar mais?"</li>
+                            </ul>
+                            <p>O que você gostaria de saber? 🤔</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ai-quick-questions">
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus gastos este mês?')">
+                        Como estão meus gastos?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Onde posso economizar mais dinheiro?')">
+                        Onde posso economizar?
+                    </div>
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus objetivos financeiros?')">
+                        Status dos meus objetivos
+                    </div>
+                </div>
+                
+                <div class="ai-chat-input">
+                    <input type="text" id="aiChatInput" placeholder="Digite sua pergunta sobre finanças..." maxlength="200">
+                    <button onclick="sendAIMessage()" id="aiSendBtn">
+                        <ion-icon name="send"></ion-icon>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="ai-loading" id="aiLoading">
+                <div class="loading-spinner"></div>
+                <span>Analisando seus dados...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->    
+    <!-- Sistema de Toast Global -->
+    <script src="../controllers/toast-system.js"></script>
+    
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <script src="../controllers/supabase-init.env"></script>
+    <script src="../controllers/main.js"></script>   
+    <script src="../models/plano.js" ></script>
+
+    <!-- AI Insights Scripts -->
+    <script src="../ai-insights/ai-service.js"></script>
+    <script src="../ai-insights/data-analyzer.js"></script>
+    <script src="../ai-insights/smart-categorization.js"></script>
+    <script src="../ai-insights/categorization-ui.js"></script>
+    <script src="../ai-insights/chat-interface.js"></script>
+    
+    <script src="../controllers/supabase-guard.env"></script>
+    
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- Tratamento silencioso de erros -->
+    <script>
+        // Tratamento global de erros - Ultra Silencioso
+        window.addEventListener('error', function(e) {
+            const errorMsg = e.message || '';
+            const isNonCritical = errorMsg.includes('Failed to fetch') || 
+                                 errorMsg.includes('CORS') ||
+                                 errorMsg.includes('ionicons') ||
+                                 errorMsg.includes('net::ERR_FAILED') ||
+                                 (e.filename && e.filename.includes('ionicons'));
+            
+            if (isNonCritical) {
+                e.preventDefault();
+                return true;
+            }
+            return false;
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            const reason = e.reason?.message || e.reason || '';
+            const isNonCritical = reason.includes('Failed to fetch') || 
+                                  reason.includes('Load failed') ||
+                                  reason.includes('net::ERR_FAILED') ||
+                                  reason.includes('CORS') ||
+                                  reason.includes('ionicons') ||
+                                  reason.includes('Ionicon SVG blocked') ||
+                                  reason.includes('Access-Control-Allow-Origin');
+            
+            if (isNonCritical) {
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+
+    <script>
+                async function logout () {
+                    if (window.supabase) {
+                        await window.supabase.auth.signOut();
+                        window.location.replace("../index.html");
+                    }
+                }
+
+        // Função para selecionar categoria no filtro
+        function selectFilterCategory(categoryName) {
+            const filterCategoryInput = document.getElementById('filter-categoria');
+            if (filterCategoryInput) {
+                filterCategoryInput.value = categoryName;
+                
+                // Atualiza visualmente as tags
+                const tags = document.querySelectorAll('.filter-categories .category-tag');
+                tags.forEach(tag => {
+                    tag.classList.remove('selected');
+                    if (tag.textContent.trim() === categoryName) {
+                        tag.classList.add('selected');
+                    }
+                });
+            }
+        }
+
+        // Função de fallback para seleção de categoria no modal de adicionar
+        function selectCategoryFallback(categoryName) {
+            const categoryInput = document.querySelector('#categoria, input[name="categoria"]');
+            if (categoryInput) {
+                categoryInput.value = categoryName;
+                
+                // Atualiza visualmente as tags do modal
+                const tags = document.querySelectorAll('.predefined-categories .category-tag');
+                tags.forEach(tag => {
+                    tag.classList.remove('selected');
+                    if (tag.textContent.trim() === categoryName) {
+                        tag.classList.add('selected');
+                    }
+                });
+                
+                // Trigger evento de mudança
+                categoryInput.dispatchEvent(new Event('change'));
+                categoryInput.dispatchEvent(new Event('input'));
+                
+                console.log('Categoria selecionada:', categoryName);
+            }
+        }
+
+        // Função SIMPLES para selecionar categoria - SEMPRE FUNCIONA
+        function selectCategory(categoryName) {
+            try {
+                console.log('🏷️ Selecionando categoria:', categoryName);
+                
+                if (!categoryName || categoryName.trim() === '') {
+                    console.warn('⚠️ Nome da categoria vazio');
+                    return false;
+                }
+                
+                // Busca o campo de categoria no modal
+                const categoryInput = document.querySelector('#categoria');
+                const categoryInputByName = document.querySelector('input[name="categoria"]');
+                const targetInput = categoryInput || categoryInputByName;
+                
+                if (targetInput) {
+                    targetInput.value = categoryName.trim();
+                    console.log('✅ Categoria definida:', categoryName);
+                    
+                    // Remove seleção de outras tags
+                    const allTags = document.querySelectorAll('.predefined-categories .category-tag');
+                    allTags.forEach(tag => {
+                        if (tag) {
+                            tag.classList.remove('selected');
+                            tag.style.backgroundColor = '';
+                            tag.style.color = '';
+                        }
+                    });
+                    
+                    // Destaca a tag selecionada
+                    const clickedTags = Array.from(allTags).filter(tag => 
+                        tag && tag.textContent && tag.textContent.trim() === categoryName.trim()
+                    );
+                    clickedTags.forEach(tag => {
+                        if (tag) {
+                            tag.classList.add('selected');
+                            tag.style.backgroundColor = '#2a2185';
+                            tag.style.color = 'white';
+                        }
+                    });
+                    
+                    // Dispara eventos para compatibilidade
+                    try {
+                        targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+                        targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    } catch (eventError) {
+                        console.warn('⚠️ Erro ao disparar eventos:', eventError);
+                    }
+                    
+                    console.log('✅ Categoria selecionada com sucesso!');
+                    return true;
+                } else {
+                    console.error('❌ Campo de categoria não encontrado!');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao selecionar categoria:', error);
+                return false;
+            }
+        }
+
+        // Função SUPER SIMPLES para IA - GARANTIDA PARA FUNCIONAR
+        function suggestCategorySimple() {
+            console.log('🤖 FUNÇÃO IA SIMPLES CHAMADA - PLANOS');
+            
+            // Pega a descrição
+            const descricaoInput = document.querySelector('#descricao');
+            if (!descricaoInput || !descricaoInput.value.trim()) {
+                alert('Digite uma descrição primeiro!');
+                return;
+            }
+            
+            const descricao = descricaoInput.value.toLowerCase();
+            console.log('📝 Descrição encontrada:', descricao);
+            
+            let categoria = 'Outros';
+            
+            // Análise específica para PLANOS
+            if (descricao.includes('netflix') || descricao.includes('spotify') || descricao.includes('youtube') || descricao.includes('streaming') || descricao.includes('prime')) {
+                categoria = 'Streaming';
+            } else if (descricao.includes('software') || descricao.includes('programa') || descricao.includes('adobe') || descricao.includes('office') || descricao.includes('aplicativo')) {
+                categoria = 'Software';
+            } else if (descricao.includes('academia') || descricao.includes('ginástica') || descricao.includes('musculação') || descricao.includes('fitness')) {
+                categoria = 'Academia';
+            } else if (descricao.includes('curso') || descricao.includes('aula') || descricao.includes('educação') || descricao.includes('escola') || descricao.includes('faculdade')) {
+                categoria = 'Educação';
+            } else if (descricao.includes('plano de saúde') || descricao.includes('convênio') || descricao.includes('médico') || descricao.includes('hospital')) {
+                categoria = 'Saúde';
+            } else if (descricao.includes('uber') || descricao.includes('transporte') || descricao.includes('99') || descricao.includes('mobilidade')) {
+                categoria = 'Transporte';
+            }
+            
+            console.log('🎯 Categoria sugerida:', categoria);
+            
+            // Aplica a categoria
+            const categoriaInput = document.querySelector('#categoria');
+            if (categoriaInput) {
+                categoriaInput.value = categoria;
+                console.log('✅ Categoria aplicada no campo:', categoria);
+                
+                // Destaca o botão visualmente
+                const botoes = document.querySelectorAll('.category-tag');
+                botoes.forEach(btn => {
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                    if (btn.textContent.trim() === categoria) {
+                        btn.style.backgroundColor = '#2a2185';
+                        btn.style.color = 'white';
+                        console.log('✅ Botão destacado:', categoria);
+                    }
+                });
+            } else {
+                console.error('❌ Campo categoria não encontrado');
+            }
+        }
+
+        // Garante que as funções estão disponíveis globalmente
+        window.selectCategory = selectCategory;
+        window.suggestCategorySimple = suggestCategorySimple;
+
+        // Aguarda o carregamento e configura fallbacks se necessário
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM carregado - configurando categorias PLANOS...');
+            
+            // Aguarda um pouco para CategorizationUI carregar
+            setTimeout(() => {
+                // Se CategorizationUI não estiver disponível, configura fallbacks
+                if (!window.CategorizationUI || typeof window.CategorizationUI.selectCategory !== 'function') {
+                    console.warn('CategorizationUI não disponível, usando funções fallback');
+                    window.CategorizationUI = {
+                        selectCategory: selectCategory,
+                        suggestCategory: suggestCategorySimple
+                    };
+                }
+                
+                console.log('✅ Sistema de categorias PLANOS configurado!');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,458 @@
+/* ================ Estilos para Tabelas de Dados ================= */
+
+/* Correção para cabeçalho fixo das tabelas */
+.table-container {
+  overflow: auto !important;
+  max-height: 600px !important;
+  position: relative !important;
+}
+
+.table-container table thead,
+#data-table thead {
+  background: linear-gradient(135deg, #2a2185 0%, #28a745 100%) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+.table-container table thead th,
+#data-table thead th {
+  background: transparent !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  position: relative !important;
+}
+
+/* Corpo da tabela limpo - força máxima */
+.table-container table tbody tr,
+#data-table tbody tr,
+table tbody tr,
+tbody tr {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+.table-container table tbody tr:hover,
+#data-table tbody tr:hover,
+table tbody tr:hover,
+tbody tr:hover {
+  background: rgba(42, 33, 133, 0.03) !important;
+  background-color: rgba(42, 33, 133, 0.03) !important;
+  background-image: none !important;
+}
+
+/* Remove qualquer fundo do tbody */
+.table-container table tbody,
+#data-table tbody,
+table tbody,
+tbody {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Estilos específicos para tabelas de receitas */
+.receitas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.receitas-table th,
+.receitas-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.receitas-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsividade das tabelas */
+@media (max-width: 768px) {
+  .table-container {
+    max-height: 400px !important;
+  }
+
+  .receitas-table th,
+  .receitas-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+/* Estilos para botões de ação na tabela */
+.table-actions {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.table-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.table-actions .edit-btn {
+  background: linear-gradient(135deg, #17a2b8, #20c997);
+  color: white;
+}
+
+.table-actions .delete-btn {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
+}
+
+.table-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Indicadores de status */
+.status-indicator {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-indicator.ativo {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.status-indicator.pendente {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+
+.status-indicator.cancelado {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+/* Loading state para tabelas */
+.table-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.table-loading .loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top-color: #2a2185;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+/* Empty state para tabelas */
+.table-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.table-empty ion-icon {
+  font-size: 48px;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.table-empty h3 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.table-empty p {
+  color: #999;
+  font-size: 14px;
+}
+
+/* Filtros da tabela */
+.table-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #2a2185;
+  box-shadow: 0 0 0 2px rgba(42, 33, 133, 0.1);
+}
+
+/* Paginação */
+.table-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 15px 0;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+  border-color: #2a2185;
+  color: #2a2185;
+}
+
+.pagination-btn.active {
+  background: #2a2185;
+  border-color: #2a2185;
+  color: white;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Busca na tabela */
+.table-search {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.table-search input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.table-search input:focus {
+  outline: none;
+  border-color: #2a2185;
+  box-shadow: 0 0 0 3px rgba(42, 33, 133, 0.1);
+}
+
+.table-search ion-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+/* Ordenação de colunas */
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.sortable-header:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sortable-header::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.sortable-header.sort-asc::after {
+  border-bottom-color: white;
+  border-top: none;
+}
+
+.sortable-header.sort-desc::after {
+  border-top-color: white;
+  border-bottom: none;
+}
+
+/* Seleção múltipla */
+.table-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.bulk-actions {
+  display: none;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2a2185;
+}
+
+.bulk-actions.show {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bulk-actions .selected-count {
+  color: #666;
+  font-weight: 500;
+}
+
+.bulk-actions .bulk-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.bulk-btn.delete {
+  background: #dc3545;
+  color: white;
+}
+
+.bulk-btn.export {
+  background: #28a745;
+  color: white;
+}
+
+/* Formatação de valores monetários */
+.currency-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.currency-value.positive {
+  color: #28a745;
+}
+
+.currency-value.negative {
+  color: #dc3545;
+}
+
+/* Badges de categoria */
+.category-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--green2) 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Data formatting */
+.date-cell {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Performance indicators */
+.performance-positive {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.performance-negative {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Responsividade avançada */
+@media (max-width: 992px) {
+  .table-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .table-pagination {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .table-container {
+    font-size: 12px;
+  }
+
+  .receitas-table th,
+  .receitas-table td {
+    padding: 6px;
+  }
+
+  .table-actions {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .table-actions button {
+    width: 100%;
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

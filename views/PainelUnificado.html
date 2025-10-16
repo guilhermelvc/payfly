@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
+    />
+    <title>PayFly - Gestão Financeira</title>
+
+    <!-- ======= Favicon ======= -->
+    <link rel="icon" type="image/png" href="../views/imgs/Favicon.png" />
+
+    <!-- ======= Estilos Unificados ======= -->
+    <link rel="stylesheet" href="../assets/css/base.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+
+    <!-- ======= Bibliotecas Externas ======= -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  </head>
+
+  <body>
+    <!-- ================ Loading Screen ================ -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p>Carregando PayFly...</p>
+    </div>
+
+    <!-- ================ Main Application Container ================ -->
+    <div class="app-container" id="app-container" style="display: none">
+      <!-- ================ Sidebar Navigation ================ -->
+      <div class="navigation" id="navigation">
+        <ul>
+          <li class="navigation-header">
+            <a href="#" class="logo-link">
+              <span class="icon">💰</span>
+              <span class="title">PayFly</span>
+            </a>
+            <div class="toggle" id="toggle">
+              <ion-icon name="menu-outline"></ion-icon>
+            </div>
+          </li>
+
+          <!-- Dashboard -->
+          <li class="nav-item" data-tab="dashboard">
+            <a href="#" onclick="app.switchTab('dashboard')">
+              <span class="icon">📊</span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+
+          <!-- Receitas -->
+          <li class="nav-item" data-tab="receitas">
+            <a href="#" onclick="app.switchTab('receitas')">
+              <span class="icon">💵</span>
+              <span class="title">Receitas</span>
+            </a>
+          </li>
+
+          <!-- Despesas -->
+          <li class="nav-item" data-tab="despesas">
+            <a href="#" onclick="app.switchTab('despesas')">
+              <span class="icon">💸</span>
+              <span class="title">Despesas</span>
+            </a>
+          </li>
+
+          <!-- Investimentos -->
+          <li class="nav-item" data-tab="investimentos">
+            <a href="#" onclick="app.switchTab('investimentos')">
+              <span class="icon">📈</span>
+              <span class="title">Investimentos</span>
+            </a>
+          </li>
+
+          <!-- Poupança -->
+          <li class="nav-item" data-tab="poupanca">
+            <a href="#" onclick="app.switchTab('poupanca')">
+              <span class="icon">🏦</span>
+              <span class="title">Poupança</span>
+            </a>
+          </li>
+
+          <!-- Planos -->
+          <li class="nav-item" data-tab="planos">
+            <a href="#" onclick="app.switchTab('planos')">
+              <span class="icon">🎯</span>
+              <span class="title">Planos</span>
+            </a>
+          </li>
+
+          <!-- IA Insights -->
+          <li class="nav-item" data-tab="ai-insights">
+            <a href="#" onclick="app.switchTab('ai-insights')">
+              <span class="icon">🤖</span>
+              <span class="title">IA Insights</span>
+            </a>
+          </li>
+
+          <!-- Configurações -->
+          <li class="nav-item" data-tab="configuracoes">
+            <a href="#" onclick="app.switchTab('configuracoes')">
+              <span class="icon">⚙️</span>
+              <span class="title">Configurações</span>
+            </a>
+          </li>
+
+          <!-- Logout -->
+          <li class="nav-item logout">
+            <a href="#" onclick="app.logout()">
+              <span class="icon">🚪</span>
+              <span class="title">Sair</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ================ Main Content Area ================ -->
+      <div class="main" id="main">
+        <!-- ================ Top Bar ================ -->
+        <div class="topbar">
+          <div class="user-info">
+            <span class="user-greeting"
+              >Olá, <span id="user-sidebar-name">Usuário</span>!</span
+            >
+            <div class="user-actions">
+              <button
+                class="btn-notification"
+                onclick="app.toggleNotifications()"
+              >
+                🔔
+                <span class="notification-badge" id="notification-count"
+                  >0</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================ Tab Content Container ================ -->
+        <div class="tab-container">
+          <!-- ================ DASHBOARD TAB ================ -->
+          <div class="tab-content active" id="tab-dashboard">
+            <div class="tab-header">
+              <h2>📊 Dashboard Financeiro</h2>
+              <div class="header-actions">
+                <button class="btn-primary" onclick="app.exportDashboard()">
+                  📄 Exportar PDF
+                </button>
+                <button class="btn-secondary" onclick="app.refreshDashboard()">
+                  🔄 Atualizar
+                </button>
+              </div>
+            </div>
+
+            <!-- Cards de Resumo -->
+            <div class="summary-cards">
+              <div
+                class="summary-card receitas"
+                onclick="app.switchTab('receitas')"
+              >
+                <div class="card-icon">💵</div>
+                <div class="card-content">
+                  <h3>Total Receitas</h3>
+                  <p class="card-value" id="totalReceitaDisplay">R$ 0,00</p>
+                </div>
+              </div>
+
+              <div
+                class="summary-card despesas"
+                onclick="app.switchTab('despesas')"
+              >
+                <div class="card-icon">💸</div>
+                <div class="card-content">
+                  <h3>Total Despesas</h3>
+                  <p class="card-value" id="totalDespesaDisplay">R$ 0,00</p>
+                </div>
+              </div>
+
+              <div class="summary-card saldo">
+                <div class="card-icon">💰</div>
+                <div class="card-content">
+                  <h3>Saldo Líquido</h3>
+                  <p class="card-value" id="saldoLiquidoDisplay">R$ 0,00</p>
+                </div>
+              </div>
+
+              <div
+                class="summary-card investimentos"
+                onclick="app.switchTab('investimentos')"
+              >
+                <div class="card-icon">📈</div>
+                <div class="card-content">
+                  <h3>Investimentos</h3>
+                  <p class="card-value" id="totalInvestimentosDisplay">
+                    R$ 0,00
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="charts-container">
+              <div class="chart-card">
+                <h3>Distribuição por Categoria</h3>
+                <canvas id="categoryChart"></canvas>
+              </div>
+              <div class="chart-card">
+                <h3>Evolução Temporal</h3>
+                <canvas id="timelineChart"></canvas>
+              </div>
+            </div>
+
+            <!-- IA Insights Preview -->
+            <div
+              class="ai-insights-preview"
+              onclick="app.switchTab('ai-insights')"
+            >
+              <h3>🤖 Insights da IA</h3>
+              <div id="ai-insights-summary">Carregando insights...</div>
+            </div>
+          </div>
+
+          <!-- ================ RECEITAS TAB ================ -->
+          <div class="tab-content" id="tab-receitas">
+            <div class="tab-header">
+              <h2>💵 Gerenciar Receitas</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="receitasModel.openCreateModal()"
+                >
+                  ➕ Nova Receita
+                </button>
+              </div>
+            </div>
+
+            <!-- Sistema de Filtros -->
+            <div class="filters-container" id="receitas-filters"></div>
+
+            <!-- Tabela de Dados -->
+            <div class="data-container">
+              <table id="data-table" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <!-- Total Display -->
+            <div class="total-display">
+              <h3>
+                Total de Receitas:
+                <span id="totalReceitaTabDisplay">R$ 0,00</span>
+              </h3>
+            </div>
+          </div>
+
+          <!-- ================ DESPESAS TAB ================ -->
+          <div class="tab-content" id="tab-despesas">
+            <div class="tab-header">
+              <h2>💸 Gerenciar Despesas</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="despesasModel.openCreateModal()"
+                >
+                  ➕ Nova Despesa
+                </button>
+              </div>
+            </div>
+
+            <!-- Sistema de Filtros -->
+            <div class="filters-container" id="despesas-filters"></div>
+
+            <!-- Tabela de Dados -->
+            <div class="data-container">
+              <table id="data-table-despesas" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <!-- Total Display -->
+            <div class="total-display">
+              <h3>
+                Total de Despesas:
+                <span id="totalDespesaTabDisplay">R$ 0,00</span>
+              </h3>
+            </div>
+          </div>
+
+          <!-- ================ INVESTIMENTOS TAB ================ -->
+          <div class="tab-content" id="tab-investimentos">
+            <div class="tab-header">
+              <h2>📈 Gerenciar Investimentos</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="investimentosModel.openCreateModal()"
+                >
+                  ➕ Novo Investimento
+                </button>
+              </div>
+            </div>
+
+            <!-- Sistema de Filtros -->
+            <div class="filters-container" id="investimentos-filters"></div>
+
+            <!-- Tabela de Dados -->
+            <div class="data-container">
+              <table id="data-table-investimentos" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Valor Investido</th>
+                    <th>Valor Atual</th>
+                    <th>Rentabilidade</th>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <!-- Total Display -->
+            <div class="total-display">
+              <h3>
+                Total Investido:
+                <span id="totalInvestimentosTabDisplay">R$ 0,00</span>
+              </h3>
+            </div>
+          </div>
+
+          <!-- ================ POUPANÇA TAB ================ -->
+          <div class="tab-content" id="tab-poupanca">
+            <div class="tab-header">
+              <h2>🏦 Gerenciar Poupança</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="poupancaModel.openCreateModal()"
+                >
+                  ➕ Nova Movimentação
+                </button>
+              </div>
+            </div>
+
+            <!-- Sistema de Filtros -->
+            <div class="filters-container" id="poupanca-filters"></div>
+
+            <!-- Tabela de Dados -->
+            <div class="data-container">
+              <table id="data-table-poupanca" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Tipo</th>
+                    <th>Data</th>
+                    <th>Plano</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <!-- Total Display -->
+            <div class="total-display">
+              <h3>
+                Total Poupado: <span id="totalPoupancaTabDisplay">R$ 0,00</span>
+              </h3>
+            </div>
+          </div>
+
+          <!-- ================ PLANOS TAB ================ -->
+          <div class="tab-content" id="tab-planos">
+            <div class="tab-header">
+              <h2>🎯 Gerenciar Planos</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="planosModel.openCreateModal()"
+                >
+                  ➕ Novo Plano
+                </button>
+              </div>
+            </div>
+
+            <!-- Sistema de Filtros -->
+            <div class="filters-container" id="planos-filters"></div>
+
+            <!-- Tabela de Dados -->
+            <div class="data-container">
+              <table id="data-table-planos" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Meta</th>
+                    <th>Progresso</th>
+                    <th>Data Limite</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ================ IA INSIGHTS TAB ================ -->
+          <div class="tab-content" id="tab-ai-insights">
+            <div class="tab-header">
+              <h2>🤖 IA Insights</h2>
+              <div class="header-actions">
+                <button
+                  class="btn-primary"
+                  onclick="aiService.generateInsights()"
+                >
+                  🔄 Gerar Insights
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat IA -->
+            <div class="ai-chat-container">
+              <div class="chat-messages" id="chat-messages"></div>
+              <div class="chat-input-container">
+                <input
+                  type="text"
+                  id="chat-input"
+                  placeholder="Pergunte sobre suas finanças..."
+                />
+                <button onclick="aiService.sendMessage()">Enviar</button>
+              </div>
+            </div>
+
+            <!-- Insights Automáticos -->
+            <div class="auto-insights" id="auto-insights">
+              <h3>Análises Automáticas</h3>
+              <div class="insights-grid" id="insights-grid">
+                <!-- Insights serão inseridos aqui -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ================ CONFIGURAÇÕES TAB ================ -->
+          <div class="tab-content" id="tab-configuracoes">
+            <div class="tab-header">
+              <h2>⚙️ Configurações</h2>
+            </div>
+
+            <div class="config-sections">
+              <!-- Seção Perfil -->
+              <div class="config-section">
+                <h3>👤 Perfil do Usuário</h3>
+                <div class="form-group">
+                  <label>Nome:</label>
+                  <input type="text" id="user-name" placeholder="Seu nome" />
+                </div>
+                <div class="form-group">
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    id="user-email"
+                    placeholder="Seu email"
+                    readonly
+                  />
+                </div>
+                <button class="btn-primary" onclick="app.updateProfile()">
+                  Salvar Perfil
+                </button>
+              </div>
+
+              <!-- Seção Preferências -->
+              <div class="config-section">
+                <h3>🎨 Preferências</h3>
+                <div class="form-group">
+                  <label>Tema:</label>
+                  <select id="theme-selector" onchange="app.changeTheme()">
+                    <option value="light">Claro</option>
+                    <option value="dark">Escuro</option>
+                    <option value="auto">Automático</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Moeda:</label>
+                  <select id="currency-selector">
+                    <option value="BRL">Real (R$)</option>
+                    <option value="USD">Dólar ($)</option>
+                    <option value="EUR">Euro (€)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Seção Dados -->
+              <div class="config-section">
+                <h3>💾 Gerenciar Dados</h3>
+                <button class="btn-secondary" onclick="app.exportData()">
+                  📤 Exportar Dados
+                </button>
+                <button class="btn-warning" onclick="app.clearCache()">
+                  🗑️ Limpar Cache
+                </button>
+                <button class="btn-danger" onclick="app.deleteAccount()">
+                  ⚠️ Excluir Conta
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================ Scripts Core ================ -->
+    <script src="../controllers/supabase-init.env"></script>
+    <script src="../controllers/toast-system.js"></script>
+
+    <!-- ================ Scripts Core Refatorados ================ -->
+    <script src="../core/BaseModel.js"></script>
+    <script src="../core/EntityManager.js"></script>
+    <script src="../core/FilterSystem.js"></script>
+    <script src="../core/ModalManager.js"></script>
+
+    <!-- ================ Controllers Unificados ================ -->
+    <script src="../controllers/AppController.js"></script>
+    <script src="../controllers/UIController.js"></script>
+    <script src="../controllers/DataController.js"></script>
+
+    <!-- ================ Models Refatorados ================ -->
+    <script src="../models/despesa-refactored.js"></script>
+    <!-- Outros models refatorados serão adicionados aqui -->
+
+    <!-- ================ AI Service Otimizado ================ -->
+    <script src="../ai/AIService.js"></script>
+    <script src="../ai/FinancialAnalyzer.js"></script>
+
+    <!-- ================ Inicialização ================ -->
+    <script src="../app.js"></script>
+
+    <!-- ================ Icons ================ -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <!-- ================ Guard de Autenticação ================ -->
+    <script src="../controllers/auth-guard.js"></script>
+  </body>
+</html>
