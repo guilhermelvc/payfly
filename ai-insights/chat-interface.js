@@ -108,6 +108,14 @@ class AIInsightsInterface {
       let toastMessage = "Erro ao processar pergunta.";
 
       if (
+        error.message.includes("quota") ||
+        error.message.includes("Limite de uso diário") ||
+        error.message.includes("RESOURCE_EXHAUSTED")
+      ) {
+        errorMessage =
+          "📅 **Limite Diário Atingido**\n\nO limite de uso da IA foi atingido por hoje. A funcionalidade estará disponível novamente amanhã.\n\n💡 **Dica:** Continue explorando seus dados financeiros através dos gráficos e relatórios do painel!";
+        toastMessage = "Limite diário da IA atingido. Tente amanhã.";
+      } else if (
         error.message.includes("internet") ||
         error.message.includes("conexão")
       ) {

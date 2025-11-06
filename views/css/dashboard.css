@@ -622,12 +622,6 @@ html {
   display: none;
 }
 
-/* Estilos específicos para botão diagnóstico */
-.quick-question-btn.diagnostic {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f) !important;
-  color: white !important;
-}
-
 /* Responsividade do Modal */
 .modal {
   max-width: 90vw;

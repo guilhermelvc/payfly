@@ -5,9 +5,20 @@
 class GeminiAIService {
   constructor() {
     this.apiKey = "AIzaSyCSJ8E6evq0NrMTZYTA20OVtVU6GIbAOEk";
+    // Usar gemini-1.5-flash que tem quota maior (1500 req/dia vs 50 req/dia do gemini-2.5-pro)
     this.baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent";
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
     this.isProcessing = false;
+
+    // Rate limiting
+    this.lastRequestTime = 0;
+    this.minRequestInterval = 2000; // 2 segundos entre requisições
+    this.requestQueue = [];
+    this.isProcessingQueue = false;
+    
+    // Quota tracking
+    this.quotaExceeded = false;
+    this.quotaResetTime = null;
   }
 
   /**
@@ -28,7 +39,7 @@ class GeminiAIService {
       );
 
       try {
-        const response = await this.callGeminiAPI(prompt);
+        const response = await this.callGeminiAPIWithRetry(prompt);
         console.log("✅ GeminiAI: Resposta recebida com sucesso");
         return response;
       } catch (apiError) {
@@ -43,7 +54,7 @@ class GeminiAIService {
           await this.setupApiUrl();
 
           // Tentar novamente com novo modelo
-          const response = await this.callGeminiAPI(prompt);
+          const response = await this.callGeminiAPIWithRetry(prompt);
           console.log("✅ GeminiAI: Resposta recebida com modelo alternativo");
           return response;
         }
@@ -56,7 +67,12 @@ class GeminiAIService {
       console.error("   - Stack:", error.stack);
 
       // Retornar erro mais específico
-      if (error.message.includes("fetch")) {
+      if (error.message.includes("quota") || error.message.includes("RESOURCE_EXHAUSTED")) {
+        this.quotaExceeded = true;
+        throw new Error(
+          "Limite de uso diário da IA atingido. A funcionalidade estará disponível novamente amanhã. 📅"
+        );
+      } else if (error.message.includes("fetch")) {
         throw new Error(
           "Erro de conexão com a IA. Verifique sua internet e tente novamente."
         );
@@ -189,6 +205,107 @@ RESPOSTA:`;
     return summary.length > 0
       ? summary.join("\n")
       : "Dados financeiros em análise...";
+  }
+
+  /**
+   * Fazer chamada para a API do Gemini com retry e rate limiting
+   * @param {string} prompt - Prompt formatado
+   * @returns {Promise<string>} - Resposta da API
+   */
+  async callGeminiAPIWithRetry(prompt, maxRetries = 3) {
+    // Se quota já foi excedida, não tentar
+    if (this.quotaExceeded) {
+      throw new Error("Limite de uso diário da IA atingido. Tente novamente amanhã.");
+    }
+
+    let lastError;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Aguardar rate limit
+        await this.waitForRateLimit();
+
+        console.log(`🔄 GeminiAI: Tentativa ${attempt}/${maxRetries}`);
+        const response = await this.callGeminiAPI(prompt);
+
+        // Atualizar timestamp de última requisição bem-sucedida
+        this.lastRequestTime = Date.now();
+
+        return response;
+      } catch (error) {
+        lastError = error;
+
+        // Se for erro de quota excedida, parar imediatamente
+        if (
+          error.message.includes("quota") ||
+          error.message.includes("RESOURCE_EXHAUSTED") ||
+          error.message.includes("exceeded your current quota")
+        ) {
+          this.quotaExceeded = true;
+          throw new Error(
+            "Limite de uso diário da IA atingido. A funcionalidade estará disponível novamente amanhã. 📅"
+          );
+        }
+
+        // Se for erro 429 (rate limit temporário), aguardar mais tempo
+        if (
+          error.message.includes("429") ||
+          error.message.includes("Limite de requisições")
+        ) {
+          const waitTime = Math.min(5000 * attempt, 15000); // 5s, 10s, 15s
+          console.log(
+            `⏰ GeminiAI: Rate limit atingido. Aguardando ${
+              waitTime / 1000
+            }s antes de tentar novamente...`
+          );
+
+          if (attempt < maxRetries) {
+            await this.sleep(waitTime);
+            continue;
+          }
+        }
+
+        // Se não for erro de rate limit, não tentar novamente
+        if (
+          !error.message.includes("429") &&
+          !error.message.includes("Limite")
+        ) {
+          throw error;
+        }
+
+        // Última tentativa falhou
+        if (attempt === maxRetries) {
+          throw new Error(
+            `Limite de requisições excedido após ${maxRetries} tentativas. Aguarde alguns minutos e tente novamente.`
+          );
+        }
+      }
+    }
+
+    throw lastError;
+  }
+
+  /**
+   * Aguardar rate limit mínimo entre requisições
+   */
+  async waitForRateLimit() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+
+    if (timeSinceLastRequest < this.minRequestInterval) {
+      const waitTime = this.minRequestInterval - timeSinceLastRequest;
+      console.log(
+        `⏰ GeminiAI: Aguardando ${waitTime}ms para respeitar rate limit...`
+      );
+      await this.sleep(waitTime);
+    }
+  }
+
+  /**
+   * Sleep helper
+   */
+  sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -448,31 +565,6 @@ RESPOSTA:`;
     } catch (error) {
       console.error("❌ Erro ao configurar URL:", error);
       // Manter URL padrão se houver erro
-    }
-  }
-
-  /**
-   * Testar conectividade com a API
-   * @returns {Promise<boolean>} - Se o teste passou
-   */
-  async testConnection() {
-    try {
-      console.log("🔍 GeminiAI: Testando conectividade...");
-
-      const testPrompt = "Responda apenas: 'Teste OK'";
-      const response = await this.callGeminiAPI(testPrompt);
-
-      const isWorking = response && response.includes("Teste OK");
-      console.log(
-        isWorking
-          ? "✅ GeminiAI: Teste de conectividade passou"
-          : "⚠️ GeminiAI: Teste de conectividade falhou"
-      );
-
-      return isWorking;
-    } catch (error) {
-      console.error("❌ GeminiAI: Falha no teste de conectividade:", error);
-      return false;
     }
   }
 
