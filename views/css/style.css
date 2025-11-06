@@ -51,6 +51,8 @@ body {
 }
 .navigation.active {
   width: 80px;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .navigation ul {
@@ -60,6 +62,12 @@ body {
   width: 100%;
   height: calc(100% - 60px); /* Deixa espaço para o rodapé */
   overflow-y: auto;
+}
+
+/* Remove scroll quando sidebar encolhido */
+.navigation.active ul {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
 }
 
 .navigation ul li {
@@ -113,6 +121,13 @@ body {
   line-height: 60px;
   text-align: start;
   white-space: nowrap;
+}
+
+/* Oculta títulos quando sidebar encolhido */
+.navigation.active ul li a .title {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /*ajuste do logo no menu*/
