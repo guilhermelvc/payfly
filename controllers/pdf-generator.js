@@ -293,15 +293,23 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
       const svgContent = await response.text();
       console.log("✅ SVG carregado, tamanho:", svgContent.length, "chars");
 
-      // Criar um canvas temporário para renderizar o SVG
+      // Modificar SVG para preto antes de renderizar
+      const blackSvg = svgContent
+        .replace(/fill="[^"]*"/g, 'fill="#000000"')
+        .replace(/stroke="[^"]*"/g, 'stroke="#000000"')
+        .replace(/fill:[^;"]*/g, "fill:#000000")
+        .replace(/stroke:[^;"]*/g, "stroke:#000000");
+
+      // Criar um canvas de alta resolução para melhor qualidade
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      canvas.width = 80;
-      canvas.height = 80;
+      const scale = 3; // Aumentar resolução
+      canvas.width = 80 * scale;
+      canvas.height = 80 * scale;
 
-      // Criar uma imagem a partir do SVG
+      // Criar uma imagem a partir do SVG modificado
       const img = new Image();
-      const svgBlob = new Blob([svgContent], {
+      const svgBlob = new Blob([blackSvg], {
         type: "image/svg+xml;charset=utf-8",
       });
       const url = URL.createObjectURL(svgBlob);
@@ -309,14 +317,23 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
       return new Promise((resolve) => {
         img.onload = function () {
           console.log("🖼️ Imagem SVG carregada com sucesso!");
-          // Limpar o canvas com fundo transparente
-          ctx.clearRect(0, 0, 80, 80);
-          ctx.drawImage(img, 0, 0, 80, 80);
+
+          // Habilitar suavização para melhor qualidade
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+
+          // Preencher fundo branco
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Desenhar a imagem em alta resolução
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
           const dataURL = canvas.toDataURL("image/png");
 
-          // Adicionar a imagem ao PDF com tamanho maior
-          pdf.addImage(dataURL, "PNG", centerX - 20, centerY - 20, 40, 40);
-          console.log("✅ Logo SVG adicionada ao PDF!");
+          // Adicionar a imagem ao PDF com bom tamanho
+          pdf.addImage(dataURL, "PNG", centerX - 15, centerY - 15, 30, 30);
+          console.log("✅ Logo SVG preta de alta qualidade adicionada ao PDF!");
 
           URL.revokeObjectURL(url);
           resolve();
@@ -348,9 +365,9 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
 }
 
 function drawFallbackLogo(pdf, centerX, centerY) {
-  console.log("🔄 Usando logo fallback geométrica");
-  // Círculo principal (moeda)
-  pdf.setFillColor(42, 33, 133); // Azul PayFly
+  console.log("🔄 Usando logo fallback geométrica em preto");
+  // Círculo principal (moeda) - PRETO
+  pdf.setFillColor(0, 0, 0);
   pdf.circle(centerX, centerY, 15, "F");
 
   // Círculo interno (brilho)
@@ -362,11 +379,11 @@ function drawFallbackLogo(pdf, centerX, centerY) {
   pdf.setFontSize(20);
   pdf.text("$", centerX, centerY + 3, { align: "center" });
 
-  // Bordas decorativas
-  pdf.setDrawColor(42, 33, 133);
+  // Bordas decorativas - PRETO
+  pdf.setDrawColor(0, 0, 0);
   pdf.setLineWidth(2);
   pdf.circle(centerX, centerY, 18, "S");
-  console.log("✅ Logo fallback desenhada");
+  console.log("✅ Logo fallback preta desenhada");
 }
 
 // Gera página para um período específico
