@@ -216,7 +216,7 @@ function getDateRange(period) {
 
   switch (period) {
     case "week":
-      // Semana atual incluindo futuro da semana (apenas esta semana)
+      // Semana atual completa (segunda a domingo)
       const startOfWeek = new Date(today);
       const dayOfWeek = today.getDay();
       const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Se domingo, volta 6 dias
@@ -230,21 +230,34 @@ function getDateRange(period) {
       endDate = endOfWeek;
       break;
     case "month":
-      // Mês atual até hoje (sem futuro)
+      // Mês atual completo (do dia 1 até o último dia do mês)
       startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      endDate = new Date(today);
-      endDate.setHours(23, 59, 59, 999);
+      endDate = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+      );
       break;
     case "6months":
-      // Últimos 6 meses até hoje (sem futuro)
+      // Últimos 6 meses completos
       startDate = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-      endDate = new Date(today);
-      endDate.setHours(23, 59, 59, 999);
+      endDate = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+      );
       break;
     case "futuros":
-      // Apenas transações futuras (a partir de amanhã)
-      startDate = new Date(today);
-      startDate.setDate(today.getDate() + 1);
+      // Apenas transações futuras (a partir do próximo mês)
+      startDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       endDate = new Date(2099, 11, 31, 23, 59, 59, 999); // Data muito futura
       break;
     default:
@@ -266,43 +279,12 @@ function filterDataByPeriod(data, period) {
 
 function processExpensesByCategory(period) {
   const filteredDespesas = filterDataByPeriod(dashboardData.despesas, period);
-  const filteredPlanos = filterDataByPeriod(dashboardData.planos, period);
-  const filteredPoupanca = filterDataByPeriod(dashboardData.poupanca, period);
-  const filteredInvestimentos = filterDataByPeriod(
-    dashboardData.investimentos,
-    period
-  );
   const categoryTotals = {};
 
-  // Processa despesas (incluindo futuras)
+  // Processa apenas despesas (sem planos, poupança ou investimentos)
   filteredDespesas.forEach((despesa) => {
     const categoria = despesa.categoria || "Outros";
     const valor = parseFloat(despesa.valor) || 0;
-    categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
-  });
-
-  // Processa planos (planejamentos futuros)
-  filteredPlanos.forEach((plano) => {
-    const categoria = plano.categoria || "Planos";
-    const valor = parseFloat(plano.valor) || 0;
-    categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
-  });
-
-  // Processa poupança
-  filteredPoupanca.forEach((poup) => {
-    const categoria = poup.tipo || "Poupança";
-    const valor = parseFloat(poup.valor) || 0;
-    categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
-  });
-
-  // Processa investimentos
-  filteredInvestimentos.forEach((inv) => {
-    const categoria = inv.tipo || "Investimentos";
-    const valor =
-      parseFloat(inv.valor_investido) ||
-      parseFloat(inv.valor_atual) ||
-      parseFloat(inv.valor) ||
-      0;
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
@@ -1416,9 +1398,7 @@ function updateDashboard() {
     console.log("✅ Dashboard atualizado para período:", period);
   } catch (error) {
     console.error("❌ Erro ao atualizar dashboard:", error);
-    if (typeof showErrorToast === "function") {
-      showErrorToast("Erro", "Falha ao atualizar dashboard");
-    }
+    // Toast removido para melhor UX
   }
 }
 
@@ -1546,10 +1526,7 @@ async function loadDashboardDataWithToast() {
     console.log("📊 INICIANDO carregamento do dashboard...");
     showDashboardLoading(true);
 
-    // Só mostra toast se a função existir
-    if (typeof showInfoToast === "function") {
-      showInfoToast("Dashboard", "Carregando dados financeiros...", 2000);
-    }
+    // Toast de carregamento removido para melhor UX
 
     console.log("📊 Verificando Supabase...");
     if (!window.supabase) {
@@ -1564,9 +1541,7 @@ async function loadDashboardDataWithToast() {
 
     if (!user) {
       console.warn("⚠️ Usuário não autenticado");
-      if (typeof showWarningToast === "function") {
-        showWarningToast("Atenção", "Usuário não autenticado");
-      }
+      // Toast removido para melhor UX
 
       // Mesmo sem usuário, vamos mostrar dados fictícios para teste
       console.log("🧪 Carregando dados de demonstração...");
@@ -1633,21 +1608,15 @@ async function loadDashboardDataWithToast() {
       (r) => new Date(r.data) > now
     );
 
-    let message = `${totalItems} registros carregados`;
-
-    if (dashboardData.planos.length > 0) {
-      message += ` • ${dashboardData.planos.length} planejamentos`;
-    }
-
-    if (despesasFuturas.length > 0 || receitasFuturas.length > 0) {
-      const totalFuturo = despesasFuturas.length + receitasFuturas.length;
-      message += ` • ${totalFuturo} lançamentos futuros`;
-    }
-
-    showSuccessToast("Dashboard Atualizado!", message, 4000);
+    // Toast de sucesso removido para melhor UX
+    console.log("✅ Dashboard carregado com sucesso:", {
+      totalItems,
+      planos: dashboardData.planos.length,
+      futuro: despesasFuturas.length + receitasFuturas.length,
+    });
   } catch (error) {
     console.error("❌ Erro ao carregar dados do dashboard:", error);
-    showErrorToast("Erro", "Falha ao carregar dados. Verifique sua conexão.");
+    // Toast de erro removido para melhor UX
   } finally {
     showDashboardLoading(false);
   }
@@ -1675,7 +1644,8 @@ function processSavingsByCategory(period) {
   const categoryTotals = {};
 
   filteredPoupanca.forEach((poupanca) => {
-    const categoria = poupanca.categoria || poupanca.nome || "Poupança";
+    // Agrupa pelo nome do plano de poupança
+    const categoria = poupanca.nome || poupanca.descricao || "Poupança";
     const valor = parseFloat(poupanca.valor) || 0;
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
@@ -1692,9 +1662,14 @@ function processInvestmentsByCategory(period) {
   const categoryTotals = {};
 
   filteredInvestimentos.forEach((investimento) => {
+    // Agrupa pela descrição/nome do investimento
     const categoria =
-      investimento.categoria || investimento.tipo || "Investimentos";
-    const valor = parseFloat(investimento.valor) || 0;
+      investimento.nome || investimento.descricao || "Investimentos";
+    const valor =
+      parseFloat(investimento.valor_investido) ||
+      parseFloat(investimento.valor_atual) ||
+      parseFloat(investimento.valor) ||
+      0;
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
