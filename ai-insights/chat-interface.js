@@ -34,11 +34,20 @@ class AIInsightsInterface {
 
       console.log("🤖 AI Insights modal aberto");
 
-      // Gerar insight automático se não houver mensagens
-      if (this.chatHistory.length === 0) {
+      // Gerar insight automático se não houver mensagens E se a quota não foi excedida
+      if (this.chatHistory.length === 0 && !window.GeminiAI.quotaExceeded) {
         setTimeout(() => {
           this.generateAutomaticInsight();
         }, 1000);
+      } else if (
+        this.chatHistory.length === 0 &&
+        window.GeminiAI.quotaExceeded
+      ) {
+        // Mostrar mensagem de boas-vindas se quota foi excedida
+        this.addMessage(
+          "ai",
+          "👋 **Bem-vindo ao AI Insights!**\n\n📅 O limite diário da IA foi atingido. A funcionalidade estará disponível novamente amanhã.\n\n💡 Enquanto isso, explore seus dados através dos **gráficos** e **relatórios** do painel!"
+        );
       }
     } catch (error) {
       console.error("❌ Erro ao abrir modal:", error);
@@ -164,9 +173,13 @@ class AIInsightsInterface {
     try {
       console.log("🤖 Gerando insight automático...");
 
+      // Mostrar loading enquanto carrega dados e processa IA
+      this.addLoadingMessage();
+
       const financialData = await window.FinancialAnalyzer.getDataForAI();
 
       if (Object.keys(financialData).length === 0) {
+        this.removeLoadingMessage();
         this.addMessage(
           "ai",
           "Ainda não encontrei dados financeiros para analisar. Cadastre algumas receitas e despesas para que eu possa te dar insights personalizados! 📊"
@@ -175,13 +188,28 @@ class AIInsightsInterface {
       }
 
       const insight = await window.GeminiAI.generateInsights(financialData);
+      this.removeLoadingMessage();
       this.addMessage("ai", insight);
     } catch (error) {
       console.error("❌ Erro ao gerar insight automático:", error);
-      this.addMessage(
-        "ai",
-        "Bem-vindo! Faça uma pergunta sobre suas finanças para começarmos a análise. 💰"
-      );
+      this.removeLoadingMessage();
+
+      // Verificar se é erro de quota
+      if (
+        error.message &&
+        (error.message.includes("quota") ||
+          error.message.includes("Limite de uso diário"))
+      ) {
+        this.addMessage(
+          "ai",
+          "📅 **Limite Diário Atingido**\n\nO limite de uso da IA foi atingido por hoje. A funcionalidade estará disponível novamente amanhã.\n\n💡 Use os gráficos e relatórios do painel para explorar seus dados!"
+        );
+      } else {
+        this.addMessage(
+          "ai",
+          "Bem-vindo! Faça uma pergunta sobre suas finanças para começarmos a análise. 💰"
+        );
+      }
     }
   }
 
@@ -243,6 +271,56 @@ class AIInsightsInterface {
           messages[i].remove();
         }
       }
+    }
+  }
+
+  /**
+   * Adicionar mensagem de loading
+   */
+  addLoadingMessage() {
+    const messagesContainer = document.getElementById("aiChatMessages");
+    if (!messagesContainer) return;
+
+    // Remover loading anterior se existir
+    this.removeLoadingMessage();
+
+    const loadingElement = document.createElement("div");
+    loadingElement.className = "ai-message ai-message-ai ai-loading-message";
+    loadingElement.id = "ai-loading-msg";
+
+    const timestamp = new Date().toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    loadingElement.innerHTML = `
+      <div class="message-avatar">
+        <ion-icon name="sparkles"></ion-icon>
+      </div>
+      <div class="message-bubble">
+        <div class="message-text">
+          <div class="ai-typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p style="margin-top: 8px; color: #888; font-size: 0.85em;">Analisando seus dados financeiros...</p>
+        </div>
+        <div class="message-time">${timestamp}</div>
+      </div>
+    `;
+
+    messagesContainer.appendChild(loadingElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  /**
+   * Remover mensagem de loading
+   */
+  removeLoadingMessage() {
+    const loadingMsg = document.getElementById("ai-loading-msg");
+    if (loadingMsg) {
+      loadingMsg.remove();
     }
   }
 

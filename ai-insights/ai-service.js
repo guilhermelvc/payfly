@@ -5,9 +5,9 @@
 class GeminiAIService {
   constructor() {
     this.apiKey = "AIzaSyCSJ8E6evq0NrMTZYTA20OVtVU6GIbAOEk";
-    // Usar gemini-1.5-flash que tem quota maior (1500 req/dia vs 50 req/dia do gemini-2.5-pro)
+    // Usar gemini-1.5-flash-latest que tem quota maior (1500 req/dia vs 50 req/dia do gemini-2.5-pro)
     this.baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
     this.isProcessing = false;
 
     // Rate limiting
@@ -15,7 +15,7 @@ class GeminiAIService {
     this.minRequestInterval = 2000; // 2 segundos entre requisições
     this.requestQueue = [];
     this.isProcessingQueue = false;
-    
+
     // Quota tracking
     this.quotaExceeded = false;
     this.quotaResetTime = null;
@@ -67,7 +67,10 @@ class GeminiAIService {
       console.error("   - Stack:", error.stack);
 
       // Retornar erro mais específico
-      if (error.message.includes("quota") || error.message.includes("RESOURCE_EXHAUSTED")) {
+      if (
+        error.message.includes("quota") ||
+        error.message.includes("RESOURCE_EXHAUSTED")
+      ) {
         this.quotaExceeded = true;
         throw new Error(
           "Limite de uso diário da IA atingido. A funcionalidade estará disponível novamente amanhã. 📅"
@@ -215,7 +218,9 @@ RESPOSTA:`;
   async callGeminiAPIWithRetry(prompt, maxRetries = 3) {
     // Se quota já foi excedida, não tentar
     if (this.quotaExceeded) {
-      throw new Error("Limite de uso diário da IA atingido. Tente novamente amanhã.");
+      throw new Error(
+        "Limite de uso diário da IA atingido. Tente novamente amanhã."
+      );
     }
 
     let lastError;
