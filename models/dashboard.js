@@ -267,6 +267,11 @@ function filterDataByPeriod(data, period) {
 function processExpensesByCategory(period) {
   const filteredDespesas = filterDataByPeriod(dashboardData.despesas, period);
   const filteredPlanos = filterDataByPeriod(dashboardData.planos, period);
+  const filteredPoupanca = filterDataByPeriod(dashboardData.poupanca, period);
+  const filteredInvestimentos = filterDataByPeriod(
+    dashboardData.investimentos,
+    period
+  );
   const categoryTotals = {};
 
   // Processa despesas (incluindo futuras)
@@ -280,6 +285,24 @@ function processExpensesByCategory(period) {
   filteredPlanos.forEach((plano) => {
     const categoria = plano.categoria || "Planos";
     const valor = parseFloat(plano.valor) || 0;
+    categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
+  });
+
+  // Processa poupança
+  filteredPoupanca.forEach((poup) => {
+    const categoria = poup.tipo || "Poupança";
+    const valor = parseFloat(poup.valor) || 0;
+    categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
+  });
+
+  // Processa investimentos
+  filteredInvestimentos.forEach((inv) => {
+    const categoria = inv.tipo || "Investimentos";
+    const valor =
+      parseFloat(inv.valor_investido) ||
+      parseFloat(inv.valor_atual) ||
+      parseFloat(inv.valor) ||
+      0;
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
@@ -630,37 +653,22 @@ function updateSummaryCards(period) {
       period
     );
 
-    // Para mensal e 6 meses: apenas realizados (não incluir futuro)
-    let despesasParaCalcular, receitasParaCalcular;
-
-    if (period === "month" || period === "6months") {
-      despesasParaCalcular = filteredDespesas.filter(
-        (item) => new Date(item.data) <= now
-      );
-      receitasParaCalcular = filteredReceitas.filter(
-        (item) => new Date(item.data) <= now
-      );
-    } else {
-      // Semanal inclui futuro da semana
-      despesasParaCalcular = filteredDespesas;
-      receitasParaCalcular = filteredReceitas;
-    }
-
-    totalDespesas = despesasParaCalcular.reduce(
+    // CORREÇÃO: Calcular sempre com base nos dados filtrados sem subdivisão adicional
+    // Semanal: inclui toda a semana (passado e futuro da semana)
+    // Mensal: inclui todo o mês até hoje
+    // 6 meses: inclui últimos 6 meses até hoje
+    totalDespesas = filteredDespesas.reduce(
       (sum, item) => sum + (parseFloat(item.valor) || 0),
       0
     );
-    totalReceitas = receitasParaCalcular.reduce(
+    totalReceitas = filteredReceitas.reduce(
       (sum, item) => sum + (parseFloat(item.valor) || 0),
       0
     );
-    totalPlanos =
-      period === "week"
-        ? filteredPlanos.reduce(
-            (sum, item) => sum + (parseFloat(item.valor) || 0),
-            0
-          )
-        : 0;
+    totalPlanos = filteredPlanos.reduce(
+      (sum, item) => sum + (parseFloat(item.valor) || 0),
+      0
+    );
     saldoLiquido = totalReceitas - totalDespesas;
   }
 
@@ -706,7 +714,7 @@ function updateSummaryCards(period) {
     console.error("❌ Elemento summary-plans não encontrado!");
   }
 
-  // Calcula totais de poupança e investimentos
+  // Calcula totais de poupança e investimentos com filtro correto
   const filteredPoupanca = filterDataByPeriod(
     dashboardData.poupanca || [],
     period
@@ -722,7 +730,11 @@ function updateSummaryCards(period) {
   );
   const totalInvestimentos = filteredInvestimentos.reduce(
     (sum, item) =>
-      sum + (parseFloat(item.valor_investido) || parseFloat(item.valor) || 0),
+      sum +
+      (parseFloat(item.valor_investido) ||
+        parseFloat(item.valor_atual) ||
+        parseFloat(item.valor) ||
+        0),
     0
   );
 
@@ -1084,84 +1096,6 @@ function toggleDataset(index) {
   timelineChart.update();
 }
 
-function updateTopCategoriesTable(period) {
-  const allCategoryData = processAllDataByCategory(period);
-
-  // Combina todas as categorias (despesas + planos + receitas)
-  const categoryData = {};
-
-  // Adiciona despesas realizadas
-  Object.entries(allCategoryData.despesas).forEach(([cat, val]) => {
-    categoryData[cat] = (categoryData[cat] || 0) + val;
-  });
-
-  // Adiciona despesas futuras
-  Object.entries(allCategoryData.despesasFuturas).forEach(([cat, val]) => {
-    const catName = `${cat} (Futuro)`;
-    categoryData[catName] = (categoryData[catName] || 0) + val;
-  });
-
-  // Adiciona planos
-  Object.entries(allCategoryData.planos).forEach(([cat, val]) => {
-    const catName = `${cat} (Planejado)`;
-    categoryData[catName] = (categoryData[catName] || 0) + val;
-  });
-  const total = Object.values(categoryData).reduce((sum, val) => sum + val, 0);
-
-  // Ordena por valor
-  const sortedCategories = Object.entries(categoryData)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 5); // Top 5
-
-  const tbody = document.getElementById("top-categories-body");
-  tbody.innerHTML = "";
-
-  sortedCategories.forEach(([categoria, valor]) => {
-    const percentage = total > 0 ? ((valor / total) * 100).toFixed(1) : "0.0";
-
-    // Conta transações baseando-se no tipo da categoria
-    let transactions = 0;
-
-    if (categoria.includes("(Futuro)")) {
-      // Despesas futuras
-      const baseCat = categoria.replace(" (Futuro)", "");
-      const now = new Date();
-      transactions = dashboardData.despesas.filter(
-        (d) =>
-          (d.categoria || "Outros") === baseCat &&
-          new Date(d.data) > now &&
-          filterDataByPeriod([d], period).length > 0
-      ).length;
-    } else if (categoria.includes("(Planejado)")) {
-      // Planos
-      const baseCat = categoria.replace(" (Planejado)", "");
-      transactions = dashboardData.planos.filter(
-        (p) =>
-          (p.categoria || "Planejamento") === baseCat &&
-          filterDataByPeriod([p], period).length > 0
-      ).length;
-    } else {
-      // Despesas normais
-      const now = new Date();
-      transactions = dashboardData.despesas.filter(
-        (d) =>
-          (d.categoria || "Outros") === categoria &&
-          new Date(d.data) <= now &&
-          filterDataByPeriod([d], period).length > 0
-      ).length;
-    }
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${categoria}</td>
-      <td>R$ ${valor.toFixed(2)}</td>
-      <td>${percentage}%</td>
-      <td>${transactions}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
 // ================ Controles de UI ================
 
 function showDashboardLoading(show) {
@@ -1478,11 +1412,6 @@ function updateDashboard() {
       updateTimelineChart(period);
       showChartLoading("timelineChart", false);
     }, 600);
-
-    setTimeout(() => {
-      console.log("📋 Atualizando tabela...");
-      updateTopCategoriesTable(period);
-    }, 900);
 
     console.log("✅ Dashboard atualizado para período:", period);
   } catch (error) {
