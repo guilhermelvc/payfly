@@ -121,6 +121,9 @@ body {
   line-height: 60px;
   text-align: start;
   white-space: nowrap;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Oculta títulos quando sidebar encolhido */
@@ -1189,11 +1192,21 @@ table thead th:not(:last-child)::after {
     width: 100%;
     left: -100%;
     z-index: 10002; /* Mais alto que as tabelas */
+    background: var(
+      --black1
+    ) !important; /* Mantém o fundo preto como no desktop */
   }
   .navigation.active {
     width: 100%;
     left: 0;
     z-index: 10002; /* Garantir que fique por cima */
+  }
+
+  /* Mostrar títulos dos itens do menu em mobile */
+  .navigation ul li a .title {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   /* Main área para celulares */
@@ -1208,9 +1221,9 @@ table thead th:not(:last-child)::after {
   /* Toggle otimizado para mobile - SEMPRE VISÍVEL */
   .toggle {
     z-index: 10003 !important; /* Mais alto que sidebar */
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     width: 45px;
     height: 45px;
     font-size: 1.8rem;
@@ -1220,11 +1233,14 @@ table thead th:not(:last-child)::after {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    color: var(--black1) !important; /* Ícone preto quando fechado */
   }
 
   .main.active .toggle {
-    color: #fff !important;
-    background: rgba(0, 0, 0, 0.8) !important;
+    color: #fff !important; /* Ícone branco quando aberto */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
     position: fixed !important;
     right: 15px;
     left: initial !important;
@@ -1315,6 +1331,10 @@ table thead th:not(:last-child)::after {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--black1) !important; /* Ícone preto quando fechado */
   }
 
   .main.active .toggle {
@@ -1326,6 +1346,11 @@ table thead th:not(:last-child)::after {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #fff !important; /* Ícone branco quando aberto */
+    color: var(--black1) !important; /* Ícone preto quando aberto */
   }
 
   .topbar {
@@ -1378,6 +1403,10 @@ table thead th:not(:last-child)::after {
     opacity: 1 !important;
     pointer-events: auto !important;
     transition: all 0.3s ease !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--black1) !important; /* Ícone preto quando fechado */
   }
 
   .main.active .toggle {
@@ -1388,6 +1417,12 @@ table thead th:not(:last-child)::after {
     opacity: 1 !important;
     pointer-events: auto !important;
     transition: all 0.3s ease !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #fff !important; /* Ícone branco quando aberto */
+    border-radius: 8px !important;
+    color: var(--black1) !important; /* Ícone preto quando aberto */
   }
 
   /* Garantir que sidebar nunca esconda toggle */

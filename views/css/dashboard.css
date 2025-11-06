@@ -632,3 +632,315 @@ html {
 .modal #form {
   padding: 20px;
 }
+
+/* ================ RESPONSIVIDADE ================= */
+
+/* Tablets e dispositivos médios (até 992px) */
+@media (max-width: 992px) {
+  .dashboard-container {
+    padding: 20px 15px;
+    margin: 10px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chart-container {
+    min-height: 300px;
+  }
+}
+
+/* Smartphones (até 768px) */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 15px 10px;
+    margin: 5px;
+    border-radius: 10px;
+  }
+
+  .dashboard-title h2 {
+    font-size: 22px;
+  }
+
+  .period-filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .period-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .summary-card {
+    padding: 15px;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .card-info h3 {
+    font-size: 14px;
+  }
+
+  .card-info p {
+    font-size: 22px;
+  }
+
+  .charts-grid {
+    gap: 15px;
+  }
+
+  .chart-container {
+    padding: 15px;
+    min-height: 250px;
+  }
+
+  .chart-header h3 {
+    font-size: 16px;
+  }
+
+  /* Botões de ação */
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* Cards */
+  .card,
+  .card2 {
+    padding: 15px;
+  }
+
+  .cardHeader h2 {
+    font-size: 18px;
+  }
+
+  /* Tabelas */
+  table {
+    font-size: 12px;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  table td:last-child {
+    border-bottom: none;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 10px;
+    color: #2a2185;
+  }
+
+  /* Toast Container */
+  #toast-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
+}
+
+/* Smartphones pequenos (até 480px) */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 10px 8px;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .dashboard-title h2 {
+    font-size: 20px;
+  }
+
+  .period-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .summary-card {
+    padding: 12px;
+  }
+
+  .card-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .card-info h3 {
+    font-size: 12px;
+  }
+
+  .card-info p {
+    font-size: 20px;
+  }
+
+  /* Gráficos responsivos - sem scroll horizontal */
+  .dashboard-charts {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0;
+  }
+
+  .chart-container {
+    padding: 15px 10px;
+    min-height: 250px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .chart-header h3 {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .chart-content {
+    height: 220px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .chart-content canvas {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Centralizar botão PDF no mobile */
+  .dashboard-title {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .pdf-btn {
+    width: 100%;
+    max-width: 250px;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .period-filters {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Botões menores */
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  /* Modal responsivo */
+  .modal {
+    margin: 10px;
+    max-width: 95vw;
+  }
+
+  .modal-header h2 {
+    font-size: 18px;
+  }
+
+  .modal-body {
+    padding: 15px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Dispositivos muito pequenos (até 360px) */
+@media (max-width: 360px) {
+  .dashboard-title h2 {
+    font-size: 18px;
+  }
+
+  .period-filters {
+    flex-wrap: wrap;
+  }
+
+  .period-btn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .card-info p {
+    font-size: 18px;
+  }
+
+  .chart-header h3 {
+    font-size: 13px;
+  }
+
+  .chart-content {
+    height: 200px;
+  }
+
+  .pdf-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}

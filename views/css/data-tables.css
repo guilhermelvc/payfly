@@ -428,31 +428,182 @@ tbody {
     flex-direction: column;
     gap: 15px;
   }
+
+  .cardHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .cardHeader .btn-primary {
+    width: 100%;
+  }
 }
 
-@media (max-width: 576px) {
+/* Tablets (até 768px) */
+@media (max-width: 768px) {
+  .cardHeader h2 {
+    font-size: 20px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+
+  .table-filters {
+    gap: 10px;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  /* Tabelas em formato de cards para mobile */
   .table-container {
-    font-size: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .receitas-table,
+  #data-table {
+    min-width: 600px; /* Permite scroll horizontal */
   }
 
   .receitas-table th,
-  .receitas-table td {
-    padding: 6px;
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+}
+
+/* Smartphones (até 576px) */
+@media (max-width: 576px) {
+  /* Header do card */
+  .cardHeader {
+    padding: 15px;
   }
 
+  .cardHeader h2 {
+    font-size: 18px;
+  }
+
+  /* Botões */
+  .btn-primary,
+  .btn-secondary {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Container da tabela */
+  .table-container {
+    font-size: 12px;
+    max-height: 500px;
+  }
+
+  /* Tabela */
+  .receitas-table,
+  #data-table {
+    min-width: 500px;
+  }
+
+  .receitas-table th,
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+
+  /* Ações da tabela */
   .table-actions {
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
   }
 
   .table-actions button {
     width: 100%;
     font-size: 10px;
-    padding: 4px 6px;
+    padding: 5px 8px;
   }
 
+  /* Paginação */
   .pagination-controls {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 5px;
+  }
+
+  .pagination-controls button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Filtros */
+  .table-filters {
+    padding: 10px;
+  }
+
+  .filter-group {
+    margin-bottom: 8px;
+  }
+
+  .filter-group label {
+    font-size: 12px;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    padding: 6px;
+    font-size: 12px;
+  }
+}
+
+/* Smartphones pequenos (até 400px) */
+@media (max-width: 400px) {
+  .cardHeader {
+    padding: 12px;
+  }
+
+  .cardHeader h2 {
+    font-size: 16px;
+  }
+
+  .table-container {
+    font-size: 11px;
+    max-height: 450px;
+  }
+
+  .receitas-table,
+  #data-table {
+    min-width: 450px;
+  }
+
+  .receitas-table th,
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+
+  .table-actions button {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
+
+  .pagination-controls button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  /* Info da paginação menor */
+  .pagination-info span {
+    font-size: 11px;
   }
 }

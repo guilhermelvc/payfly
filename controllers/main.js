@@ -17,26 +17,64 @@ let main = document.querySelector(".main");
 
 // Inicializar sidebar baseado no localStorage (padrão: fechado)
 document.addEventListener("DOMContentLoaded", function () {
-  const sidebarState = localStorage.getItem("sidebarState");
+  const isMobile = window.innerWidth <= 480;
 
-  // Se não houver estado salvo, iniciar fechado (sem classe active)
-  if (sidebarState === "open") {
-    navigation.classList.add("active");
-    main.classList.add("active");
-  } else {
-    // Garante que inicia fechado
+  if (isMobile) {
+    // Em mobile, sempre iniciar fechado
     navigation.classList.remove("active");
     main.classList.remove("active");
+  } else {
+    // Em desktop, usar localStorage
+    const sidebarState = localStorage.getItem("sidebarState");
+    if (sidebarState === "open") {
+      navigation.classList.add("active");
+      main.classList.add("active");
+    } else {
+      navigation.classList.remove("active");
+      main.classList.remove("active");
+    }
   }
+
+  // Fechar sidebar ao clicar em links de navegação no mobile
+  const navigationLinks = document.querySelectorAll(".navigation ul li a");
+
+  navigationLinks.forEach((link) => {
+    link.addEventListener("click", function () {
+      const isMobile = window.innerWidth <= 480;
+
+      // Fechar sidebar apenas em mobile
+      if (isMobile && navigation.classList.contains("active")) {
+        navigation.classList.remove("active");
+        main.classList.remove("active");
+      }
+    });
+  });
+
+  // Fechar sidebar ao clicar no overlay em mobile
+  main.addEventListener("click", function (e) {
+    const isMobile = window.innerWidth <= 480;
+
+    // Se está em mobile e sidebar está aberta
+    if (isMobile && main.classList.contains("active")) {
+      // Se clicou no overlay (área escura)
+      if (e.target === main || e.target.classList.contains("main")) {
+        navigation.classList.remove("active");
+        main.classList.remove("active");
+      }
+    }
+  });
 });
 
 toggle.onclick = function () {
   navigation.classList.toggle("active");
   main.classList.toggle("active");
 
-  // Salvar estado no localStorage
-  const isOpen = navigation.classList.contains("active");
-  localStorage.setItem("sidebarState", isOpen ? "open" : "closed");
+  // Salvar estado no localStorage apenas para desktop
+  const isMobile = window.innerWidth <= 480;
+  if (!isMobile) {
+    const isOpen = navigation.classList.contains("active");
+    localStorage.setItem("sidebarState", isOpen ? "open" : "closed");
+  }
 };
 
 // Sistema de throttling para evitar múltiplas chamadas
