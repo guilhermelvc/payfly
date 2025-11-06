@@ -89,7 +89,7 @@ function formatarData(date) {
 
 function updateReceitaDisplay() {
   const el = document.getElementById("totalReceitaDisplay");
-  if (el) el.textContent = `R$ ${totalReceita.toFixed(2)}`;
+  if (el) el.textContent = `R$ ${totalReceitaGlobal.toFixed(2)}`;
 }
 
 async function loadReceitasFromSupabase() {
@@ -143,7 +143,7 @@ async function loadReceitasFromSupabase() {
     totalReceitaGlobal = 0;
     (data || []).forEach((r) => {
       addReceitaToTable(r, r.id);
-      totalReceita += Number(r.valor || 0);
+      totalReceitaGlobal += Number(r.valor || 0);
     });
 
     updateReceitaDisplay();
@@ -163,7 +163,7 @@ async function removeReceitaFromSupabase(receitaId, receitaValue) {
     if (error) throw error;
     const row = document.getElementById(`row-${receitaId}`);
     if (row) row.remove();
-    totalReceita -= receitaValue;
+    totalReceitaGlobal -= receitaValue;
     updateReceitaDisplay();
     showSuccessToast("Sucesso!", "Receita excluída com sucesso!");
   } catch (err) {

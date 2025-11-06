@@ -16,133 +16,6 @@ let timelineChart = null;
 
 // ================ Carregamento de Dados ================
 
-// Função para carregar dados de demonstração
-function loadDemoData() {
-  console.log("🧪 Carregando dados de demonstração...");
-
-  // Dados fictícios para demonstração
-  const hoje = new Date();
-  const semanaPassada = new Date(hoje.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-  dashboardData.despesas = [
-    {
-      id: 1,
-      descricao: "Gasolina",
-      valor: 150.0,
-      categoria: "Transporte",
-      data: hoje.toISOString().split("T")[0],
-    },
-    {
-      id: 2,
-      descricao: "Supermercado",
-      valor: 280.5,
-      categoria: "Alimentação",
-      data: semanaPassada.toISOString().split("T")[0],
-    },
-    {
-      id: 3,
-      descricao: "Academia",
-      valor: 80.0,
-      categoria: "Saúde",
-      data: hoje.toISOString().split("T")[0],
-    },
-    {
-      id: 4,
-      descricao: "Restaurante",
-      valor: 45.0,
-      categoria: "Alimentação",
-      data: semanaPassada.toISOString().split("T")[0],
-    },
-  ];
-
-  dashboardData.receitas = [
-    {
-      id: 1,
-      descricao: "Salário",
-      valor: 3500.0,
-      categoria: "Trabalho",
-      data: hoje.toISOString().split("T")[0],
-    },
-    {
-      id: 2,
-      descricao: "Freelance",
-      valor: 800.0,
-      categoria: "Extra",
-      data: semanaPassada.toISOString().split("T")[0],
-    },
-  ];
-
-  dashboardData.planos = [
-    {
-      id: 1,
-      descricao: "Viagem para Europa",
-      valor: 15000.0,
-      categoria: "Viagem",
-      data: new Date(hoje.getTime() + 365 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0], // +1 ano
-    },
-    {
-      id: 2,
-      descricao: "Carro Novo",
-      valor: 45000.0,
-      categoria: "Veículo",
-      data: new Date(hoje.getTime() + 730 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0], // +2 anos
-    },
-  ];
-
-  dashboardData.poupanca = [
-    {
-      id: 1,
-      nome: "Viagem para Europa",
-      valor: 1200.0,
-      tipo: "Meta de Viagem",
-      data: hoje.toISOString().split("T")[0],
-    },
-    {
-      id: 2,
-      nome: "Reserva de Emergência",
-      valor: 2500.0,
-      tipo: "Emergência",
-      data: semanaPassada.toISOString().split("T")[0],
-    },
-  ];
-
-  dashboardData.investimentos = [
-    {
-      id: 1,
-      nome: "Tesouro IPCA+",
-      valor_investido: 5000.0,
-      valor_atual: 5250.0,
-      tipo: "Tesouro Direto",
-      data: hoje.toISOString().split("T")[0],
-    },
-    {
-      id: 2,
-      nome: "CDB Banco XYZ",
-      valor_investido: 3000.0,
-      valor_atual: 3120.0,
-      tipo: "CDB",
-      data: semanaPassada.toISOString().split("T")[0],
-    },
-  ];
-
-  console.log("🧪 Dados demo carregados:", {
-    despesas: dashboardData.despesas.length,
-    receitas: dashboardData.receitas.length,
-    planos: dashboardData.planos.length,
-    poupanca: dashboardData.poupanca.length,
-    investimentos: dashboardData.investimentos.length,
-  });
-
-  // Atualiza dashboard
-  updateDashboard();
-
-  showDashboardLoading(false);
-}
-
 async function loadDashboardData() {
   try {
     showDashboardLoading(true);
@@ -189,13 +62,28 @@ async function loadDashboardData() {
     dashboardData.poupanca = poupancaResult.data || [];
     dashboardData.investimentos = investimentosResult.data || [];
 
-    console.log("📊 Dados carregados:", {
+    console.log("📊 Dados carregados do Supabase:", {
       despesas: dashboardData.despesas.length,
       receitas: dashboardData.receitas.length,
       planos: dashboardData.planos.length,
       poupanca: dashboardData.poupanca.length,
       investimentos: dashboardData.investimentos.length,
     });
+
+    // Log detalhado das receitas para debug
+    if (dashboardData.receitas.length > 0) {
+      console.log(
+        "💰 RECEITAS CARREGADAS DO BANCO:",
+        dashboardData.receitas.map((r) => ({
+          descricao: r.descricao,
+          valor: r.valor,
+          data: r.data,
+          categoria: r.categoria,
+        }))
+      );
+    } else {
+      console.log("✅ Nenhuma receita encontrada no banco");
+    }
 
     // Atualiza dashboard
     updateDashboard();
@@ -271,14 +159,31 @@ function getDateRange(period) {
 function filterDataByPeriod(data, period) {
   const { startDate, endDate } = getDateRange(period);
 
-  return data.filter((item) => {
+  console.log(`🔍 filterDataByPeriod (${period}):`, {
+    range: {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    },
+    totalItems: data?.length || 0,
+  });
+
+  const filtered = data.filter((item) => {
     const itemDate = new Date(item.data || item.criado_em);
     return itemDate >= startDate && itemDate <= endDate;
   });
+
+  console.log(`🔍 Filtrados: ${filtered.length} itens`);
+  return filtered;
 }
 
 function processExpensesByCategory(period) {
   const filteredDespesas = filterDataByPeriod(dashboardData.despesas, period);
+  console.log(`💸 processExpensesByCategory (${period}):`, {
+    totalDespesas: dashboardData.despesas?.length || 0,
+    filtradas: filteredDespesas.length,
+    amostra: filteredDespesas.slice(0, 3),
+  });
+
   const categoryTotals = {};
 
   // Processa apenas despesas (sem planos, poupança ou investimentos)
@@ -288,6 +193,7 @@ function processExpensesByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
+  console.log(`💸 Resultado processExpensesByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
@@ -586,17 +492,21 @@ function updateSummaryCards(period) {
   console.log("💰 Atualizando cards de resumo para período:", period);
 
   let totalDespesas, totalReceitas, totalPlanos, saldoLiquido;
-  const now = new Date();
 
   if (period === "futuros") {
-    // Filtro de lançamentos futuros - apenas transações e planos futuros
-    const despesasFuturas = (dashboardData.despesas || []).filter(
-      (item) => new Date(item.data) > now
+    // Filtro de lançamentos futuros - usa a mesma lógica dos gráficos para TODOS os tipos
+    const despesasFuturas = filterDataByPeriod(
+      dashboardData.despesas || [],
+      period
     );
-    const receitasFuturas = (dashboardData.receitas || []).filter(
-      (item) => new Date(item.data) > now
+    const receitasFuturas = filterDataByPeriod(
+      dashboardData.receitas || [],
+      period
     );
-    const todosPlanos = dashboardData.planos || [];
+    const planosFuturos = filterDataByPeriod(
+      dashboardData.planos || [],
+      period
+    );
 
     totalDespesas = despesasFuturas.reduce(
       (sum, item) => sum + (parseFloat(item.valor) || 0),
@@ -606,7 +516,7 @@ function updateSummaryCards(period) {
       (sum, item) => sum + (parseFloat(item.valor) || 0),
       0
     );
-    totalPlanos = todosPlanos.reduce(
+    totalPlanos = planosFuturos.reduce(
       (sum, item) => sum + (parseFloat(item.valor) || 0),
       0
     );
@@ -615,7 +525,7 @@ function updateSummaryCards(period) {
     console.log("🔮 Lançamentos futuros calculados:", {
       despesasFuturas: despesasFuturas.length,
       receitasFuturas: receitasFuturas.length,
-      planos: todosPlanos.length,
+      planosFuturos: planosFuturos.length,
       totalDespesas,
       totalReceitas,
       totalPlanos,
@@ -635,10 +545,18 @@ function updateSummaryCards(period) {
       period
     );
 
-    // CORREÇÃO: Calcular sempre com base nos dados filtrados sem subdivisão adicional
-    // Semanal: inclui toda a semana (passado e futuro da semana)
-    // Mensal: inclui todo o mês até hoje
-    // 6 meses: inclui últimos 6 meses até hoje
+    // Log detalhado para debug
+    console.log(`📊 Dados filtrados para ${period}:`, {
+      totalReceitasDB: dashboardData.receitas?.length || 0,
+      receitasFiltradas: filteredReceitas.length,
+      receitasDetalhadas: filteredReceitas.map((r) => ({
+        descricao: r.descricao,
+        valor: r.valor,
+        data: r.data,
+      })),
+    });
+
+    // Calcular sempre com base nos dados filtrados
     totalDespesas = filteredDespesas.reduce(
       (sum, item) => sum + (parseFloat(item.valor) || 0),
       0
@@ -773,98 +691,6 @@ function getPeriodText(period) {
 }
 
 // ================ Gráficos ================
-
-function updateCategoryChart(period) {
-  // Verifica se Chart.js está disponível
-  if (typeof Chart === "undefined") {
-    console.warn("⚠️ Chart.js não disponível - pulando gráfico de categorias");
-    const canvas = document.getElementById("categoryChart");
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#666";
-      ctx.textAlign = "center";
-      ctx.font = "16px Arial";
-      ctx.fillText("Gráfico indisponível", canvas.width / 2, canvas.height / 2);
-      ctx.font = "12px Arial";
-      ctx.fillText(
-        "Chart.js não carregado",
-        canvas.width / 2,
-        canvas.height / 2 + 20
-      );
-    }
-    return;
-  }
-
-  const categoryData = processExpensesByCategory(period);
-  const categories = Object.keys(categoryData);
-  const values = Object.values(categoryData);
-
-  const canvas = document.getElementById("categoryChart");
-  if (!canvas) {
-    console.error("❌ Canvas categoryChart não encontrado!");
-    return;
-  }
-
-  const ctx = canvas.getContext("2d");
-
-  if (categoryChart) {
-    categoryChart.destroy();
-  }
-
-  categoryChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: categories,
-      datasets: [
-        {
-          data: values,
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#9966FF",
-            "#FF9F40",
-            "#FF6384",
-            "#C9CBCF",
-          ],
-          borderWidth: 2,
-          borderColor: "#fff",
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          top: 10,
-          bottom: 10,
-          left: 10,
-          right: 10,
-        },
-      },
-      plugins: {
-        legend: {
-          position: "bottom",
-          align: "center",
-          labels: {
-            padding: 20,
-            usePointStyle: true,
-            textAlign: "center",
-            boxWidth: 12,
-            boxHeight: 12,
-            font: {
-              size: 12,
-              weight: "500",
-            },
-          },
-        },
-      },
-    },
-  });
-}
 
 function updateTimelineChart(period) {
   // Verifica se Chart.js está disponível
@@ -1495,14 +1321,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("✅ Dashboard container encontrado!");
 
-  // Carrega dados de demonstração imediatamente para debug
-  try {
-    loadDemoData();
-    console.log("✅ Dados de demonstração carregados com sucesso!");
-  } catch (error) {
-    console.error("❌ Erro ao carregar dados demo:", error);
-  }
-
   // Aguarda Chart.js carregar antes de inicializar
   waitForChart(() => {
     console.log("📊 Iniciando dashboard após Chart.js...");
@@ -1542,10 +1360,8 @@ async function loadDashboardDataWithToast() {
     if (!user) {
       console.warn("⚠️ Usuário não autenticado");
       // Toast removido para melhor UX
-
-      // Mesmo sem usuário, vamos mostrar dados fictícios para teste
-      console.log("🧪 Carregando dados de demonstração...");
-      loadDemoData();
+      // Não carrega dados demo - aguarda autenticação
+      showDashboardLoading(false);
       return;
     }
 
@@ -1627,6 +1443,12 @@ async function loadDashboardDataWithToast() {
 // Função para processar dados de receitas por categoria
 function processIncomeByCategory(period) {
   const filteredReceitas = filterDataByPeriod(dashboardData.receitas, period);
+  console.log(`💰 processIncomeByCategory (${period}):`, {
+    totalReceitas: dashboardData.receitas?.length || 0,
+    filtradas: filteredReceitas.length,
+    amostra: filteredReceitas.slice(0, 3),
+  });
+
   const categoryTotals = {};
 
   filteredReceitas.forEach((receita) => {
@@ -1635,12 +1457,19 @@ function processIncomeByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
+  console.log(`💰 Resultado processIncomeByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
 // Função para processar dados de poupança por categoria
 function processSavingsByCategory(period) {
   const filteredPoupanca = filterDataByPeriod(dashboardData.poupanca, period);
+  console.log(`🏦 processSavingsByCategory (${period}):`, {
+    totalPoupanca: dashboardData.poupanca?.length || 0,
+    filtradas: filteredPoupanca.length,
+    amostra: filteredPoupanca.slice(0, 3),
+  });
+
   const categoryTotals = {};
 
   filteredPoupanca.forEach((poupanca) => {
@@ -1650,6 +1479,7 @@ function processSavingsByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
+  console.log(`🏦 Resultado processSavingsByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
@@ -1659,6 +1489,12 @@ function processInvestmentsByCategory(period) {
     dashboardData.investimentos,
     period
   );
+  console.log(`📈 processInvestmentsByCategory (${period}):`, {
+    totalInvestimentos: dashboardData.investimentos?.length || 0,
+    filtrados: filteredInvestimentos.length,
+    amostra: filteredInvestimentos.slice(0, 3),
+  });
+
   const categoryTotals = {};
 
   filteredInvestimentos.forEach((investimento) => {
@@ -1673,12 +1509,19 @@ function processInvestmentsByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
+  console.log(`📈 Resultado processInvestmentsByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
 // Função para processar dados de planos por categoria
 function processPlansByCategory(period) {
   const filteredPlanos = filterDataByPeriod(dashboardData.planos, period);
+  console.log(`📋 processPlansByCategory (${period}):`, {
+    totalPlanos: dashboardData.planos?.length || 0,
+    filtrados: filteredPlanos.length,
+    amostra: filteredPlanos.slice(0, 3),
+  });
+
   const categoryTotals = {};
 
   filteredPlanos.forEach((plano) => {
@@ -1687,11 +1530,30 @@ function processPlansByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
+  console.log(`📋 Resultado processPlansByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
 // Função principal para o sistema de gráfico interativo
 function updateCategoryChart(chartContext) {
+  // Compatibilidade: se receber apenas string (period), usar tipo 'expense' padrão
+  if (typeof chartContext === "string") {
+    const period = chartContext;
+    chartContext = {
+      type: "expense",
+      period: period,
+      config: { description: "Despesas por categoria" },
+      colors: [
+        "#FF6384",
+        "#36A2EB",
+        "#FFCE56",
+        "#4BC0C0",
+        "#9966FF",
+        "#FF9F40",
+      ],
+    };
+  }
+
   console.log(`🎯 Atualizando gráfico interativo:`, chartContext);
 
   // Verifica se Chart.js está disponível
@@ -1754,8 +1616,15 @@ function updateCategoryChart(chartContext) {
   const categories = Object.keys(categoryData);
   const values = Object.values(categoryData);
 
+  console.log(`📊 Dados do gráfico para ${type} (${period}):`, {
+    categorias: categories.length,
+    valores: values,
+    categoryData,
+  });
+
   // Se não há dados, mostra mensagem
   if (categories.length === 0 || values.every((v) => v === 0)) {
+    console.log(`⚠️ Nenhum dado para exibir no gráfico ${type} (${period})`);
     const canvas = document.getElementById("categoryChart");
     if (canvas) {
       const ctx = canvas.getContext("2d");
