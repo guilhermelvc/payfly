@@ -885,7 +885,15 @@ function formatCurrency(value) {
 }
 
 function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString("pt-BR");
+  try {
+    // Corrige problema de timezone: força interpretação como data local
+    const dateStr = dateString.split("T")[0]; // Pega só a parte da data (YYYY-MM-DD)
+    const [year, month, day] = dateStr.split("-");
+    const localDate = new Date(year, month - 1, day); // Meses são 0-indexed
+    return localDate.toLocaleDateString("pt-BR");
+  } catch (e) {
+    return dateString;
+  }
 }
 
 // Toast function removed - now using standardized toast system

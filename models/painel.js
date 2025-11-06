@@ -21,7 +21,15 @@ function updateCardValues() {
 
 // Função para formatar a data
 function formatarData(date) {
-  return new Date(date).toLocaleDateString("pt-BR");
+  try {
+    // Corrige problema de timezone: força interpretação como data local
+    const dateStr = date.split("T")[0]; // Pega só a parte da data (YYYY-MM-DD)
+    const [year, month, day] = dateStr.split("-");
+    const localDate = new Date(year, month - 1, day); // Meses são 0-indexed
+    return localDate.toLocaleDateString("pt-BR");
+  } catch (e) {
+    return date;
+  }
 }
 
 // Função para calcular o status de uma receita, despesa ou plano

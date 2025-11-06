@@ -20,8 +20,11 @@ const Modal = {
 // Format date helper
 function formatarData(date) {
   try {
-    const dateObj = new Date(date);
-    const formatted = dateObj.toLocaleDateString("pt-BR");
+    // Corrige problema de timezone: força interpretação como data local
+    const dateStr = date.split("T")[0]; // Pega só a parte da data (YYYY-MM-DD)
+    const [year, month, day] = dateStr.split("-");
+    const localDate = new Date(year, month - 1, day); // Meses são 0-indexed
+    const formatted = localDate.toLocaleDateString("pt-BR");
 
     // Debug: Log da conversão de data
     console.log(`📅 formatarData - Input: "${date}" → Output: "${formatted}"`);

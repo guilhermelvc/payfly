@@ -735,12 +735,15 @@ function updateTimelineChart(period) {
     (date) => timelineData[date].receitasFuturas || 0
   );
 
-  const labels = dates.map((date) =>
-    new Date(date).toLocaleDateString("pt-BR", {
+  const labels = dates.map((date) => {
+    // Corrige problema de timezone para labels
+    const [year, month, day] = date.split("-");
+    const localDate = new Date(year, month - 1, day);
+    return localDate.toLocaleDateString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
-    })
-  );
+    });
+  });
 
   const ctx = document.getElementById("timelineChart").getContext("2d");
 
