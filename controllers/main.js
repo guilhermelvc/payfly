@@ -15,9 +15,28 @@ let toggle = document.querySelector(".toggle");
 let navigation = document.querySelector(".navigation");
 let main = document.querySelector(".main");
 
+// Inicializar sidebar baseado no localStorage (padrão: fechado)
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarState = localStorage.getItem("sidebarState");
+
+  // Se não houver estado salvo, iniciar fechado (sem classe active)
+  if (sidebarState === "open") {
+    navigation.classList.add("active");
+    main.classList.add("active");
+  } else {
+    // Garante que inicia fechado
+    navigation.classList.remove("active");
+    main.classList.remove("active");
+  }
+});
+
 toggle.onclick = function () {
   navigation.classList.toggle("active");
   main.classList.toggle("active");
+
+  // Salvar estado no localStorage
+  const isOpen = navigation.classList.contains("active");
+  localStorage.setItem("sidebarState", isOpen ? "open" : "closed");
 };
 
 // Sistema de throttling para evitar múltiplas chamadas
