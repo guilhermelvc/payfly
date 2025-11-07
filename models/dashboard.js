@@ -324,7 +324,8 @@ function processTimelineData(period) {
 
   // Processa despesas
   filteredDespesas.forEach((despesa) => {
-    const date = new Date(despesa.data || despesa.criado_em).toDateString();
+    const dateObj = new Date(despesa.data || despesa.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     const isLancamentoFuturo = new Date(despesa.data) > now;
 
     if (!timelineData[date]) {
@@ -348,7 +349,8 @@ function processTimelineData(period) {
 
   // Processa receitas
   filteredReceitas.forEach((receita) => {
-    const date = new Date(receita.data || receita.criado_em).toDateString();
+    const dateObj = new Date(receita.data || receita.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     const isLancamentoFuturo = new Date(receita.data) > now;
 
     if (!timelineData[date]) {
@@ -372,7 +374,8 @@ function processTimelineData(period) {
 
   // Processa planos (sempre considerados como planejamento futuro)
   filteredPlanos.forEach((plano) => {
-    const date = new Date(plano.data || plano.criado_em).toDateString();
+    const dateObj = new Date(plano.data || plano.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     if (!timelineData[date]) {
       timelineData[date] = {
         despesas: 0,
@@ -389,7 +392,8 @@ function processTimelineData(period) {
 
   // Processa poupança
   filteredPoupanca.forEach((poup) => {
-    const date = new Date(poup.data || poup.criado_em).toDateString();
+    const dateObj = new Date(poup.data || poup.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     if (!timelineData[date]) {
       timelineData[date] = {
         despesas: 0,
@@ -406,7 +410,8 @@ function processTimelineData(period) {
 
   // Processa investimentos
   filteredInvestimentos.forEach((inv) => {
-    const date = new Date(inv.data || inv.criado_em).toDateString();
+    const dateObj = new Date(inv.data || inv.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     if (!timelineData[date]) {
       timelineData[date] = {
         despesas: 0,
@@ -434,7 +439,7 @@ function processFutureTimelineData() {
   (dashboardData.despesas || []).forEach((despesa) => {
     const dataItem = new Date(despesa.data);
     if (dataItem > now) {
-      const date = dataItem.toDateString();
+      const date = dataItem.toISOString().split("T")[0]; // Formato YYYY-MM-DD
       if (!timelineData[date]) {
         timelineData[date] = {
           despesas: 0,
@@ -452,7 +457,7 @@ function processFutureTimelineData() {
   (dashboardData.receitas || []).forEach((receita) => {
     const dataItem = new Date(receita.data);
     if (dataItem > now) {
-      const date = dataItem.toDateString();
+      const date = dataItem.toISOString().split("T")[0]; // Formato YYYY-MM-DD
       if (!timelineData[date]) {
         timelineData[date] = {
           despesas: 0,
@@ -468,7 +473,8 @@ function processFutureTimelineData() {
 
   // Processa todos os planos (sempre são planejamentos futuros)
   (dashboardData.planos || []).forEach((plano) => {
-    const date = new Date(plano.data || plano.criado_em).toDateString();
+    const dateObj = new Date(plano.data || plano.criado_em);
+    const date = dateObj.toISOString().split("T")[0]; // Formato YYYY-MM-DD
     if (!timelineData[date]) {
       timelineData[date] = {
         despesas: 0,
@@ -865,29 +871,29 @@ function createCustomLegend() {
   const dashedDatasets = datasets.slice(3, 6);
 
   legendContainer.innerHTML = `
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0; padding: 8px 5px; background: transparent; width: 100%;">
+    <div class="timeline-legend-container" style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0; padding: 8px 5px; background: transparent; width: 100%;">
       <!-- Linha 1: Linhas Contínuas -->
-      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 100%;">
+      <div class="timeline-legend-row" style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 100%;">
         ${continuousDatasets
           .map(
             (dataset, index) => `
-          <div onclick="toggleDataset(${index})" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
+          <div onclick="toggleDataset(${index})" class="timeline-legend-item" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
             <div style="width: 16px; height: 2px; background-color: ${dataset.borderColor}; margin-right: 5px; border-radius: 1px;"></div>
-            <span style="white-space: nowrap; color: #333;">${dataset.label}</span>
+            <span class="timeline-legend-label" style="white-space: nowrap; color: #333;">${dataset.label}</span>
           </div>
         `
           )
           .join("")}
       </div>
       <!-- Linha 2: Linhas Pontilhadas -->
-      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 100%;">
+      <div class="timeline-legend-row" style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 100%;">
         ${dashedDatasets
           .map((dataset, index) => {
             const actualIndex = index + 3;
             return `
-          <div onclick="toggleDataset(${actualIndex})" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
+          <div onclick="toggleDataset(${actualIndex})" class="timeline-legend-item" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
             <div style="width: 16px; height: 2px; background: linear-gradient(to right, ${dataset.borderColor} 60%, transparent 60%); background-size: 5px 2px; margin-right: 5px; border-radius: 1px;"></div>
-            <span style="white-space: nowrap; color: #333;">${dataset.label}</span>
+            <span class="timeline-legend-label" style="white-space: nowrap; color: #333;">${dataset.label}</span>
           </div>
         `;
           })
