@@ -10,6 +10,7 @@
     <!-- ======= Estilos ====== -->
     <link rel="stylesheet" href="../views/css/style.css" />
     <link rel="stylesheet" href="../views/css/data-tables.css" />
+    <link rel="stylesheet" href="../assets/css/accessibility.css" />
 
     <!-- Script ULTRA AGRESSIVO para forçar estilos -->
     <script>
@@ -526,5 +527,44 @@
           window.location.href = "../views/Login.html";
         });
     </script>
+
+    <!-- Barra de Acessibilidade -->
+    <div class="accessibility-bar">
+      <div class="accessibility-controls">
+        <button
+          class="accessibility-btn"
+          id="decrease-font-btn"
+          title="Diminuir fonte (Ctrl + -)"
+        >
+          <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <span class="font-size-display" id="font-size-display">16px</span>
+        <button
+          class="accessibility-btn"
+          id="increase-font-btn"
+          title="Aumentar fonte (Ctrl + +)"
+        >
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+        <button
+          class="accessibility-btn"
+          id="reset-font-btn"
+          title="Resetar fonte (Ctrl + 0)"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+        <div class="accessibility-divider"></div>
+        <button
+          class="accessibility-btn"
+          id="theme-toggle-btn"
+          title="Alternar tema (Ctrl + Shift + T)"
+        >
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Script de Acessibilidade -->
+    <script src="../controllers/accessibility.js"></script>
   </body>
 </html>
