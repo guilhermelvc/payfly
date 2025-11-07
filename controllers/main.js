@@ -82,18 +82,21 @@ let updateUserInfoThrottled = false;
 let updateUserInfoTimer = null;
 
 // Função centralizada para atualizar informações do usuário
-window.updateUserInfo = async function () {
-  // Throttling - evita múltiplas chamadas em sequência rápida
-  if (updateUserInfoThrottled) {
+window.updateUserInfo = async function (forceUpdate = false) {
+  // Throttling - evita múltiplas chamadas em sequência rápida (exceto se forçado)
+  if (!forceUpdate && updateUserInfoThrottled) {
     console.debug("main.js: updateUserInfo throttled - ignorando chamada");
     return;
   }
 
-  updateUserInfoThrottled = true;
-  clearTimeout(updateUserInfoTimer);
-  updateUserInfoTimer = setTimeout(() => {
-    updateUserInfoThrottled = false;
-  }, 1000); // 1 segundo de throttle
+  if (!forceUpdate) {
+    updateUserInfoThrottled = true;
+    clearTimeout(updateUserInfoTimer);
+    updateUserInfoTimer = setTimeout(() => {
+      updateUserInfoThrottled = false;
+    }, 1000); // 1 segundo de throttle
+  }
+
   if (!window.supabase) {
     console.warn("main.js: Supabase não disponível");
     return;
@@ -185,20 +188,27 @@ window.updateUserInfo = async function () {
 
 // Função global para forçar refresh do nome do usuário
 window.forceUserNameRefresh = async function () {
-  console.log("Forçando refresh do nome do usuário");
+  console.log("Forçando refresh do nome do usuário (ignorando throttle)");
 
-  // Chama updateUserInfo se disponível
+  // Reseta o throttle para permitir atualização imediata
+  updateUserInfoThrottled = false;
+  clearTimeout(updateUserInfoTimer);
+
+  // Chama updateUserInfo com forceUpdate = true
   if (window.updateUserInfo) {
-    await window.updateUserInfo();
-    console.log("updateUserInfo() executada no refresh");
+    await window.updateUserInfo(true);
+    console.log("updateUserInfo(true) executada no refresh");
   }
 
-  // Dispara evento customizado para outras páginas/scripts
-  window.dispatchEvent(
-    new CustomEvent("userNameUpdated", {
-      detail: { timestamp: Date.now() },
-    })
-  );
+  // Aguarda um pouco e dispara evento customizado para outras páginas/scripts
+  setTimeout(() => {
+    window.dispatchEvent(
+      new CustomEvent("userNameUpdated", {
+        detail: { timestamp: Date.now() },
+      })
+    );
+    console.log("Evento userNameUpdated disparado");
+  }, 500);
 };
 
 // Listener para o evento de atualização do nome

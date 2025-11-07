@@ -87,10 +87,13 @@ async function saveUserName(event) {
 
     console.log("Nome salvo com sucesso:", updatedData);
 
-    // Também atualizar os metadados do usuário no Auth
+    // Também atualizar os metadados do usuário no Auth (importante para Google Auth)
     try {
       await window.supabase.auth.updateUser({
-        data: { name: userName },
+        data: {
+          name: userName,
+          full_name: userName, // Para compatibilidade com Google Auth
+        },
       });
       console.log("Metadados do Auth também atualizados");
     } catch (metaError) {

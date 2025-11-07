@@ -139,17 +139,27 @@ async function getCurrentUserInfo() {
 
     // Tenta buscar nome na tabela de usuários
     try {
-      const { data: userProfile } = await window.supabase
+      const { data: userProfile, error } = await window.supabase
         .from("usuarios")
         .select("nome")
         .eq("id", user.id)
-        .single();
+        .limit(1);
+
+      if (error) {
+        console.warn("Erro ao buscar perfil do usuário:", error);
+      }
+
+      const nome = userProfile && userProfile[0]?.nome;
 
       return {
-        name: userProfile?.nome || user.email.split("@")[0] || "Usuário",
+        name:
+          nome && !nome.includes("@")
+            ? nome
+            : user.email.split("@")[0] || "Usuário",
         email: user.email,
       };
-    } catch {
+    } catch (e) {
+      console.warn("⚠️ Exceção ao buscar perfil:", e);
       // Fallback para email
       return {
         name: user.email.split("@")[0] || "Usuário",

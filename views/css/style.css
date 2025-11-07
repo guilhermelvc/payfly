@@ -121,9 +121,6 @@ body {
   line-height: 60px;
   text-align: start;
   white-space: nowrap;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Oculta títulos quando sidebar encolhido */
