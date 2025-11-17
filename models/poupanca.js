@@ -65,6 +65,8 @@ async function applyStoredPoupancaFilter() {
         tipo: item.tipo,
         plano: item.plano_vinculado_nome || "",
         category: item.categoria || "Poupança",
+        is_recorrente: item.is_recorrente || false,
+        recorrencia_meses: item.recorrencia_meses || 1,
       })) || [];
 
     totalPoupanca = transactions.reduce((sum, item) => sum + item.amount, 0);
@@ -121,6 +123,8 @@ async function loadPoupancaFromSupabase() {
         tipo: item.tipo,
         plano: item.plano_vinculado_nome || "",
         category: item.categoria || "Poupança",
+        is_recorrente: item.is_recorrente || false,
+        recorrencia_meses: item.recorrencia_meses || 1,
       })) || [];
 
     totalPoupanca = transactions.reduce((sum, item) => sum + item.amount, 0);
@@ -153,6 +157,8 @@ function loadDemoDataFallback() {
       tipo: "Depósito",
       plano: "Viagem Europa",
       category: "Poupança",
+      is_recorrente: false,
+      recorrencia_meses: 1,
     },
     {
       id: "demo2",
@@ -162,6 +168,8 @@ function loadDemoDataFallback() {
       tipo: "Rendimento",
       plano: "",
       category: "Rendimento",
+      is_recorrente: false,
+      recorrencia_meses: 1,
     },
     {
       id: "demo3",
@@ -171,6 +179,8 @@ function loadDemoDataFallback() {
       tipo: "Depósito",
       plano: "Casa Própria",
       category: "Poupança",
+      is_recorrente: false,
+      recorrencia_meses: 1,
     },
     {
       id: "demo4",
@@ -180,6 +190,8 @@ function loadDemoDataFallback() {
       tipo: "Saque",
       plano: "",
       category: "Saque",
+      is_recorrente: false,
+      recorrencia_meses: 1,
     },
   ];
 
@@ -272,53 +284,123 @@ async function savePoupanca(
     const user = userData?.user;
     if (!user) throw new Error("Usuário não autenticado");
 
+    // Verifica se é poupança recorrente
+    const isRecorrente =
+      document.getElementById("is_recorrente")?.checked || false;
+    const recorrenciaMeses = isRecorrente
+      ? parseInt(document.getElementById("recorrencia_meses")?.value || 1)
+      : 1;
+
     // Ajusta o sinal baseado no tipo
     const valorFinal = tipo.toLowerCase().includes("saque")
       ? -Math.abs(parseFloat(valor))
       : Math.abs(parseFloat(valor));
 
-    // Se tem plano selecionado, busca o ID do plano
-    let planoVinculadoId = null;
-    let planoVinculadoNome = null;
+    // Se é recorrente, cria múltiplas poupanças
+    if (isRecorrente && recorrenciaMeses > 1) {
+      const poupancasParaCriar = [];
+      const dataInicial = new Date(data);
 
-    if (plano && plano !== "") {
-      // Busca o plano pelo nome para obter o ID
-      const { data: planoData, error: planoError } = await window.supabase
-        .from("planos")
-        .select("id, descricao")
-        .eq("usuario_id", user.id)
-        .eq("descricao", plano)
-        .single();
+      // Cria uma poupança para cada mês
+      for (let i = 0; i < recorrenciaMeses; i++) {
+        const novaData = new Date(dataInicial);
+        novaData.setMonth(novaData.getMonth() + i);
 
-      if (!planoError && planoData) {
-        planoVinculadoId = planoData.id;
-        planoVinculadoNome = planoData.descricao;
+        // Formata a data como YYYY-MM-DD
+        const dataFormatada = novaData.toISOString().split("T")[0];
+
+        // Se tem plano selecionado, busca o ID do plano
+        let planoVinculadoId = null;
+        let planoVinculadoNome = null;
+
+        if (plano && plano !== "") {
+          // Busca o plano pelo nome para obter o ID
+          const { data: planoData, error: planoError } = await window.supabase
+            .from("planos")
+            .select("id, descricao")
+            .eq("usuario_id", user.id)
+            .eq("descricao", plano)
+            .single();
+
+          if (!planoError && planoData) {
+            planoVinculadoId = planoData.id;
+            planoVinculadoNome = planoData.descricao;
+          }
+        }
+
+        poupancasParaCriar.push({
+          descricao,
+          valor: valorFinal,
+          data: dataFormatada,
+          tipo,
+          plano_vinculado_id: planoVinculadoId,
+          plano_vinculado_nome: planoVinculadoNome,
+          categoria: "Poupança",
+          usuario_id: user.id,
+          is_recorrente: i === 0 ? true : false, // Marca apenas a primeira como recorrente
+          recorrencia_meses: i === 0 ? recorrenciaMeses : 1,
+        });
       }
+
+      // Insere todas as poupanças
+      const { error } = await window.supabase
+        .from("poupanca")
+        .insert(poupancasParaCriar);
+      if (error) throw error;
+
+      console.log(
+        `✅ ${recorrenciaMeses} poupanças recorrentes criadas com sucesso!`
+      );
+    } else {
+      // Cria poupança única (sem recorrência)
+      // Se tem plano selecionado, busca o ID do plano
+      let planoVinculadoId = null;
+      let planoVinculadoNome = null;
+
+      if (plano && plano !== "") {
+        // Busca o plano pelo nome para obter o ID
+        const { data: planoData, error: planoError } = await window.supabase
+          .from("planos")
+          .select("id, descricao")
+          .eq("usuario_id", user.id)
+          .eq("descricao", plano)
+          .single();
+
+        if (!planoError && planoData) {
+          planoVinculadoId = planoData.id;
+          planoVinculadoNome = planoData.descricao;
+        }
+      }
+
+      const poupancaData = {
+        descricao,
+        valor: valorFinal,
+        data,
+        tipo,
+        plano_vinculado_id: planoVinculadoId,
+        plano_vinculado_nome: planoVinculadoNome,
+        categoria: "Poupança",
+        usuario_id: user.id,
+        is_recorrente: false,
+        recorrencia_meses: 1,
+      };
+
+      const { error } = await window.supabase
+        .from("poupanca")
+        .insert([poupancaData]);
+      if (error) throw error;
+
+      console.log("✅ Poupança única criada com sucesso!");
     }
-
-    const poupancaData = {
-      descricao,
-      valor: valorFinal,
-      data,
-      tipo,
-      plano_vinculado_id: planoVinculadoId,
-      plano_vinculado_nome: planoVinculadoNome,
-      categoria: "Poupança",
-      usuario_id: user.id,
-    };
-
-    const { error } = await window.supabase
-      .from("poupanca")
-      .insert([poupancaData]);
-    if (error) throw error;
 
     await reloadPoupancaDataRespectingFilter();
     showSuccessToast("Poupança salva!", "Movimentação adicionada com sucesso!");
 
-    // Fecha o modal após salvar
+    // Fecha o modal após salvar com sucesso
     if (typeof Modal !== "undefined" && Modal.close) {
       Modal.close();
     } else {
+      // Fallback para fechar modal
       const modalOverlay = document.querySelector(
         ".standardized-modal-overlay"
       );
@@ -333,6 +415,13 @@ async function savePoupanca(
       form.reset();
       const hoje = new Date().toISOString().split("T")[0];
       document.getElementById("data").value = hoje;
+    }
+
+    // Reseta o switch de recorrência
+    const recorrenceCheckbox = document.getElementById("is_recorrente");
+    if (recorrenceCheckbox) {
+      recorrenceCheckbox.checked = false;
+      document.getElementById("recorrencia_meses_group").style.display = "none";
     }
   } catch (err) {
     console.error("Erro ao salvar poupança:", err);
@@ -463,12 +552,17 @@ function addPoupancaRowToTable(item) {
   const amountClass =
     item.amount >= 0 ? "performance-positive" : "performance-negative";
 
+  const recorrenciaCell = item.is_recorrente
+    ? `<span class="recorrencia-badge">✓ ${item.recorrencia_meses}x</span>`
+    : "-";
+
   row.innerHTML = `
     <td>${item.description}</td>
     <td class="${amountClass}">${formatCurrency(Math.abs(item.amount))}</td>
     <td>${formatDate(item.date)}</td>
     <td>${item.tipo}</td>
     <td>${item.plano || "-"}</td>
+    <td>${recorrenciaCell}</td>
     <td><button onclick="editPoupancaTransaction('${
       item.id
     }')" class="edit-button" title="Editar"><ion-icon name="create-outline" style="font-size: 20px;"></ion-icon></button></td>
@@ -513,6 +607,10 @@ function updateTable() {
     const amountClass =
       transaction.amount >= 0 ? "performance-positive" : "performance-negative";
 
+    const recorrenciaCell = transaction.is_recorrente
+      ? `<span class="recorrencia-badge">✓ ${transaction.recorrencia_meses}x</span>`
+      : "-";
+
     row.innerHTML = `
             <td>${transaction.description}</td>
             <td class="${amountClass}">${formatCurrency(
@@ -521,6 +619,7 @@ function updateTable() {
             <td>${formatDate(transaction.date)}</td>
             <td>${transaction.tipo}</td>
             <td>${transaction.plano || "-"}</td>
+            <td>${recorrenciaCell}</td>
             <td><button onclick="editTransaction(${index})" class="edit-button" title="Editar"><ion-icon name="create-outline" style="font-size: 20px;"></ion-icon></button></td>
             <td><button onclick="deleteTransaction(${index})" class="delete-button" title="Excluir"><ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon></button></td>
         `;
@@ -596,6 +695,8 @@ const Form = {
         tipo: tipo,
         plano: plano,
         category: tipo.toLowerCase().includes("saque") ? "Saque" : "Poupança",
+        is_recorrente: false,
+        recorrencia_meses: 1,
       };
 
       transactions.push(newTransaction);
@@ -663,6 +764,22 @@ async function editTransaction(index) {
   document.getElementById("edit-date").value = transaction.date;
   document.getElementById("edit-tipo").value = transaction.tipo;
 
+  // Popula campos de recorrência
+  const isRecorrente = transaction.is_recorrente || false;
+  const recorrenciaMeses = transaction.recorrencia_meses || 1;
+
+  document.getElementById("edit-is-recorrente").checked = isRecorrente;
+  document.getElementById("edit-recorrencia-meses").value = recorrenciaMeses;
+
+  // Mostra/esconde o campo de meses
+  if (isRecorrente) {
+    document.getElementById("edit-recorrencia-meses-group").style.display =
+      "block";
+  } else {
+    document.getElementById("edit-recorrencia-meses-group").style.display =
+      "none";
+  }
+
   // Carregar opções de planos e selecionar o atual
   await loadPlansIntoEditSelect(transaction.plano);
 
@@ -682,6 +799,12 @@ async function submitEditForm(event) {
   const valor = parseFloat(formData.get("amount"));
   const tipo = formData.get("tipo");
   const plano = formData.get("plano");
+
+  // Recebe valores de recorrência
+  const isRecorrente = document.getElementById("edit-is-recorrente").checked;
+  const recorrenciaMeses = isRecorrente
+    ? parseInt(document.getElementById("edit-recorrencia-meses").value || 1)
+    : 1;
 
   // Ajusta o sinal baseado no tipo
   const valorFinal = tipo.toLowerCase().includes("saque")
@@ -717,6 +840,8 @@ async function submitEditForm(event) {
       plano_vinculado_id: planoVinculadoId,
       plano_vinculado_nome: planoVinculadoNome,
       categoria: tipo.toLowerCase().includes("saque") ? "Saque" : "Poupança",
+      is_recorrente: isRecorrente,
+      recorrencia_meses: recorrenciaMeses,
     };
 
     const { error } = await window.supabase
@@ -783,6 +908,41 @@ function deleteTransaction(index) {
 function closeEditModal() {
   document.querySelector(".edit-modal-overlay").style.display = "none";
   document.getElementById("edit-form").reset();
+  // Reseta a visibilidade do campo de recorrência
+  document.getElementById("edit-recorrencia-meses-group").style.display = "none";
+}
+
+function toggleRecorrenciaFields() {
+  const isRecorrente = document.getElementById("is_recorrente").checked;
+  const mesesGroup = document.getElementById("recorrencia_meses_group");
+
+  if (isRecorrente) {
+    mesesGroup.style.display = "block";
+    // Define valor padrão se não houver
+    const mesesInput = document.getElementById("recorrencia_meses");
+    if (!mesesInput.value || mesesInput.value === "1") {
+      mesesInput.value = "1";
+    }
+  } else {
+    mesesGroup.style.display = "none";
+    document.getElementById("recorrencia_meses").value = "1";
+  }
+}
+
+function toggleEditRecorrenciaFields() {
+  const isRecorrente = document.getElementById("edit-is-recorrente").checked;
+  const mesesGroup = document.getElementById("edit-recorrencia-meses-group");
+
+  if (isRecorrente) {
+    mesesGroup.style.display = "block";
+    const mesesInput = document.getElementById("edit-recorrencia-meses");
+    if (!mesesInput.value || mesesInput.value === "1") {
+      mesesInput.value = "1";
+    }
+  } else {
+    mesesGroup.style.display = "none";
+    document.getElementById("edit-recorrencia-meses").value = "1";
+  }
 }
 
 // ================ Filter Functions ================

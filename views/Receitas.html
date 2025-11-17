@@ -229,6 +229,7 @@
                                     <th>Valor</th>
                                     <th>Data</th>
                                     <th>Categoria</th>
+                                    <th>Recorrente</th>
                                     <th>Editar</th>
                                     <th>Excluir</th>
                                 </tr>
@@ -288,6 +289,20 @@
                             <span class="category-tag" onclick="selectCategory('Aluguel')">Aluguel</span>
                             <span class="category-tag" onclick="selectCategory('Pensão')">Pensão</span>
                         </div>
+                    </div>
+
+                    <div class="standardized-input-group recorrencia-group">
+                        <label for="is_recorrente" class="recorrencia-label">
+                            <span class="recorrencia-text">Receita Recorrente?</span>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="is_recorrente" name="is_recorrente" onchange="toggleRecorrenciaFields()">
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="standardized-input-group" id="recorrencia_meses_group" style="display: none;">
+                        <label for="recorrencia_meses">Duração (meses)</label>
+                        <input type="number" id="recorrencia_meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
                     </div>
 
                     <div class="standardized-modal-actions">
@@ -383,6 +398,20 @@
                 <div class="standardized-input-group categoria-group">
                     <label for="edit-categoria">Categoria</label>
                     <input type="text" id="edit-categoria" name="categoria" placeholder="Digite ou selecione uma categoria...">
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                    <label for="edit-is-recorrente" class="recorrencia-label">
+                        <span class="recorrencia-text">Receita Recorrente?</span>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="edit-is-recorrente" name="is_recorrente" onchange="toggleEditRecorrenciaFields()">
+                        </div>
+                    </label>
+                </div>
+
+                <div class="standardized-input-group" id="edit-recorrencia-meses-group" style="display: none;">
+                    <label for="edit-recorrencia-meses">Duração (meses)</label>
+                    <input type="number" id="edit-recorrencia-meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
                 </div>
 
                 <div class="standardized-modal-actions">
