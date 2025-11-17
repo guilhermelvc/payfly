@@ -50,6 +50,9 @@ CREATE TABLE despesas (
     categoria TEXT DEFAULT 'Outros',
     categoria_sugerida_ia TEXT,
     tipo TEXT NOT NULL DEFAULT 'despesa',
+    is_recorrente BOOLEAN DEFAULT false,
+    recorrencia_meses INTEGER DEFAULT 1,
+    despesa_pai_id uuid REFERENCES despesas(id) ON DELETE CASCADE,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );

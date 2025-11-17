@@ -230,6 +230,7 @@
                                     <th>Valor</th>
                                     <th>Data</th>
                                     <th>Categoria</th>
+                                    <th>Recorrente</th>
                                     <th>Editar</th>
                                     <th>Excluir</th>
                                 </tr>
@@ -291,6 +292,22 @@
                         </div>
                     </div>
 
+                    <div class="standardized-input-group recorrencia-group">
+                        <label for="is_recorrente" class="recorrencia-label">
+                            <span class="recorrencia-text">Despesa Recorrente?</span>
+                            <div class="switch-toggle">
+                                <input type="checkbox" id="is_recorrente" name="is_recorrente" onchange="toggleRecorrenciaFields()">
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="standardized-input-group" id="recorrencia_meses_group" style="display: none;">
+                        <label for="recorrencia_meses">Duração (meses)</label>
+                        <input type="number" id="recorrencia_meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                        <div class="standardized-help-text">A despesa será replicada a cada mês até o prazo especificado, no mesmo dia da data informada.</div>
+                    </div>
+
                     <div class="standardized-modal-actions">
                         <a onclick="Modal.close()" class="standardized-button standardized-button-secondary">Cancelar</a>
                         <button type="submit" class="standardized-button standardized-button-primary">💾 Salvar</button>
@@ -344,6 +361,15 @@
                     </div>
                 </div>
 
+                <div class="standardized-input-group">
+                    <label for="filter-recorrente">Filtrar por Recorrência</label>
+                    <select id="filter-recorrente" name="recorrente">
+                        <option value="">Todas</option>
+                        <option value="sim">Apenas Recorrentes</option>
+                        <option value="nao">Apenas Únicas</option>
+                    </select>
+                </div>
+
                 <div class="standardized-modal-actions">
                     <a onclick="FilterModal.close()" class="standardized-button standardized-button-secondary">Cancelar</a>
                     <button type="submit" class="standardized-button standardized-button-primary">🔍 Filtrar</button>
@@ -384,6 +410,22 @@
                 <div class="standardized-input-group categoria-group">
                     <label for="edit-categoria">Categoria</label>
                     <input type="text" id="edit-categoria" name="categoria" placeholder="Digite ou selecione uma categoria...">
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                    <label for="edit-is-recorrente" class="recorrencia-label">
+                        <span class="recorrencia-text">Despesa Recorrente?</span>
+                        <div class="switch-toggle">
+                            <input type="checkbox" id="edit-is-recorrente" name="is_recorrente" onchange="toggleEditRecorrenciaFields()">
+                            <span class="slider"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="standardized-input-group" id="edit-recorrencia-meses-group" style="display: none;">
+                    <label for="edit-recorrencia-meses">Duração (meses)</label>
+                    <input type="number" id="edit-recorrencia-meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                    <div class="standardized-help-text">A despesa será replicada a cada mês até o prazo especificado.</div>
                 </div>
 
                 <div class="standardized-modal-actions">
@@ -836,11 +878,35 @@
         window.suggestCategoryAI = suggestCategoryAI;
         window.suggestCategorySimple = suggestCategorySimple;
         
+        // Função para toggle de campos de recorrência
+        function toggleRecorrenciaFields() {
+            const isRecorrente = document.getElementById('is_recorrente').checked;
+            const mesesGroup = document.getElementById('recorrencia_meses_group');
+            
+            if (isRecorrente) {
+                mesesGroup.style.display = 'block';
+                // Define valor padrão se não houver
+                const mesesInput = document.getElementById('recorrencia_meses');
+                if (!mesesInput.value || mesesInput.value === '1') {
+                    mesesInput.value = '1';
+                }
+            } else {
+                mesesGroup.style.display = 'none';
+                document.getElementById('recorrencia_meses').value = '1';
+            }
+        }
+        
+        // Disponibilizar funções globalmente
+        window.toggleRecorrenciaFields = toggleRecorrenciaFields;
+        window.toggleEditRecorrenciaFields = toggleEditRecorrenciaFields;
+        
         // Debug: Verifica se as funções foram definidas corretamente
         console.log('🔍 Debug - Verificando funções:');
         console.log('selectCategory:', typeof window.selectCategory);
         console.log('suggestCategoryAI:', typeof window.suggestCategoryAI);
         console.log('suggestCategorySimple:', typeof window.suggestCategorySimple);
+        console.log('toggleRecorrenciaFields:', typeof window.toggleRecorrenciaFields);
+        console.log('toggleEditRecorrenciaFields:', typeof window.toggleEditRecorrenciaFields);
         
         // Função de teste para debug
         window.testCategoryFunction = function() {

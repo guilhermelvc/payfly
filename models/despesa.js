@@ -215,7 +215,13 @@ function addDespesaToTable(despesa, despesaId) {
   } else {
     categoriaCell.textContent = "-";
   }
-  const editCell = newRow.insertCell(4);
+  const recorrenciaCell = newRow.insertCell(4);
+  if (despesa.is_recorrente) {
+    recorrenciaCell.innerHTML = `<span class="recorrencia-badge">✓ ${despesa.recorrencia_meses}x</span>`;
+  } else {
+    recorrenciaCell.textContent = "-";
+  }
+  const editCell = newRow.insertCell(5);
   const editButton = document.createElement("button");
   editButton.classList.add("edit-button");
   editButton.innerHTML =
@@ -223,7 +229,7 @@ function addDespesaToTable(despesa, despesaId) {
   editButton.title = "Editar";
   editButton.onclick = () => editDespesa(despesaId, despesa);
   editCell.appendChild(editButton);
-  const deleteCell = newRow.insertCell(5);
+  const deleteCell = newRow.insertCell(6);
   const deleteButton = document.createElement("button");
   deleteButton.classList.add("delete-button");
   deleteButton.innerHTML =
@@ -240,12 +246,46 @@ function editDespesa(despesaId, despesa) {
   document.getElementById("edit-amount").value = despesa.valor || "";
   document.getElementById("edit-date").value = despesa.data || "";
   document.getElementById("edit-categoria").value = despesa.categoria || "";
+
+  // Popula campos de recorrência
+  const isRecorrente = despesa.is_recorrente || false;
+  const recorrenciaMeses = despesa.recorrencia_meses || 1;
+
+  document.getElementById("edit-is-recorrente").checked = isRecorrente;
+  document.getElementById("edit-recorrencia-meses").value = recorrenciaMeses;
+
+  // Mostra/esconde o campo de meses
+  if (isRecorrente) {
+    document.getElementById("edit-recorrencia-meses-group").style.display =
+      "block";
+  } else {
+    document.getElementById("edit-recorrencia-meses-group").style.display =
+      "none";
+  }
+
   editingDespesaId = despesaId;
   document.querySelector(".edit-modal-overlay").classList.add("active");
 }
+
 function closeEditModal() {
   document.querySelector(".edit-modal-overlay").classList.remove("active");
   editingDespesaId = null;
+}
+
+function toggleEditRecorrenciaFields() {
+  const isRecorrente = document.getElementById("edit-is-recorrente").checked;
+  const mesesGroup = document.getElementById("edit-recorrencia-meses-group");
+
+  if (isRecorrente) {
+    mesesGroup.style.display = "block";
+    const mesesInput = document.getElementById("edit-recorrencia-meses");
+    if (!mesesInput.value || mesesInput.value === "1") {
+      mesesInput.value = "1";
+    }
+  } else {
+    mesesGroup.style.display = "none";
+    document.getElementById("edit-recorrencia-meses").value = "1";
+  }
 }
 
 function submitEditForm(event) {
@@ -254,11 +294,25 @@ function submitEditForm(event) {
   const valor = parseFloat(document.getElementById("edit-amount").value);
   const data = document.getElementById("edit-date").value;
   const categoria = document.getElementById("edit-categoria").value;
+
+  // Recebe valores de recorrência
+  const isRecorrente = document.getElementById("edit-is-recorrente").checked;
+  const recorrenciaMeses = isRecorrente
+    ? parseInt(document.getElementById("edit-recorrencia-meses").value || 1)
+    : 1;
+
   if (descricao === "" || isNaN(valor) || data === "") {
     showToast("Por favor, preencha todos os campos corretamente!");
     return;
   }
-  const updatedDespesa = { descricao, valor, data, categoria };
+  const updatedDespesa = {
+    descricao,
+    valor,
+    data,
+    categoria,
+    is_recorrente: isRecorrente,
+    recorrencia_meses: recorrenciaMeses,
+  };
   updateDespesaInSupabase(editingDespesaId, updatedDespesa);
   closeEditModal();
 }
@@ -306,6 +360,13 @@ async function saveDespesa(descricao, valor, data, categoria = null) {
     const user = userData?.user;
     if (!user) throw new Error("Usuário não autenticado");
 
+    // Verifica se é despesa recorrente
+    const isRecorrente =
+      document.getElementById("is_recorrente")?.checked || false;
+    const recorrenciaMeses = isRecorrente
+      ? parseInt(document.getElementById("recorrencia_meses")?.value || 1)
+      : 1;
+
     // Processa categoria se fornecida
     let processedCategory = null;
     if (categoria && window.CategorizationUI) {
@@ -315,19 +376,60 @@ async function saveDespesa(descricao, valor, data, categoria = null) {
       );
     }
 
-    const despesaData = {
-      descricao,
-      valor: parseFloat(valor),
-      data,
-      usuario_id: user.id,
-      tipo: "despesa",
-      categoria: processedCategory || categoria,
-    };
+    // Se é recorrente, cria múltiplas despesas
+    if (isRecorrente && recorrenciaMeses > 1) {
+      const despesasParaCriar = [];
+      const dataInicial = new Date(data);
 
-    const { error } = await window.supabase
-      .from("despesas")
-      .insert([despesaData]);
-    if (error) throw error;
+      // Cria uma despesa para cada mês
+      for (let i = 0; i < recorrenciaMeses; i++) {
+        const novaData = new Date(dataInicial);
+        novaData.setMonth(novaData.getMonth() + i);
+
+        // Formata a data como YYYY-MM-DD
+        const dataFormatada = novaData.toISOString().split("T")[0];
+
+        despesasParaCriar.push({
+          descricao,
+          valor: parseFloat(valor),
+          data: dataFormatada,
+          usuario_id: user.id,
+          tipo: "despesa",
+          categoria: processedCategory || categoria,
+          is_recorrente: i === 0 ? true : false, // Marca apenas a primeira como recorrente
+          recorrencia_meses: i === 0 ? recorrenciaMeses : 1,
+        });
+      }
+
+      // Insere todas as despesas
+      const { error } = await window.supabase
+        .from("despesas")
+        .insert(despesasParaCriar);
+      if (error) throw error;
+
+      console.log(
+        `✅ ${recorrenciaMeses} despesas recorrentes criadas com sucesso!`
+      );
+    } else {
+      // Cria despesa única (sem recorrência)
+      const despesaData = {
+        descricao,
+        valor: parseFloat(valor),
+        data,
+        usuario_id: user.id,
+        tipo: "despesa",
+        categoria: processedCategory || categoria,
+        is_recorrente: false,
+        recorrencia_meses: 1,
+      };
+
+      const { error } = await window.supabase
+        .from("despesas")
+        .insert([despesaData]);
+      if (error) throw error;
+
+      console.log("✅ Despesa única criada com sucesso!");
+    }
 
     await loadDespesasFromSupabase();
 
@@ -348,6 +450,13 @@ async function saveDespesa(descricao, valor, data, categoria = null) {
     const form = document.querySelector("#form");
     if (form) {
       form.reset();
+    }
+
+    // Reseta o switch de recorrência
+    const recorrenceCheckbox = document.getElementById("is_recorrente");
+    if (recorrenceCheckbox) {
+      recorrenceCheckbox.checked = false;
+      document.getElementById("recorrencia_meses_group").style.display = "none";
     }
 
     showSuccessToast("Despesa salva!", "Despesa adicionada com sucesso!");
@@ -411,12 +520,16 @@ async function filterDespesas(event) {
     const categoriaInput = document
       .getElementById("filter-categoria")
       .value.trim();
+    const recorrenteInput = document
+      .getElementById("filter-recorrente")
+      .value.trim();
 
     console.log("📋 Valores capturados:", {
       descricaoInput,
       valorInput,
       dataInput,
       categoriaInput,
+      recorrenteInput,
     });
 
     const { data: userData } = await window.supabase.auth.getUser();
@@ -449,6 +562,12 @@ async function filterDespesas(event) {
       query = query.ilike("categoria", `%${categoriaInput}%`);
     }
 
+    // Filtro por recorrência
+    if (recorrenteInput === "sim") {
+      query = query.eq("is_recorrente", true);
+    } else if (recorrenteInput === "nao") {
+      query = query.eq("is_recorrente", false);
+    }
     const { data: rows, error } = await query.order("criado_em", {
       ascending: false,
     });

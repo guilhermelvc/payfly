@@ -310,12 +310,21 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
         .replace(/fill:[^;"]*/g, "fill:#000000")
         .replace(/stroke:[^;"]*/g, "stroke:#000000");
 
-      // Criar um canvas de alta resolução para melhor qualidade
+      // Criar um canvas com DPI adequado para celulares
       const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const scale = 3; // Aumentar resolução
-      canvas.width = 80 * scale;
-      canvas.height = 80 * scale;
+      const ctx = canvas.getContext("2d", { alpha: false });
+
+      // Usar devicePixelRatio para melhor qualidade em dispositivos móveis
+      const scale = window.devicePixelRatio || 1;
+      const canvasSize = 200; // Tamanho base do canvas
+
+      canvas.width = canvasSize * scale;
+      canvas.height = canvasSize * scale;
+      canvas.style.width = canvasSize + "px";
+      canvas.style.height = canvasSize + "px";
+
+      // Ajustar contexto para escala
+      ctx.scale(scale, scale);
 
       // Criar uma imagem a partir do SVG modificado
       const img = new Image();
@@ -334,14 +343,16 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
 
           // Preencher fundo branco
           ctx.fillStyle = "#FFFFFF";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(0, 0, canvasSize, canvasSize);
 
-          // Desenhar a imagem em alta resolução
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          // Centralizar e desenhar a imagem
+          const imgSize = canvasSize * 0.9;
+          const offset = (canvasSize - imgSize) / 2;
+          ctx.drawImage(img, offset, offset, imgSize, imgSize);
 
-          const dataURL = canvas.toDataURL("image/png");
+          const dataURL = canvas.toDataURL("image/png", 0.95);
 
-          // Adicionar a imagem ao PDF com bom tamanho
+          // Adicionar a imagem ao PDF com tamanho consistente
           pdf.addImage(dataURL, "PNG", centerX - 15, centerY - 15, 30, 30);
           console.log("✅ Logo SVG preta de alta qualidade adicionada ao PDF!");
 
@@ -376,24 +387,49 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
 
 function drawFallbackLogo(pdf, centerX, centerY) {
   console.log("🔄 Usando logo fallback geométrica em preto");
-  // Círculo principal (moeda) - PRETO
-  pdf.setFillColor(0, 0, 0);
-  pdf.circle(centerX, centerY, 15, "F");
 
-  // Círculo interno (brilho)
-  pdf.setFillColor(255, 255, 255);
-  pdf.circle(centerX - 3, centerY - 3, 4, "F");
+  try {
+    // Salvar estado atual
+    const currentDrawColor = pdf.getDrawColor();
+    const currentFillColor = pdf.getFillColor();
+    const currentTextColor = pdf.getTextColor();
+    const currentLineWidth = pdf.getLineWidth();
 
-  // Símbolo $ estilizado
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFontSize(20);
-  pdf.text("$", centerX, centerY + 3, { align: "center" });
+    // Círculo externo (borda) - PRETO
+    pdf.setDrawColor(0, 0, 0);
+    pdf.setLineWidth(1);
+    pdf.circle(centerX, centerY, 18, "S");
 
-  // Bordas decorativas - PRETO
-  pdf.setDrawColor(0, 0, 0);
-  pdf.setLineWidth(2);
-  pdf.circle(centerX, centerY, 18, "S");
-  console.log("✅ Logo fallback preta desenhada");
+    // Círculo principal (moeda) - PRETO
+    pdf.setFillColor(0, 0, 0);
+    pdf.circle(centerX, centerY, 15, "F");
+
+    // Círculo interno (brilho) - BRANCO
+    pdf.setFillColor(255, 255, 255);
+    pdf.circle(centerX - 4, centerY - 4, 3.5, "F");
+
+    // Símbolo $ estilizado - BRANCO
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(16);
+    pdf.text("$", centerX, centerY + 2, { align: "center" });
+
+    console.log("✅ Logo fallback preta desenhada com sucesso");
+
+    // Restaurar estado anterior
+    pdf.setDrawColor(currentDrawColor);
+    pdf.setFillColor(currentFillColor);
+    pdf.setTextColor(currentTextColor);
+    pdf.setLineWidth(currentLineWidth);
+  } catch (error) {
+    console.error("❌ Erro ao desenhar logo fallback:", error);
+
+    // Fallback mínimo: apenas um círculo preto com $
+    pdf.setFillColor(0, 0, 0);
+    pdf.circle(centerX, centerY, 15, "F");
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(14);
+    pdf.text("$", centerX, centerY + 2, { align: "center" });
+  }
 }
 
 // Gera página para um período específico
