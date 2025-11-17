@@ -193,7 +193,7 @@
             <div class="details" style="grid-template-columns: 1fr;">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <a onclick="Modal.open()" class="add-transaction-button">+ Adicionar Objetivo</a>
+                        <a onclick="Modal.open()" class="add-transaction-button">+ Adicionar Plano</a>
                         <a href="#" onclick="FilterModal.open()" class="btn1"><i class=" filter fas fa-sort-down"></i><ion-icon name="filter-outline"></ion-icon> Filtrar</a>
                         
                     </div>
@@ -206,6 +206,7 @@
                                     <th>Valor</th>
                                     <th>Data</th>
                                     <th>Categoria</th>
+                                    <th>Recorrente</th>
                                     <th>Editar</th>
                                     <th>Excluir</th>
                                 </tr>
@@ -225,23 +226,23 @@
     <div class="standardized-modal-overlay">
         <div class="standardized-modal">
             <div class="standardized-modal-header">
-                <h2>🎯 Adicionar Objetivo</h2>
+                <h2>🎯 Adicionar Plano</h2>
                 <button class="standardized-modal-close" onclick="Modal.close()">×</button>
             </div>
             
             <div class="standardized-modal-body">
                 <form onsubmit="Form.submit(event)" id="form">
                     <div class="standardized-input-group">
-                        <label for="descricao">Nome do Objetivo</label>
+                        <label for="descricao">Nome do Plano</label>
                         <input type="text" id="descricao" name="descricao" placeholder="Ex: Viagem para Europa, Comprar carro...">
                     </div>
 
                     <div class="standardized-input-group">
-                        <label for="valor">Valor do Objetivo (R$)</label>
+                        <label for="valor">Valor do Plano (R$)</label>
                         <input type="number" id="valor" name="valor" placeholder="0,00" step="0.01">
                     </div>
 
-                    <div class="standardized-help-text">Digite o valor total que deseja alcançar para este objetivo.</div>
+                    <div class="standardized-help-text">Digite o valor total que deseja alcançar para este Plano.</div>
 
                     <div class="standardized-input-group">
                         <label for="data">Data Meta</label>
@@ -249,7 +250,7 @@
                     </div>
 
                     <div class="standardized-input-group categoria-group">
-                        <label for="categoria">Tipo de Objetivo</label>
+                        <label for="categoria">Tipo de Plano</label>
                         <div class="categoria-input-wrapper">
                             <input type="text" id="categoria" name="categoria" placeholder="Ex: Viagem para Europa, Carro novo...">
                             <button type="button" class="ia-suggest-btn" onclick="suggestCategorySimple()" title="Sugestão com IA">
@@ -267,6 +268,22 @@
                             <span class="category-tag" onclick="selectCategory('Reserva Emergência')">🛡️ Reserva Emergência</span>
                             <span class="category-tag" onclick="selectCategory('Negócio Próprio')">💼 Negócio Próprio</span>
                         </div>
+                    </div>
+
+                    <div class="standardized-input-group recorrencia-group">
+                        <label for="is_recorrente" class="recorrencia-label">
+                            <span class="recorrencia-text">Plano Recorrente?</span>
+                            <div class="switch-toggle">
+                                <input type="checkbox" id="is_recorrente" name="is_recorrente" onchange="toggleRecorrenciaFields()">
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="standardized-input-group" id="recorrencia_meses_group" style="display: none;">
+                        <label for="recorrencia_meses">Duração (meses)</label>
+                        <input type="number" id="recorrencia_meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                        <div class="standardized-help-text">Plano será replicado a cada mês até o prazo especificado, no mesmo dia da data informada.</div>
                     </div>
 
                     <div class="standardized-modal-actions">
@@ -288,7 +305,7 @@
 <div class="standardized-modal-overlay filter-modal-overlay">
     <div class="standardized-modal">
         <div class="standardized-modal-header">
-            <h2>🔍 Filtrar Objetivos</h2>
+            <h2>🔍 Filtrar Planos</h2>
             <button class="standardized-modal-close" onclick="FilterModal.close()">×</button>
         </div>
         
@@ -310,7 +327,7 @@
                 </div>
 
                 <div class="standardized-input-group">
-                    <label for="filter-categoria">Tipo de Objetivo</label>
+                    <label for="filter-categoria">Tipo de Plano</label>
                     <input type="text" id="filter-categoria" name="categoria" placeholder="Ex: Viagem, Veículo, Casa... (busca parcial)">
                     <div class="predefined-categories filter-categories">
                         <span class="category-tag" onclick="selectFilterCategory('Viagem')">✈️ Viagem</span>
@@ -322,6 +339,15 @@
                         <span class="category-tag" onclick="selectFilterCategory('Reserva Emergência')">🛡️ Reserva Emergência</span>
                         <span class="category-tag" onclick="selectFilterCategory('Negócio Próprio')">💼 Negócio Próprio</span>
                     </div>
+                </div>
+
+                <div class="standardized-input-group">
+                    <label for="filter-recorrente">Filtrar por Recorrência</label>
+                    <select id="filter-recorrente" name="recorrente">
+                        <option value="">Todas</option>
+                        <option value="sim">Apenas Recorrentes</option>
+                        <option value="nao">Apenas Únicas</option>
+                    </select>
                 </div>
 
                 <div class="standardized-modal-actions">
@@ -338,7 +364,7 @@
 <div class="standardized-modal-overlay edit-modal-overlay">
     <div class="standardized-modal">
         <div class="standardized-modal-header">
-            <h2>✏️ Editar Objetivo</h2>
+            <h2>✏️ Editar Plano</h2>
             <button class="standardized-modal-close" onclick="closeEditModal()">×</button>
         </div>
         
@@ -364,6 +390,22 @@
                 <div class="standardized-input-group categoria-group">
                     <label for="edit-categoria">Categoria</label>
                     <input type="text" id="edit-categoria" name="categoria" placeholder="Digite ou selecione uma categoria...">
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                    <label for="edit-is-recorrente" class="recorrencia-label">
+                        <span class="recorrencia-text">Plano Recorrente?</span>
+                        <div class="switch-toggle">
+                            <input type="checkbox" id="edit-is-recorrente" name="is_recorrente" onchange="toggleEditRecorrenciaFields()">
+                            <span class="slider"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="standardized-input-group" id="edit-recorrencia-meses-group" style="display: none;">
+                    <label for="edit-recorrencia-meses">Duração (meses)</label>
+                    <input type="number" id="edit-recorrencia-meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                    <div class="standardized-help-text">Plano será replicado a cada mês até o prazo especificado, no mesmo dia da data informada.</div>
                 </div>
 
                 <div class="standardized-modal-actions">
@@ -412,8 +454,8 @@
                     <div class="quick-question-btn" onclick="askQuickQuestion('Onde posso economizar mais dinheiro?')">
                         Onde posso economizar?
                     </div>
-                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus objetivos financeiros?')">
-                        Status dos meus objetivos
+                    <div class="quick-question-btn" onclick="askQuickQuestion('Como estão meus planos financeiros?')">
+                        Status dos meus Planos
                     </div>
                 </div>
                 

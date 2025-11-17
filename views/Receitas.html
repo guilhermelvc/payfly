@@ -294,8 +294,9 @@
                     <div class="standardized-input-group recorrencia-group">
                         <label for="is_recorrente" class="recorrencia-label">
                             <span class="recorrencia-text">Receita Recorrente?</span>
-                            <div class="checkbox-wrapper">
+                            <div class="switch-toggle">
                                 <input type="checkbox" id="is_recorrente" name="is_recorrente" onchange="toggleRecorrenciaFields()">
+                                <span class="slider"></span>
                             </div>
                         </label>
                     </div>
@@ -303,6 +304,7 @@
                     <div class="standardized-input-group" id="recorrencia_meses_group" style="display: none;">
                         <label for="recorrencia_meses">Duração (meses)</label>
                         <input type="number" id="recorrencia_meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                        <div class="standardized-help-text">A receita será replicada a cada mês até o prazo especificado, no mesmo dia da data informada.</div>
                     </div>
 
                     <div class="standardized-modal-actions">
@@ -358,6 +360,15 @@
                     </div>
                 </div>
 
+                <div class="standardized-input-group">
+                    <label for="filter-recorrente">Filtrar por Recorrência</label>
+                    <select id="filter-recorrente" name="recorrente">
+                        <option value="">Todas</option>
+                        <option value="sim">Apenas Recorrentes</option>
+                        <option value="nao">Apenas Únicas</option>
+                    </select>
+                </div>
+
                 <div class="standardized-modal-actions">
                     <a onclick="FilterModal.close()" class="standardized-button standardized-button-secondary">Cancelar</a>
                     <button type="submit" class="standardized-button standardized-button-primary">🔍 Filtrar</button>
@@ -403,8 +414,9 @@
                 <div class="standardized-input-group recorrencia-group">
                     <label for="edit-is-recorrente" class="recorrencia-label">
                         <span class="recorrencia-text">Receita Recorrente?</span>
-                        <div class="checkbox-wrapper">
+                        <div class="switch-toggle">
                             <input type="checkbox" id="edit-is-recorrente" name="is_recorrente" onchange="toggleEditRecorrenciaFields()">
+                            <span class="slider"></span>
                         </div>
                     </label>
                 </div>
@@ -412,6 +424,7 @@
                 <div class="standardized-input-group" id="edit-recorrencia-meses-group" style="display: none;">
                     <label for="edit-recorrencia-meses">Duração (meses)</label>
                     <input type="number" id="edit-recorrencia-meses" name="recorrencia_meses" placeholder="Ex: 6, 12..." min="1" max="120" value="1">
+                    <div class="standardized-help-text">Receita será replicada a cada mês até o prazo especificado, no mesmo dia da data informada.</div>
                 </div>
 
                 <div class="standardized-modal-actions">

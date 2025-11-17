@@ -36,6 +36,9 @@ CREATE TABLE receitas (
     categoria TEXT DEFAULT 'Outros',
     categoria_sugerida_ia TEXT,
     tipo TEXT NOT NULL DEFAULT 'receita',
+    is_recorrente BOOLEAN DEFAULT false,
+    recorrencia_meses INTEGER DEFAULT 1,
+    receita_pai_id uuid REFERENCES receitas(id) ON DELETE CASCADE,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -72,6 +75,9 @@ CREATE TABLE planos (
     progresso_percentual NUMERIC(5,2) DEFAULT 0, -- Calculado: (valor_poupado/valor)*100
     prioridade INTEGER DEFAULT 1, -- 1=baixa, 2=média, 3=alta
     observacoes TEXT, -- Campo adicional para contexto da IA
+    is_recorrente BOOLEAN DEFAULT false,
+    recorrencia_meses INTEGER DEFAULT 1,
+    plano_pai_id uuid REFERENCES planos(id) ON DELETE CASCADE,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -88,6 +94,9 @@ CREATE TABLE poupanca (
     plano_vinculado_nome TEXT, -- Nome do plano para facilitar consultas
     categoria TEXT DEFAULT 'Poupança',
     observacoes TEXT, -- Campo adicional para contexto da IA
+    is_recorrente BOOLEAN DEFAULT false,
+    recorrencia_meses INTEGER DEFAULT 1,
+    poupanca_pai_id uuid REFERENCES poupanca(id) ON DELETE CASCADE,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -103,6 +112,9 @@ CREATE TABLE investimentos (
     tipo TEXT NOT NULL DEFAULT 'Renda Fixa',
     rentabilidade NUMERIC(5,2) DEFAULT 0.00,
     categoria TEXT DEFAULT 'Investimentos',
+    is_recorrente BOOLEAN DEFAULT false,
+    recorrencia_meses INTEGER DEFAULT 1,
+    investimento_pai_id uuid REFERENCES investimentos(id) ON DELETE CASCADE,
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
@@ -483,6 +495,22 @@ BEGIN
     RETURN resultado;
 END;
 $$ LANGUAGE plpgsql;
+
+-- =================== ÍNDICES PARA PERFORMANCE ===================
+
+-- Índices para filtro de recorrência
+CREATE INDEX idx_despesas_is_recorrente ON despesas(usuario_id, is_recorrente);
+CREATE INDEX idx_receitas_is_recorrente ON receitas(usuario_id, is_recorrente);
+CREATE INDEX idx_poupanca_is_recorrente ON poupanca(usuario_id, is_recorrente);
+CREATE INDEX idx_investimentos_is_recorrente ON investimentos(usuario_id, is_recorrente);
+CREATE INDEX idx_planos_is_recorrente ON planos(usuario_id, is_recorrente);
+
+-- Índices para replicação (relacionamentos pai-filho)
+CREATE INDEX idx_despesas_pai ON despesas(despesa_pai_id);
+CREATE INDEX idx_receitas_pai ON receitas(receita_pai_id);
+CREATE INDEX idx_poupanca_pai ON poupanca(poupanca_pai_id);
+CREATE INDEX idx_investimentos_pai ON investimentos(investimento_pai_id);
+CREATE INDEX idx_planos_pai ON planos(plano_pai_id);
 
 -- =================== COMENTÁRIOS FINAIS ===================
 
