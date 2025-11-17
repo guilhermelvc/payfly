@@ -335,7 +335,9 @@ class AppController {
         break;
 
       case "ai-insights":
-        this.loadAIInsights();
+        // ⚠️ NÃO carregar insights automáticos para economizar quota da API
+        // Os insights serão gerados apenas quando o usuário solicitar explicitamente
+        console.log("📌 AI Insights: Aba aberta - aguardando ação do usuário");
         break;
     }
   }
@@ -379,15 +381,13 @@ class AppController {
 
   /**
    * Carrega insights da IA
+   * ⚠️ DESCONTINUADO - Chamadas automáticas foram removidas para economizar quota
    */
   async loadAIInsights() {
-    if (typeof window.aiService !== "undefined") {
-      try {
-        await window.aiService.generateAutomaticInsights();
-      } catch (error) {
-        console.warn("⚠️ Erro carregando insights da IA:", error);
-      }
-    }
+    console.log(
+      "📌 AI Insights: Modo manual - aguardando solicitação do usuário"
+    );
+    // Não fazer nada aqui - deixar o usuário iniciar a conversa manualmente
   }
 
   /**

@@ -34,19 +34,20 @@ class AIInsightsInterface {
 
       console.log("🤖 AI Insights modal aberto");
 
-      // Gerar insight automático se não houver mensagens E se a quota não foi excedida
-      if (this.chatHistory.length === 0 && !window.GeminiAI.quotaExceeded) {
-        setTimeout(() => {
-          this.generateAutomaticInsight();
-        }, 1000);
-      } else if (
-        this.chatHistory.length === 0 &&
-        window.GeminiAI.quotaExceeded
-      ) {
-        // Mostrar mensagem de boas-vindas se quota foi excedida
+      // ⚠️ NÃO gerar insights automáticos para economizar quota
+      // Mostrar mensagem de boas-vindas quando abrir pela primeira vez
+      if (this.chatHistory.length === 0) {
         this.addMessage(
           "ai",
-          "👋 **Bem-vindo ao AI Insights!**\n\n📅 O limite diário da IA foi atingido. A funcionalidade estará disponível novamente amanhã.\n\n💡 Enquanto isso, explore seus dados através dos **gráficos** e **relatórios** do painel!"
+          "👋 **Bem-vindo ao AI Insights!**\n\n💡 Sou seu assistente financeiro pessoal. Faça perguntas como:\n\n📊 'Como estão meus gastos?'\n💰 'Onde posso economizar?'\n📈 'Qual meu patrimônio total?'\n🎯 'Estou no caminho certo para meus objetivos?'\n\n✨ Estou aqui para ajudar!"
+        );
+      }
+
+      // ⚠️ Se quota foi excedida, mostrar mensagem de limite
+      if (window.GeminiAI.quotaExceeded) {
+        this.addMessage(
+          "ai",
+          "📅 **Limite Diário Atingido**\n\nO limite de uso da IA foi atingido por hoje. A funcionalidade estará disponível novamente amanhã.\n\n💡 Enquanto isso, explore seus dados através dos **gráficos** e **relatórios** do painel!"
         );
       }
     } catch (error) {
@@ -140,11 +141,12 @@ class AIInsightsInterface {
         toastMessage = "Serviço temporariamente indisponível.";
       } else if (
         error.message.includes("limite") ||
-        error.message.includes("429")
+        error.message.includes("429") ||
+        error.message.includes("Limite de requisições")
       ) {
         errorMessage =
-          "Muitas perguntas em pouco tempo. Aguarde alguns segundos antes de tentar novamente. ⏰";
-        toastMessage = "Aguarde alguns segundos antes de tentar novamente.";
+          "⏳ **Limite de Requisições Atingido**\n\nA IA está recebendo muitas requisições. Por favor, **aguarde alguns minutos** e tente novamente.\n\n💡 Enquanto isso, você pode explorar seus dados nos gráficos e relatórios do painel.";
+        toastMessage = "Limite de requisições. Aguarde alguns minutos.";
       } else {
         errorMessage = `Erro: ${error.message} Tente reformular sua pergunta. 💭`;
         toastMessage = "Tente reformular sua pergunta.";
@@ -170,47 +172,13 @@ class AIInsightsInterface {
    * Gerar insight automático
    */
   async generateAutomaticInsight() {
-    try {
-      console.log("🤖 Gerando insight automático...");
-
-      // Mostrar loading enquanto carrega dados e processa IA
-      this.addLoadingMessage();
-
-      const financialData = await window.FinancialAnalyzer.getDataForAI();
-
-      if (Object.keys(financialData).length === 0) {
-        this.removeLoadingMessage();
-        this.addMessage(
-          "ai",
-          "Ainda não encontrei dados financeiros para analisar. Cadastre algumas receitas e despesas para que eu possa te dar insights personalizados! 📊"
-        );
-        return;
-      }
-
-      const insight = await window.GeminiAI.generateInsights(financialData);
-      this.removeLoadingMessage();
-      this.addMessage("ai", insight);
-    } catch (error) {
-      console.error("❌ Erro ao gerar insight automático:", error);
-      this.removeLoadingMessage();
-
-      // Verificar se é erro de quota
-      if (
-        error.message &&
-        (error.message.includes("quota") ||
-          error.message.includes("Limite de uso diário"))
-      ) {
-        this.addMessage(
-          "ai",
-          "📅 **Limite Diário Atingido**\n\nO limite de uso da IA foi atingido por hoje. A funcionalidade estará disponível novamente amanhã.\n\n💡 Use os gráficos e relatórios do painel para explorar seus dados!"
-        );
-      } else {
-        this.addMessage(
-          "ai",
-          "Bem-vindo! Faça uma pergunta sobre suas finanças para começarmos a análise. 💰"
-        );
-      }
-    }
+    console.warn(
+      "⚠️ generateAutomaticInsight() foi descontinuado para economizar quota da API"
+    );
+    this.addMessage(
+      "ai",
+      "⚠️ Geração automática de insights foi desabilitada para economizar quota da API.\n\nFaça uma pergunta específica para começarmos a análise! 💡"
+    );
   }
 
   /**

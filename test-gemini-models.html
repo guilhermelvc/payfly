@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Teste de Modelos Gemini API</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .container {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                max-width: 900px;
+                width: 100%;
+                padding: 40px;
+            }
+
+            h1 {
+                color: #333;
+                margin-bottom: 10px;
+                font-size: 28px;
+            }
+
+            .subtitle {
+                color: #666;
+                margin-bottom: 30px;
+                font-size: 14px;
+            }
+
+            .input-section {
+                margin-bottom: 30px;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border-left: 4px solid #667eea;
+            }
+
+            .input-group {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            input {
+                flex: 1;
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 14px;
+                font-family: "Courier New", monospace;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+            button {
+                padding: 12px 24px;
+                background: #667eea;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            button:hover {
+                background: #764ba2;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            }
+
+            button:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .status {
+                padding: 12px;
+                border-radius: 6px;
+                margin-bottom: 15px;
+                font-size: 14px;
+                display: none;
+            }
+
+            .status.loading {
+                display: block;
+                background: #e3f2fd;
+                color: #1976d2;
+                border-left: 4px solid #1976d2;
+            }
+
+            .status.success {
+                display: block;
+                background: #e8f5e9;
+                color: #388e3c;
+                border-left: 4px solid #388e3c;
+            }
+
+            .status.error {
+                display: block;
+                background: #ffebee;
+                color: #c62828;
+                border-left: 4px solid #c62828;
+            }
+
+            .models-section {
+                margin-top: 30px;
+            }
+
+            .models-section h2 {
+                color: #333;
+                margin-bottom: 20px;
+                font-size: 18px;
+            }
+
+            .model-list {
+                display: grid;
+                gap: 12px;
+            }
+
+            .model-card {
+                padding: 16px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                background: #fafafa;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .model-card:hover {
+                background: #f0f0f0;
+                border-color: #667eea;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            }
+
+            .model-name {
+                font-weight: 600;
+                color: #333;
+                font-family: "Courier New", monospace;
+                font-size: 14px;
+                margin-bottom: 8px;
+                word-break: break-all;
+            }
+
+            .model-info {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 10px;
+                font-size: 12px;
+                color: #666;
+            }
+
+            .info-item {
+                padding: 8px;
+                background: white;
+                border-radius: 4px;
+                border-left: 3px solid #667eea;
+            }
+
+            .info-label {
+                font-weight: 600;
+                color: #333;
+            }
+
+            .badge {
+                display: inline-block;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 600;
+                margin-right: 8px;
+                margin-top: 8px;
+            }
+
+            .badge-generate {
+                background: #e8f5e9;
+                color: #2e7d32;
+            }
+
+            .badge-embed {
+                background: #f3e5f5;
+                color: #6a1b9a;
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+                color: #999;
+            }
+
+            .empty-state svg {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 20px;
+                opacity: 0.5;
+            }
+
+            .copy-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                background: #667eea;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 8px;
+            }
+
+            .copy-btn:hover {
+                background: #764ba2;
+            }
+
+            .copy-btn.copied {
+                background: #4caf50;
+            }
+
+            .recommended {
+                border-left: 4px solid #4caf50 !important;
+                background: #f1f8e9 !important;
+            }
+
+            .recommended::after {
+                content: "✓ Recomendado";
+                float: right;
+                background: #4caf50;
+                color: white;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🤖 Teste de Modelos Gemini API</h1>
+            <p class="subtitle">
+                Descubra qual é o modelo correto para sua chave API
+            </p>
+
+            <div class="input-section">
+                <label
+                    style="
+                        display: block;
+                        margin-bottom: 10px;
+                        font-weight: 600;
+                        color: #333;
+                    "
+                >
+                    Cole sua Chave API Gemini:
+                </label>
+                <div class="input-group">
+                    <input
+                        type="password"
+                        id="apiKey"
+                        placeholder="AIzaSy..."
+                        value="AIzaSyBqdE6oz6FkpO5foR6HhPw2QFBfAIMujD8"
+                    />
+                    <button onclick="toggleApiKeyVisibility()">👁️ Ver</button>
+                </div>
+                <button
+                    onclick="fetchModels()"
+                    id="fetchBtn"
+                    style="width: 100%; margin-top: 10px"
+                >
+                    🔍 Listar Modelos Disponíveis
+                </button>
+            </div>
+
+            <div class="status" id="status"></div>
+
+            <div class="models-section">
+                <h2>Modelos Disponíveis:</h2>
+                <div id="modelsList" class="model-list">
+                    <div class="empty-state">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <p>Clique no botão acima para listar os modelos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function toggleApiKeyVisibility() {
+                const input = document.getElementById("apiKey");
+                input.type = input.type === "password" ? "text" : "password";
+            }
+
+            async function fetchModels() {
+                const apiKey = document.getElementById("apiKey").value.trim();
+                const status = document.getElementById("status");
+                const modelsList = document.getElementById("modelsList");
+                const fetchBtn = document.getElementById("fetchBtn");
+
+                if (!apiKey) {
+                    status.textContent = "❌ Digite uma chave API";
+                    status.className = "status error";
+                    return;
+                }
+
+                status.textContent = "⏳ Buscando modelos...";
+                status.className = "status loading";
+                fetchBtn.disabled = true;
+                modelsList.innerHTML = "";
+
+                try {
+                    const response = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(
+                            `Erro ${response.status}: Chave API inválida ou expirada`
+                        );
+                    }
+
+                    const data = await response.json();
+                    const models = data.models || [];
+
+                    if (models.length === 0) {
+                        status.textContent = "⚠️ Nenhum modelo encontrado";
+                        status.className = "status error";
+                        modelsList.innerHTML =
+                            '<div class="empty-state"><p>Sua chave não tem acesso a modelos</p></div>';
+                        return;
+                    }
+
+                    status.textContent = `✅ ${models.length} modelos encontrados`;
+                    status.className = "status success";
+
+                    // Filtrar modelos com suporte a generateContent
+                    const generateModels = models.filter((m) =>
+                        m.supportedGenerationMethods?.includes(
+                            "generateContent"
+                        )
+                    );
+
+                    if (generateModels.length === 0) {
+                        modelsList.innerHTML =
+                            '<div class="empty-state"><p>Nenhum modelo com suporte a generateContent</p></div>';
+                        return;
+                    }
+
+                    // Recomendar o melhor modelo
+                    const recommended = recommendedModel(generateModels);
+
+                    modelsList.innerHTML = generateModels
+                        .map((model) => {
+                            const displayName = model.name.split("/").pop();
+                            const isRecommended = model.name === recommended;
+                            return `
+                        <div class="model-card ${
+                            isRecommended ? "recommended" : ""
+                        }">
+                            <div class="model-name">${displayName}</div>
+                            <div class="model-info">
+                                <div class="info-item">
+                                    <span class="info-label">Nome completo:</span>
+                                    <div style="font-family: monospace; font-size: 11px; word-break: break-all; margin-top: 4px;">
+                                        ${model.name}
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Versão:</span>
+                                    <div>${model.version || "N/A"}</div>
+                                </div>
+                            </div>
+                            <div>
+                                ${
+                                    model.supportedGenerationMethods?.includes(
+                                        "generateContent"
+                                    )
+                                        ? '<span class="badge badge-generate">✓ generateContent</span>'
+                                        : ""
+                                }
+                                ${
+                                    model.supportedGenerationMethods?.includes(
+                                        "embedContent"
+                                    )
+                                        ? '<span class="badge badge-embed">✓ embedContent</span>'
+                                        : ""
+                                }
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('${displayName}', this)">
+                                📋 Copiar nome
+                            </button>
+                        </div>
+                    `;
+                        })
+                        .join("");
+                } catch (error) {
+                    status.textContent = `❌ ${error.message}`;
+                    status.className = "status error";
+                    console.error("Erro:", error);
+                } finally {
+                    fetchBtn.disabled = false;
+                }
+            }
+
+            function recommendedModel(models) {
+                // Ordem de preferência
+                const preference = [
+                    "gemini-2.0-flash",
+                    "gemini-1.5-flash-latest",
+                    "gemini-1.5-pro-latest",
+                    "gemini-1.5-flash",
+                    "gemini-1.5-pro",
+                    "gemini-pro-latest",
+                    "gemini-pro",
+                ];
+
+                for (const pref of preference) {
+                    const found = models.find((m) => m.name.includes(pref));
+                    if (found) return found.name;
+                }
+
+                return models[0]?.name;
+            }
+
+            function copyToClipboard(text, btn) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const original = btn.textContent;
+                    btn.textContent = "✓ Copiado!";
+                    btn.classList.add("copied");
+                    setTimeout(() => {
+                        btn.textContent = original;
+                        btn.classList.remove("copied");
+                    }, 2000);
+                });
+            }
+
+            // Carregar automaticamente ao abrir a página
+            document.addEventListener("DOMContentLoaded", () => {
+                const apiKey = document.getElementById("apiKey").value;
+                if (apiKey) {
+                    fetchModels();
+                }
+            });
+        </script>
+    </body>
+</html>
