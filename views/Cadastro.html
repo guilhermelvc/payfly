@@ -8,7 +8,8 @@
     <title>PayFly</title>
     <!-- ======= Estilos ====== -->
     <link rel="icon" type="image/png" href="../views/imgs/Favicon.png">
-        <link rel="stylesheet" href="../views/css/auth.css">   
+        <link rel="stylesheet" href="../views/css/auth.css">
+    <link rel="stylesheet" href="../assets/css/accessibility.css">   
 </head>
 
 <div class="centralizer">
@@ -110,5 +111,11 @@ function validateEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
 }
 </script>
+
+<!-- Injetor de Acessibilidade -->
+<script src="../controllers/accessibility-injector.js"></script>
+
+<!-- Sistema de Acessibilidade -->
+<script src="../controllers/accessibility.js"></script>
 
 </html>

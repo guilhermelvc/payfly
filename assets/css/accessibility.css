@@ -2,119 +2,128 @@
 
 /* Variáveis de Tema */
 :root {
-  /* Tema Escuro (padrão atual) */
-  --bg-primary: #222;
-  --bg-secondary: #fff;
-  --bg-card: #fff;
-  --text-primary: #222;
-  --text-secondary: #666;
-  --text-inverse: #fff;
-  --border-color: #f5f5f5;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --hover-bg: #f5f5f5;
+    /* Tema Escuro (padrão atual) */
+    --bg-primary: #222;
+    --bg-secondary: #fff;
+    --bg-card: #fff;
+    --text-primary: #222;
+    --text-secondary: #666;
+    --text-inverse: #fff;
+    --border-color: #f5f5f5;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --hover-bg: #f5f5f5;
 
-  /* Cores do sistema (mantém as mesmas) */
-  --blue: #2a2185;
-  --white: #fff;
-  --gray: #f5f5f5;
-  --black1: #222;
-  --black2: #999;
-  --green: #93b1a6;
-  --red: red;
-  --green2: #183d3d;
-  --green3: #005951;
+    /* Cores do sistema (mantém as mesmas) */
+    --blue: #2a2185;
+    --white: #fff;
+    --gray: #f5f5f5;
+    --black1: #222;
+    --black2: #999;
+    --green: #93b1a6;
+    --red: red;
+    --green2: #183d3d;
+    --green3: #005951;
 
-  /* Tamanho de fonte base */
-  --font-size-base: 16px;
-  --font-scale: 1;
+    /* Tamanho de fonte base */
+    --font-size-base: 16px;
+    --font-scale: 1;
 }
 
 /* Tema Claro */
 body.light-theme {
-  --bg-primary: #f5f5f5;
-  --bg-secondary: #fff;
-  --bg-card: #fff;
-  --text-primary: #222;
-  --text-secondary: #666;
-  --text-inverse: #fff;
-  --border-color: #ddd;
-  --shadow: rgba(0, 0, 0, 0.08);
-  --hover-bg: #e9e9e9;
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #fff;
+    --bg-card: #fff;
+    --text-primary: #222;
+    --text-secondary: #666;
+    --text-inverse: #fff;
+    --border-color: #ddd;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --hover-bg: #e9e9e9;
 }
 
 body.light-theme .navigation {
-  background: #fff !important;
-  border-left: 10px solid #f0f0f0 !important;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    background: #fff !important;
+    border-left: 10px solid #f0f0f0 !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .navigation ul li a {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .navigation ul li:hover,
 body.light-theme .navigation ul li.hovered {
-  background-color: var(--gray) !important;
+    background-color: var(--gray) !important;
 }
 
 body.light-theme .main {
-  background: #f5f5f5 !important;
+    background: #f5f5f5 !important;
 }
 
 body.light-theme .topbar {
-  background: #fff !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background: #fff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 body.light-theme .cardBox .card {
-  background: #fff !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    background: #fff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 body.light-theme .cardBox .card .numbers,
 body.light-theme .cardBox .card .cardName,
 body.light-theme .card-info h3,
 body.light-theme .card-info p {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .cardBox .card .iconBx,
 body.light-theme .cardBox .card .iconBx ion-icon,
 body.light-theme .card-icon,
 body.light-theme .card-icon ion-icon {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .details {
-  background: #fff !important;
+    background: #fff !important;
 }
 
 body.light-theme .recentOrders {
-  background: #fff !important;
+    background: #fff !important;
 }
 
 body.light-theme .cardHeader h2,
 body.light-theme .details .cardHeader h2 {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
-
 /* Aplicar escala de fonte */
 html {
-  font-size: calc(var(--font-size-base) * var(--font-scale)) !important;
+    font-size: calc(var(--font-size-base) * var(--font-scale)) !important;
 }
 
 body {
-  font-size: 1rem !important;
+    font-size: 1rem !important;
+}
+
+/* Garantir que TODOS os elementos herdem e apliquem a escala corretamente */
+* {
+    font-size: inherit !important;
+}
+
+/* Elemento-chave para propagação de escala */
+html * {
+    font-size: inherit !important;
 }
 
 /* Garantir que elementos importantes herdem e apliquem a escala */
 table {
-  font-size: 1rem !important;
+    font-size: 1rem !important;
 }
 
 table th,
 table td {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* Cards do Painel */
@@ -122,34 +131,34 @@ table td {
 .summary-card h3,
 .summary-content h3,
 .card-info h3 {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 .cardBox .card .numbers,
 .summary-card p,
 .summary-value,
 .card-info p {
-  font-size: 1.5rem !important;
+    font-size: 1.5rem !important;
 }
 
 .cardBox .card .iconBx,
 .card-icon,
 .summary-icon {
-  font-size: 1.75rem !important;
+    font-size: 1.75rem !important;
 }
 
 .summary-icon ion-icon {
-  font-size: 1.5rem !important;
+    font-size: 1.5rem !important;
 }
 
 /* Dashboard e Gráficos */
 .dashboard-title h2 {
-  font-size: 1.5rem !important;
+    font-size: 1.5rem !important;
 }
 
 .chart-header h3,
 .chart-container h3 {
-  font-size: 1.125rem !important;
+    font-size: 1.125rem !important;
 }
 
 /* Legendas e labels dos gráficos */
@@ -178,7 +187,7 @@ canvas + div *,
 .chart-selector-info,
 .chart-title,
 h3.chart-title {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* Forçar fontes em todos os elementos SVG e texto dos gráficos */
@@ -187,328 +196,472 @@ svg tspan,
 .recharts-text,
 .recharts-legend-item,
 .recharts-legend-item-text {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* Botões de período */
 .period-filters button,
 .period-btn {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* Período e filtros */
 .period-btn,
 .filter-btn {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 /* Texto dos gráficos (precisa ser aplicado via JS também) */
 .chart-content,
 .chart-content * {
-  font-size: inherit !important;
+    font-size: inherit !important;
 }
 
 .title {
-  font-size: 1rem !important;
+    font-size: 1rem !important;
 }
 
 button,
 .btn-primary,
 .btn-secondary {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 input,
 select,
 textarea {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
 label {
-  font-size: 0.875rem !important;
+    font-size: 0.875rem !important;
 }
 
-/* Barra de Acessibilidade */
+/* Barra de Acessibilidade - Botão Flutuante */
 .accessibility-bar {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 10004;
-  background: rgba(42, 33, 133, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 8px 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-top-left-radius: 10px;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 10004;
 }
 
-.accessibility-bar.minimized {
-  padding: 5px 10px;
+.accessibility-toggle-btn {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+    transition: all 0.3s ease;
+    z-index: 10005;
+}
+
+.accessibility-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.6);
+}
+
+.accessibility-toggle-btn:active {
+    transform: scale(0.95);
 }
 
 .accessibility-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 0.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
 }
 
-.accessibility-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 16px;
-}
-
-.accessibility-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-.accessibility-btn:active {
-  transform: translateY(0);
-}
-
-.accessibility-btn ion-icon {
-  font-size: 18px;
-}
-
-.accessibility-label {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  margin-right: 5px;
-  display: none;
+.accessibility-controls.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 .font-size-display {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  min-width: 45px;
-  text-align: center;
+    font-size: 1rem;
+    color: #000000;
+    text-align: center;
+    padding: 0.6rem;
+    background: rgba(0, 102, 204, 0.08);
+    border-radius: 8px;
+    font-weight: 900;
+    border: 1px solid rgba(0, 102, 204, 0.15);
 }
 
 .accessibility-divider {
-  width: 1px;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.3);
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0.25rem 0;
+}
+
+.accessibility-btn {
+    background: rgba(0, 102, 204, 0.05);
+    border: 1px solid rgba(0, 102, 204, 0.2);
+    color: #000000;
+    cursor: pointer;
+    padding: 0.7rem 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    width: 100%;
+    height: 44px;
+}
+
+.accessibility-btn:hover {
+    background: rgba(0, 102, 204, 0.2);
+    color: #000000;
+    border-color: rgba(0, 102, 204, 0.4);
+    transform: translateX(-4px);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.2);
+}
+
+.accessibility-btn:active {
+    transform: translateX(-2px);
+}
+
+.accessibility-btn ion-icon {
+    font-size: 1.3rem;
+    color: #000000;
+}
+}
+
+.accessibility-label {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 5px;
+    display: none;
+}
+
+.font-size-display {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: center;
+}
+
+.accessibility-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 /* Responsivo */
 @media (max-width: 768px) {
-  .accessibility-bar {
-    padding: 6px 10px;
-    gap: 6px;
-  }
+    .accessibility-bar {
+        padding: 6px 10px;
+        gap: 6px;
+    }
 
-  .accessibility-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
+    .accessibility-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
 
-  .accessibility-btn ion-icon {
-    font-size: 16px;
-  }
+    .accessibility-btn ion-icon {
+        font-size: 16px;
+    }
 
-  .font-size-display {
-    padding: 3px 8px;
-    font-size: 10px;
-    min-width: 40px;
-  }
+    .font-size-display {
+        padding: 3px 8px;
+        font-size: 10px;
+        min-width: 40px;
+    }
 }
 
 @media (max-width: 480px) {
-  .accessibility-bar {
-    padding: 5px 8px;
-    gap: 5px;
-    border-top-left-radius: 8px;
-  }
+    .accessibility-bar {
+        padding: 5px 8px;
+        gap: 5px;
+        border-top-left-radius: 8px;
+    }
 
-  .accessibility-btn {
-    width: 26px;
-    height: 26px;
-  }
+    .accessibility-btn {
+        width: 26px;
+        height: 26px;
+    }
 
-  .font-size-display {
-    padding: 2px 6px;
-    min-width: 35px;
-  }
+    .font-size-display {
+        padding: 2px 6px;
+        min-width: 35px;
+    }
 }
 
 /* Animações */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .accessibility-bar {
-  animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.3s ease;
 }
 
 /* Foco visível para acessibilidade */
 .accessibility-btn:focus {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
 /* Tooltip */
 .accessibility-btn {
-  position: relative;
+    position: relative;
 }
 
 .accessibility-btn::after {
-  content: attr(title);
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%) scale(0);
-  background: rgba(0, 0, 0, 0.9);
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: transform 0.2s ease;
-  z-index: 10005;
+    content: attr(title);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+    z-index: 10005;
 }
 
 .accessibility-btn:hover::after {
-  transform: translateX(-50%) scale(1);
+    transform: translateX(-50%) scale(1);
+}
+/* Ajustes para tema claro na barra de acessibilidade */
+body.light-theme .accessibility-toggle-btn {
+    background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
 }
 
-/* Ajustes para tema claro na barra de acessibilidade */
-body.light-theme .accessibility-bar {
-  background: rgba(42, 33, 133, 0.95);
+body.light-theme .accessibility-toggle-btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.6);
+}
+
+body.light-theme .accessibility-controls {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .accessibility-btn {
+    color: #000000;
+}
+
+body.light-theme .accessibility-btn:hover {
+    background: rgba(0, 102, 204, 0.2);
+    color: #000000;
+    border-color: rgba(0, 102, 204, 0.4);
+}
+
+body.light-theme .font-size-display {
+    color: #000000;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .accessibility-divider {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* Tema claro - Dashboard e Cards */
 body.light-theme .dashboard-container,
 body.light-theme .dashboard-summary,
 body.light-theme .dashboard-charts {
-  background: #f5f5f5 !important;
+    background: #f5f5f5 !important;
 }
 
 body.light-theme .summary-card,
 body.light-theme .chart-container {
-  background: #fff !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
-  color: var(--black1) !important;
+    background: #fff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .summary-card h3,
 body.light-theme .summary-card p,
 body.light-theme .chart-header h3,
 body.light-theme .dashboard-title h2 {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .card-icon {
-  background: rgba(42, 33, 133, 0.1) !important;
-  color: var(--blue) !important;
+    background: rgba(42, 33, 133, 0.1) !important;
+    color: var(--blue) !important;
 }
 
 /* Tema claro - Tabelas */
 body.light-theme table,
 body.light-theme .data-table-wrapper,
 body.light-theme .recentOrders table {
-  background: #fff !important;
-  color: var(--black1) !important;
+    background: #fff !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme table thead {
-  background: #f8f9fa !important;
+    background: #f8f9fa !important;
 }
 
 body.light-theme table th {
-  color: var(--black1) !important;
-  font-weight: 600 !important;
+    color: var(--black1) !important;
+    font-weight: 600 !important;
 }
 
 body.light-theme table td {
-  color: var(--black1) !important;
-  border-bottom: 1px solid #e9ecef !important;
+    color: var(--black1) !important;
+    border-bottom: 1px solid #e9ecef !important;
 }
 
 body.light-theme table tbody tr:hover {
-  background: #f8f9fa !important;
+    background: #f8f9fa !important;
 }
 
 /* Tema claro - Botões */
 body.light-theme .btn-primary,
 body.light-theme .period-btn,
 body.light-theme .pdf-btn {
-  color: #fff !important;
+    color: #fff !important;
 }
 
 body.light-theme .btn-secondary {
-  background: #6c757d !important;
-  color: #fff !important;
+    background: #6c757d !important;
+    color: #fff !important;
 }
 
 /* Tema claro - Inputs e Forms */
 body.light-theme input,
 body.light-theme select,
 body.light-theme textarea {
-  background: #fff !important;
-  border: 1px solid #ced4da !important;
-  color: var(--black1) !important;
+    background: #fff !important;
+    border: 1px solid #ced4da !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme input::placeholder,
 body.light-theme textarea::placeholder {
-  color: #6c757d !important;
+    color: #6c757d !important;
 }
 
 /* Tema claro - Modais */
 body.light-theme .modal {
-  background: #fff !important;
-  color: var(--black1) !important;
+    background: #fff !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .modal-header {
-  background: #f8f9fa !important;
-  border-bottom: 1px solid #dee2e6 !important;
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
 }
 
 body.light-theme .modal-header h2 {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 body.light-theme .close-modal {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
 }
 
 /* Tema claro - Filtros */
 body.light-theme .filter-controls,
 body.light-theme .filter-section {
-  background: #fff !important;
-  border: 1px solid #dee2e6 !important;
+    background: #fff !important;
+    border: 1px solid #dee2e6 !important;
 }
 
 body.light-theme .filter-controls label,
 body.light-theme .filter-section label {
-  color: var(--black1) !important;
+    color: var(--black1) !important;
+}
+
+/* =============== MEDIA QUERIES - ACCESSIBILITY BUTTON =============== */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .accessibility-bar {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .accessibility-toggle-btn {
+        width: 52px;
+        height: 52px;
+        font-size: 1.3rem;
+    }
+
+    .accessibility-controls {
+        min-width: 160px;
+        bottom: 65px;
+    }
+
+    .accessibility-btn {
+        height: 38px;
+        padding: 0.5rem 0.7rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .accessibility-bar {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .accessibility-toggle-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .accessibility-controls {
+        min-width: 150px;
+        bottom: 60px;
+        padding: 0.6rem;
+    }
+
+    .accessibility-btn {
+        height: 36px;
+        padding: 0.5rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .font-size-display {
+        font-size: 0.8rem;
+        padding: 0.3rem;
+    }
 }

@@ -1,524 +1,722 @@
 /* ======= Estilos ======= */
 * {
-  font-family: "Ubuntu", sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  text-decoration: none;
+    font-family: "Ubuntu", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 16px;
-  text-decoration: none;
-  background: white;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 16px;
+    text-decoration: none;
+    background: white;
+    overflow-x: hidden;
 }
 
 h2 {
-  margin-bottom: 30px;
+    margin-bottom: 30px;
 }
 
 /* Cabeçalho */
 
 .container {
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
-  top: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
 }
 
 .fixed-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .menu-icon {
-  display: none;
-  cursor: pointer;
-  font-size: 32px;
-  color: black;
+    display: none;
+    cursor: pointer;
+    font-size: 32px;
+    color: black;
 }
 
 .text-menu {
-  color: black;
-  margin: 0 20px;
-  text-decoration: none;
-  font-size: 18px;
-  transition: color 0.3s ease;
+    color: black;
+    margin: 0 20px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
 }
 
 .text-menu:hover {
-  color: #93b1a6;
+    color: #93b1a6;
+}
+
+/* Avatar do usuário */
+.user-menu {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.user-avatar {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-family: "Ubuntu", sans-serif;
+    border: none;
+}
+
+/* Avatar quando usuário está logado */
+.user-avatar.logged-in {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #93b1a6, #183d3d);
+    color: white;
+    border: 2px solid #183d3d;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.user-avatar.logged-in:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(24, 61, 61, 0.3);
+}
+
+/* Botão quando usuário NÃO está logado */
+.user-avatar.login-button {
+    background-color: #183d3d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(24, 61, 61, 0.2);
+}
+
+.user-avatar.login-button:hover {
+    background-color: #0f2626;
+    box-shadow: 0 4px 12px rgba(24, 61, 61, 0.3);
 }
 
 .User {
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
 }
 
 .item-menu {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .item-menu.hide {
-  display: none;
+    display: none;
 }
 
 /* Primeira seção da pagina */
 .central-div {
-  margin-top: 80px;
-  padding: 40px 20px;
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background-color: white;
-  overflow: hidden;
+    margin-top: 80px;
+    padding: 40px 20px;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: white;
+    overflow: hidden;
 }
 
 /* Estilos para a elipse */
 .ellipse {
-  width: 25vw;
-  height: 100%;
-  max-width: 300px;
-  background-color: #93b1a6;
-  border-radius: 0 100% 100% 0;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  z-index: 0;
-  opacity: 0.8;
+    width: 25vw;
+    height: 100%;
+    max-width: 300px;
+    background-color: #93b1a6;
+    border-radius: 0 100% 100% 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 0;
+    opacity: 0.8;
+}
+
+/* Seção PayFly com título e libélula */
+.payfly-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    margin-left: 50px;
+}
+
+.payfly-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #183d3d;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payfly-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 30px;
+    text-align: center;
+    max-width: 500px;
+}
+
+.payfly-tagline {
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    margin-top: 30px;
+    text-align: center;
+    max-width: 550px;
+    line-height: 1.6;
+    font-style: italic;
 }
 
 /* Estilos para a imagem central */
 .central-image {
-  position: relative;
-  z-index: 1;
-  max-width: 100%;
-  height: auto;
-  width: auto;
-  max-height: 520px;
-  margin-left: 50px; /* Desloca a imagem para a direita do meio círculo */
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    max-height: 520px;
+    animation: wingFlap 0.8s ease-in-out infinite;
+    transform-origin: center;
 }
 
-/* Estilos para a imagem central */
-.central-image {
-  max-width: 100%; /* Garante que a imagem não ultrapasse a largura máxima da div */
-  max-height: 100%; /* Garante que a imagem não ultrapasse a altura máxima da div */
-  width: 520px; /* Permite que a largura da imagem se ajuste automaticamente */
-  height: 520px; /* Permite que a altura da imagem se ajuste automaticamente */
+/* Animação de batida de asas */
+@keyframes wingFlap {
+    0% {
+        transform: scaleX(1) rotateZ(0deg);
+    }
+    25% {
+        transform: scaleX(0.98) rotateZ(-2deg);
+    }
+    50% {
+        transform: scaleX(1) rotateZ(0deg);
+    }
+    75% {
+        transform: scaleX(0.98) rotateZ(2deg);
+    }
+    100% {
+        transform: scaleX(1) rotateZ(0deg);
+    }
 }
 
 /* Estilos para os links e a logo */
 .links-and-logo {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Alinha os itens à direita */
-  font-size: 20px;
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Alinha os itens à direita */
+    font-size: 20px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }
 
 .link,
 .logo {
-  margin-left: 10px; /* Reduz o espaçamento entre os links e a logo */
+    margin-left: 10px; /* Reduz o espaçamento entre os links e a logo */
 }
 
 .link {
-  color: #333;
-  text-decoration: none;
-  font-size: 20px; /* Tamanho da fonte ajustado para dispositivos móveis */
+    color: #333;
+    text-decoration: none;
+    font-size: 20px; /* Tamanho da fonte ajustado para dispositivos móveis */
 }
 
 .logo {
-  width: auto;
-  height: auto;
-  max-width: 150px; /* Tamanho da logo ajustado para dispositivos móveis */
-  max-height: 150px;
-  margin-right: 10px;
+    width: auto;
+    height: auto;
+    max-width: 150px; /* Tamanho da logo ajustado para dispositivos móveis */
+    max-height: 150px;
+    margin-right: 10px;
 }
 
 /* Seção "Quem Somos?" da pagina */
 .quem-somos-section {
-  background-color: #93b1a6; /* Define a cor de fundo */
-  padding: 50px 20px; /* Adiciona espaçamento interno */
-  display: flex;
-  justify-content: center;
+    background-color: #93b1a6; /* Define a cor de fundo */
+    padding: 120px 20px 80px 20px; /* Aumenta padding superior para melhor centralização */
+    display: flex;
+    justify-content: center;
+    min-height: 100vh; /* Garante que a seção ocupará a altura total da janela */
+    align-items: center; /* Centraliza verticalmente */
+    scroll-margin-top: 80px; /* Espaço para o header fixo */
 }
 
 .quem-somos-content {
-  display: flex;
-  align-items: center;
-  max-width: 1200px; /* Define uma largura máxima para o conteúdo */
-  width: 100%;
+    display: flex;
+    align-items: center;
+    max-width: 1200px; /* Define uma largura máxima para o conteúdo */
+    width: 100%;
 }
 
 .text {
-  flex: 1; /* Faz o texto ocupar o espaço restante */
-  padding-right: 100px; /* Adiciona espaçamento à direita */
-  max-width: 500px;
-  padding-left: 80px;
+    flex: 1; /* Faz o texto ocupar o espaço restante */
+    padding-right: 100px; /* Adiciona espaçamento à direita */
+    max-width: 500px;
+    padding-left: 80px;
 }
 /* Formatação do titulo da seção */
 .quem-somos-section h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 /* Formatação do texto da seção */
 .quem-somos-section p {
-  font-size: 18px;
-  margin-bottom: 20px;
+    font-size: 18px;
+    margin-bottom: 20px;
 }
 /* Formatação da imagem da seção */
 .quem-somos-image {
-  margin-left: 300px;
-  width: 300px;
-  height: 300px;
+    margin-left: 300px;
+    width: 300px;
+    height: 300px;
 }
 
 /* Seção do botão de cadastro */
 .call-to-action-section {
-  background-color: #183d3d; /* Define a cor de fundo */
-  padding: 50px 20px; /* Adiciona espaçamento interno */
-  text-align: center; /* Centraliza o conteúdo */
+    background-color: #183d3d; /* Define a cor de fundo */
+    padding: 50px 20px; /* Adiciona espaçamento interno */
+    text-align: center; /* Centraliza o conteúdo */
 }
 
 .call-to-action-content {
-  max-width: 1200px; /* Define uma largura máxima para o conteúdo */
-  margin: 0 auto; /* Centraliza a div na página */
+    max-width: 1200px; /* Define uma largura máxima para o conteúdo */
+    margin: 0 auto; /* Centraliza a div na página */
 }
 
 .call-to-action-section h2 {
-  color: #fff; /* Define a cor do texto como branco */
-  font-size: 24px;
-  margin-bottom: 20px;
+    color: #fff; /* Define a cor do texto como branco */
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .call-to-action-section p {
-  color: #fff; /* Define a cor do texto como branco */
-  font-size: 18px;
-  margin-bottom: 20px;
+    color: #fff; /* Define a cor do texto como branco */
+    font-size: 18px;
+    margin-bottom: 20px;
 }
 /* Botão de cadastro */
 .cta-button {
-  background-color: #005951; /* Verde mais escuro */
-  color: #fff; /* Cor do texto como branco */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    background: linear-gradient(135deg, #93b1a6, #005951);
+    color: #fff;
+    padding: 18px 45px;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(24, 61, 61, 0.3);
+    text-decoration: none;
+    letter-spacing: 0.5px;
 }
 
 .cta-button:hover {
-  background-color: #00413b; /* Altera a cor ao passar o mouse */
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(24, 61, 61, 0.4);
+    background: linear-gradient(135deg, #a8c5ba, #00766a);
+}
+
+.cta-button:active {
+    transform: translateY(-1px);
 }
 
 /* Seção de dados de contato da pagina */
 .contato-section {
-  background-color: white;
-  padding: 50px 20px;
-  display: flex;
-  justify-content: center; /* Centraliza o conteúdo horizontalmente */
-  margin-bottom: 50px;
+    background-color: white;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    margin-bottom: 50px;
 }
 
 .contato-left {
-  max-width: 700px; /* Define uma largura máxima para o conteúdo */
-  width: 100%;
-  margin-bottom: 40px;
-  margin-top: 50px;
+    max-width: 700px; /* Define uma largura máxima para o conteúdo */
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 50px;
 }
 
 .contato-right {
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
 }
 
 .contato-item {
-  margin-bottom: 20px;
-  display: block; /* Usa flexbox para alinhar o ícone e o texto horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
+    margin-bottom: 20px;
+    display: block; /* Usa flexbox para alinhar o ícone e o texto horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
 }
 /* Formatação dos icones desta sessão */
 .contato-item ion-icon {
-  margin-right: 10px;
-  color: #183d3d;
+    margin-right: 10px;
+    color: #183d3d;
 }
 
 ion-con.md.hydrated {
-  width: 80px;
-  height: 100px;
-  color: #183d3d;
+    width: 80px;
+    height: 100px;
+    color: #183d3d;
 }
 
 /* Para garantir que o texto e o ícone não sejam quebrados */
 .contato-item p {
-  margin: 0;
-  white-space: nowrap; /* Impede que o texto seja quebrado */
+    margin: 0;
+    white-space: nowrap; /* Impede que o texto seja quebrado */
 }
 
 .logo {
-  max-width: 350px;
-  max-height: 500px;
+    max-width: 350px;
+    max-height: 500px;
 }
 
 /* Rodapé */
 .footer {
-  background-color: #183d3d;
-  color: white;
-  padding: 40px 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 30px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+    background-color: #183d3d;
+    color: white;
+    padding: 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .footer-container {
-  background-color: #183d3d;
-  width: 100%;
+    background-color: #183d3d;
+    width: 100%;
 }
 
 .footer-column {
-  flex: 1;
-  min-width: 250px;
-  max-width: 300px;
-  padding: 0 15px;
-  margin-bottom: 20px;
-  text-align: center;
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    padding: 0 15px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .footer-column p {
-  margin-bottom: 15px;
-  font-size: 16px;
-  line-height: 1.5;
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 .footer-column ion-icon {
-  font-size: 35px;
-  margin: 10px;
-  color: white;
-  transition: transform 0.3s ease, color 0.3s ease;
-  cursor: pointer;
+    font-size: 35px;
+    margin: 10px;
+    color: white;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
 }
 
 .footer-column ion-icon:hover {
-  transform: scale(1.1);
-  color: #93b1a6;
+    transform: scale(1.1);
+    color: #93b1a6;
 }
 
 .footer-column:last-child {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
 /* Media Queries */
 @media screen and (max-width: 1024px) {
-  .quem-somos-content {
-    flex-direction: column;
-    text-align: center;
-  }
+    .quem-somos-content {
+        flex-direction: column;
+        text-align: center;
+    }
 
-  .text {
-    padding: 0;
-    margin-bottom: 30px;
-  }
+    .text {
+        padding: 0;
+        margin-bottom: 30px;
+    }
 
-  .quem-somos-image {
-    width: 250px;
-    height: 250px;
-  }
+    .quem-somos-image {
+        width: 250px;
+        height: 250px;
+    }
 }
 
 @media screen and (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
+    body {
+        font-size: 14px;
+    }
 
-  .menu-icon {
-    display: block;
-  }
+    .menu-icon {
+        display: block;
+    }
 
-  .fixed-header {
-    padding: 10px 15px;
-  }
+    .fixed-header {
+        padding: 10px 15px;
+    }
 
-  .item-menu:not(.menu-icon) {
-    display: none;
-  }
+    .item-menu:not(.menu-icon) {
+        display: none;
+    }
 
-  .item-menu.show {
-    display: block;
-  }
+    .item-menu.show {
+        display: block;
+    }
 
-  .text-menu {
-    display: block;
-    padding: 10px 0;
-    margin: 5px 0;
-    font-size: 16px;
-  }
+    .text-menu {
+        display: block;
+        padding: 10px 0;
+        margin: 5px 0;
+        font-size: 16px;
+    }
 
-  .central-div {
-    margin-top: 60px;
-    padding: 20px;
-    min-height: auto;
-  }
+    .user-menu {
+        order: -1;
+        margin-left: 0;
+        margin-right: auto;
+    }
 
-  .ellipse {
-    width: 20vw;
-    max-width: 150px;
-    opacity: 0.6;
-  }
+    .user-avatar.logged-in {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
 
-  .central-image {
-    max-height: 50vh;
-    margin-left: 20px;
-  }
+    .user-avatar.login-button {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
 
-  .links-and-logo {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    margin-top: 20px;
-  }
+    .central-div {
+        margin-top: 60px;
+        padding: 20px;
+        min-height: auto;
+    }
 
-  .contato-section {
-    flex-direction: column;
-    text-align: center;
-  }
+    .ellipse {
+        width: 20vw;
+        max-width: 150px;
+        opacity: 0.6;
+    }
 
-  .contato-item {
-    justify-content: center;
-  }
+    .payfly-section {
+        margin-left: 20px;
+    }
 
-  .footer {
-    padding: 30px 15px;
-    gap: 20px;
-  }
+    .payfly-title {
+        font-size: 36px;
+        margin-bottom: 15px;
+    }
 
-  .footer-column {
-    min-width: 100%;
-    padding: 0;
-    margin-bottom: 25px;
-  }
+    .payfly-subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
 
-  .footer-column p {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
+    .payfly-tagline {
+        font-size: 14px;
+        margin-top: 20px;
+        max-width: 400px;
+    }
 
-  .footer-column:last-child {
-    margin-bottom: 0;
-    padding: 0 15px;
-  }
+    .central-image {
+        max-height: 50vh;
+        margin-left: 0;
+    }
 
-  .footer-column ion-icon {
-    font-size: 30px;
-    margin: 8px;
-  }
+    .links-and-logo {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        margin-top: 20px;
+    }
+
+    .cta-button {
+        padding: 14px 30px;
+        font-size: 16px;
+    }
+
+    .contato-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .contato-item {
+        justify-content: center;
+    }
+
+    .footer {
+        padding: 30px 15px;
+        gap: 20px;
+    }
+
+    .footer-column {
+        min-width: 100%;
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .footer-column p {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .footer-column:last-child {
+        margin-bottom: 0;
+        padding: 0 15px;
+    }
+
+    .footer-column ion-icon {
+        font-size: 30px;
+        margin: 8px;
+    }
 }
 
 @media screen and (max-width: 480px) {
-  .central-div {
-    margin-top: 50px;
-    padding: 15px;
-  }
+    .central-div {
+        margin-top: 50px;
+        padding: 15px;
+    }
 
-  .ellipse {
-    width: 15vw;
-    max-width: 100px;
-    opacity: 0.5;
-  }
+    .user-avatar.logged-in {
+        width: 38px;
+        height: 38px;
+        font-size: 12px;
+    }
 
-  .central-image {
-    max-height: 40vh;
-    margin-left: 10px;
-  }
+    .user-avatar.login-button {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
 
-  .quem-somos-section {
-    padding: 40px 15px;
-  }
+    .cta-button {
+        padding: 12px 25px;
+        font-size: 15px;
+    }
 
-  .call-to-action-section {
-    padding: 40px 15px;
-  }
+    .payfly-section {
+        margin-left: 10px;
+    }
 
-  .call-to-action-section h2 {
-    font-size: 24px;
-  }
+    .payfly-title {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
 
-  .contato-section {
-    padding: 40px 15px;
-  }
+    .payfly-subtitle {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
 
-  .footer {
-    padding: 30px 15px;
-  }
+    .payfly-tagline {
+        font-size: 13px;
+        margin-top: 15px;
+        max-width: 300px;
+    }
+
+    .ellipse {
+        width: 15vw;
+        max-width: 100px;
+        opacity: 0.5;
+    }
+
+    .central-image {
+        max-height: 40vh;
+        margin-left: 10px;
+    }
+
+    .quem-somos-section {
+        padding: 40px 15px;
+    }
+
+    .call-to-action-section {
+        padding: 40px 15px;
+    }
+
+    .call-to-action-section h2 {
+        font-size: 24px;
+    }
+
+    .contato-section {
+        padding: 40px 15px;
+    }
+
+    .footer {
+        padding: 30px 15px;
+    }
 }
 
 .central-div {
-  margin-top: 50px; /* Reduz o espaço superior */
+    margin-top: 50px; /* Reduz o espaço superior */
 }
 
 .quem-somos-content {
-  flex-direction: column; /* Empilha os elementos verticalmente */
+    flex-direction: column; /* Empilha os elementos verticalmente */
 }
 
 .text {
-  padding: 0; /* Remove o preenchimento */
-  text-align: center; /* Centraliza o texto */
+    padding: 0; /* Remove o preenchimento */
+    text-align: center; /* Centraliza o texto */
 }
 
 .quem-somos-image,
 .logo {
-  margin-left: 0; /* Remove a margem à esquerda */
-  margin-bottom: 20px; /* Adiciona espaço inferior */
+    margin-left: 0; /* Remove a margem à esquerda */
+    margin-bottom: 20px; /* Adiciona espaço inferior */
 }
 
 .cta-button {
-  padding: 8px 16px; /* Reduz o preenchimento do botão */
-  font-size: 14px; /* Reduz o tamanho da fonte do botão */
+    padding: 8px 16px; /* Reduz o preenchimento do botão */
+    font-size: 14px; /* Reduz o tamanho da fonte do botão */
 }
 
 .contato-section {
-  flex-direction: column; /* Empilha os elementos verticalmente */
-  align-items: center; /* Centraliza os itens */
+    flex-direction: column; /* Empilha os elementos verticalmente */
+    align-items: center; /* Centraliza os itens */
 }
 
 .contato-left {
-  padding-right: 0; /* Remove o preenchimento à direita */
-  text-align: center; /* Centraliza o texto */
+    padding-right: 0; /* Remove o preenchimento à direita */
+    text-align: center; /* Centraliza o texto */
 }
 
 .footer {
-  flex-direction: column; /* Empilha as colunas verticalmente em dispositivos menores */
-  align-items: center;
-  text-align: center;
+    flex-direction: column; /* Empilha as colunas verticalmente em dispositivos menores */
+    align-items: center;
+    text-align: center;
 }
 
 .footer-column {
-  flex: 1 0 100%; /* As colunas ocuparão 100% do espaço em dispositivos menores */
-  margin-right: 0;
+    flex: 1 0 100%; /* As colunas ocuparão 100% do espaço em dispositivos menores */
+    margin-right: 0;
 }
