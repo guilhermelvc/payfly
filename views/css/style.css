@@ -1443,110 +1443,7 @@ table thead th:not(:last-child)::after {
     }
 }
 
-/* CSS de QR Code e Boleto completamente removido */
-
-/* CSS QR Code Inteligente removido */
-
-/* ======================= Boleto Modal ==================== */
-
-.boleto-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border: 2px solid #ddd;
-}
-
-.boleto-info {
-    margin-bottom: 20px;
-}
-
-.boleto-info h3 {
-    color: var(--blue);
-    margin-bottom: 10px;
-    font-size: 18px;
-}
-
-.boleto-info p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-.boleto-info strong {
-    color: var(--black1);
-}
-
-.boleto-barcode-container {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.boleto-barcode-container h4 {
-    color: var(--blue);
-    margin-bottom: 10px;
-}
-
-#boleto-barcode {
-    margin: 15px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.linha-digitavel {
-    margin-top: 15px;
-}
-
-.linha-digitavel label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--black1);
-}
-
-.linha-digitavel input {
-    font-family: monospace;
-    font-size: 12px;
-    font-weight: bold;
-    text-align: center;
-    padding: 8px;
-    border: 2px solid var(--blue);
-    border-radius: 5px;
-    background: #f8f9fa;
-    margin-bottom: 10px;
-    letter-spacing: 1px;
-}
-
-.linha-digitavel button {
-    background: var(--blue);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.linha-digitavel button:hover {
-    background: var(--green3);
-    transform: translateY(-2px);
-}
-
-/* Boleto Modal específico */
-#boleto-modal.modal-overlay {
-    z-index: 1001;
-}
-
-#boleto-modal .modal {
-    max-width: 700px;
-    width: 90%;
-}
-
-#boleto-form h2 {
-    color: var(--blue);
-    text-align: center;
-    margin-bottom: 20px;
-}
+/* CSS de pagamentos removido */
 
 /* =============== Modal de Exclusão de Conta ================= */
 
@@ -2855,6 +2752,7 @@ table thead th:not(:last-child)::after {
 
 /* Ações Especiais - Fixas na parte inferior */
 .delete-actions {
+    display: flex;
     gap: 16px;
     padding: 20px 24px 24px 24px;
     border-top: 1px solid #e2e8f0;
@@ -2862,21 +2760,32 @@ table thead th:not(:last-child)::after {
     flex-shrink: 0;
     position: relative;
     z-index: 10;
+    justify-content: center;
+    align-items: center;
 }
 
 .safe-button {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-    color: white;
-    border: 2px solid #38a169;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #38a169 !important;
     font-weight: 600;
     position: relative;
     overflow: hidden;
     min-height: 50px;
     flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .safe-button:hover {
-    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
 }
@@ -2902,15 +2811,24 @@ table thead th:not(:last-child)::after {
 }
 
 /* Botão delete no modal específico de exclusão de conta */
-.delete-account-button {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    border: 2px solid #c82333;
+.delete-account-button,
+.delete-button {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #c82333 !important;
     font-weight: 600;
     position: relative;
     overflow: hidden;
     animation: deleteButtonPulse 3s infinite;
     min-height: 50px;
     flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 @keyframes deleteButtonPulse {
@@ -2923,8 +2841,10 @@ table thead th:not(:last-child)::after {
     }
 }
 
-.delete-account-button:hover {
-    background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+.delete-account-button:hover,
+.delete-button:hover {
+    background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%) !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6);
 }
@@ -2971,6 +2891,78 @@ table thead th:not(:last-child)::after {
     .delete-account-modal .standardized-modal-body {
         padding: 20px 20px 0 20px;
     }
+}
+
+/* =================== MODAL EXCLUSÃO - TEXTO SEMPRE PRETO =================== */
+/* Garante que o texto do modal de exclusão seja sempre preto, independente do tema */
+.delete-account-modal,
+.delete-account-modal *,
+.delete-account-modal h2,
+.delete-account-modal h3,
+.delete-account-modal h4,
+.delete-account-modal p,
+.delete-account-modal span,
+.delete-account-modal strong,
+.delete-account-modal small,
+.delete-account-modal label {
+    color: inherit;
+}
+
+/* Força cores específicas nos elementos do modal */
+.delete-main-warning .warning-title h3,
+.warning-title h3 {
+    color: #c53030 !important;
+}
+
+.warning-description,
+.delete-main-warning .warning-description {
+    color: #2d3748 !important;
+}
+
+.delete-data-list h4 {
+    color: #2d3748 !important;
+}
+
+.delete-data-list .item-content strong {
+    color: #2d3748 !important;
+}
+
+.delete-data-list .item-content small {
+    color: #718096 !important;
+}
+
+.delete-confirmation .confirmation-question h4 {
+    color: #c05621 !important;
+}
+
+.delete-confirmation .final-warning {
+    color: #744210 !important;
+}
+
+/* Override para tema escuro - garante texto preto no modal */
+body:not(.light-theme) .delete-account-modal .warning-title h3 {
+    color: #c53030 !important;
+}
+
+body:not(.light-theme) .delete-account-modal .warning-description {
+    color: #2d3748 !important;
+}
+
+body:not(.light-theme) .delete-account-modal .delete-data-list h4,
+body:not(.light-theme) .delete-account-modal .item-content strong {
+    color: #2d3748 !important;
+}
+
+body:not(.light-theme) .delete-account-modal .item-content small {
+    color: #718096 !important;
+}
+
+body:not(.light-theme) .delete-account-modal .confirmation-question h4 {
+    color: #c05621 !important;
+}
+
+body:not(.light-theme) .delete-account-modal .final-warning {
+    color: #744210 !important;
 }
 
 /* =================== CORREÇÃO CABEÇALHO TABELAS =================== */
@@ -3733,6 +3725,73 @@ body:not(.light-theme) .standardized-input-group textarea:focus {
 
 body:not(.light-theme) .standardized-input-group label {
     color: var(--text-primary);
+}
+
+/* =============== PÁGINA DE CONFIGURAÇÕES NO TEMA ESCURO =============== */
+/* Container principal preto */
+body:not(.light-theme) .configuration,
+body:not(.light-theme) .Configuration {
+    background: transparent !important;
+}
+
+body:not(.light-theme) .configuration .data,
+body:not(.light-theme) .Configuration .data {
+    background: #1a1a1a !important;
+}
+
+/* Formulários com fundo cinza escuro */
+body:not(.light-theme) .configuration #form1,
+body:not(.light-theme) .Configuration #form1 {
+    background: #2a2a2a !important;
+    border: 1px solid #3a3a3a !important;
+    border-radius: 10px !important;
+}
+
+/* Títulos e labels brancos */
+body:not(.light-theme) .configuration #form1 h2,
+body:not(.light-theme) .Configuration #form1 h2 {
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) .configuration .input-group1 label,
+body:not(.light-theme) .Configuration .input-group1 label {
+    color: #ffffff !important;
+}
+
+/* Inputs com fundo escuro e texto claro */
+body:not(.light-theme) .configuration .input-group1 input,
+body:not(.light-theme) .Configuration .input-group1 input,
+body:not(.light-theme) .configuration .input-group1 select,
+body:not(.light-theme) .Configuration .input-group1 select {
+    background: #333333 !important;
+    border: 1px solid #4a4a4a !important;
+    color: #e0e0e0 !important;
+}
+
+body:not(.light-theme) .configuration .input-group1 input::placeholder,
+body:not(.light-theme) .Configuration .input-group1 input::placeholder {
+    color: #888888 !important;
+}
+
+body:not(.light-theme) .configuration .input-group1 input:focus,
+body:not(.light-theme) .Configuration .input-group1 input:focus {
+    border-color: #005951 !important;
+    box-shadow: 0 0 0 3px rgba(0, 89, 81, 0.2) !important;
+}
+
+/* Botões na configuração */
+body:not(.light-theme) .configuration .btn,
+body:not(.light-theme) .Configuration .btn,
+body:not(.light-theme) .configuration button,
+body:not(.light-theme) .Configuration button {
+    background: #005951 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+body:not(.light-theme) .configuration .btn:hover,
+body:not(.light-theme) .Configuration .btn:hover {
+    background: #004940 !important;
 }
 
 /* Modais no tema escuro */

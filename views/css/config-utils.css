@@ -1,47 +1,5 @@
 /* ================ Estilos para Configurações e Utilidades ================= */
 
-/* Estilos específicos para página de configurações */
-#form2 {
-    margin-top: 30px;
-}
-
-.config-description {
-    color: #666;
-    margin-bottom: 20px;
-}
-
-/* Estilos para elementos de configuração bancária */
-.bank-config {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-}
-
-.bank-config h3 {
-    color: #2a2185;
-    margin-bottom: 15px;
-}
-
-/* Estilos para modais de boleto */
-.boleto-info h3 {
-    margin: 0 0 15px 0;
-    color: #667eea;
-}
-
-.boleto-info h4 {
-    margin: 0 0 10px 0;
-}
-
-.boleto-barcode {
-    margin: 10px 0;
-}
-
-.linha-digitavel {
-    background: #f8f9fa;
-    font-family: monospace;
-}
-
 /* Estilos para loading de IA */
 .ai-loading {
     display: none;
@@ -417,56 +375,148 @@ input:checked + .toggle-slider:before {
 }
 
 /* =============== TEMA ESCURO - CONFIGURAÇÕES =============== */
-body:not(.light-theme) .bank-config {
-    background: #2a2a2a;
+
+/* Container principal e fundo */
+body:not(.light-theme) .config-form {
+    background: #1a1a1a !important;
     border: 1px solid #3a3a3a;
 }
 
-body:not(.light-theme) .bank-config h3 {
-    color: #e0e0e0;
+body:not(.light-theme) .config-form h2 {
+    color: #ffffff !important;
 }
 
 body:not(.light-theme) .config-description {
-    color: #999;
+    color: #b0b0b0 !important;
 }
 
-body:not(.light-theme) .boleto-info h3 {
-    color: #4db8a8;
+/* Labels e textos */
+body:not(.light-theme) .input-group1 label {
+    color: #ffffff !important;
 }
 
-body:not(.light-theme) .boleto-info h4 {
-    color: #e0e0e0;
+body:not(.light-theme) .config-section {
+    background: #1a1a1a !important;
+    border: 1px solid #3a3a3a;
+    border-bottom: 1px solid #3a3a3a !important;
 }
 
-body:not(.light-theme) .linha-digitavel {
-    background: #333;
-    color: #e0e0e0;
+body:not(.light-theme) .config-section h3 {
+    color: #ffffff !important;
 }
 
+body:not(.light-theme) .config-item label {
+    color: #ffffff !important;
+}
+
+/* Inputs */
+body:not(.light-theme) .input-group1 input,
+body:not(.light-theme) .input-group1 select,
+body:not(.light-theme) .input-group1 textarea {
+    background: #2a2a2a !important;
+    border-color: #3a3a3a !important;
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) .input-group1 input::placeholder,
+body:not(.light-theme) .input-group1 textarea::placeholder {
+    color: #888 !important;
+}
+
+body:not(.light-theme) .input-group1 input:focus,
+body:not(.light-theme) .input-group1 select:focus,
+body:not(.light-theme) .input-group1 textarea:focus {
+    border-color: #005951 !important;
+    box-shadow: 0 0 0 3px rgba(0, 89, 81, 0.2) !important;
+}
+
+/* Notification items */
+body:not(.light-theme) .notification-item {
+    background: #2a2a2a !important;
+}
+
+body:not(.light-theme) .notification-item h4 {
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) .notification-item p {
+    color: #b0b0b0 !important;
+}
+
+/* Theme options */
+body:not(.light-theme) .theme-option {
+    border-color: #3a3a3a !important;
+    background: #2a2a2a !important;
+}
+
+body:not(.light-theme) .theme-option:hover {
+    border-color: #005951 !important;
+}
+
+body:not(.light-theme) .theme-option.selected {
+    border-color: #005951 !important;
+    background: rgba(0, 89, 81, 0.1) !important;
+}
+
+/* Backup section */
+body:not(.light-theme) .backup-section {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 89, 81, 0.1),
+        rgba(0, 89, 81, 0.05)
+    ) !important;
+}
+
+body:not(.light-theme) .backup-icon {
+    color: #4db8a8 !important;
+}
+
+body:not(.light-theme) .backup-info {
+    color: #b0b0b0 !important;
+}
+
+/* AI Loading */
 body:not(.light-theme) .ai-loading {
-    color: #999;
+    color: #b0b0b0 !important;
 }
 
+/* Tooltips */
 body:not(.light-theme) .tooltip-content {
     background: #1a1a1a;
     color: #e0e0e0;
     border: 1px solid #3a3a3a;
 }
 
-body:not(.light-theme) .config-section {
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
-}
-
-body:not(.light-theme) .config-section h3 {
-    color: #e0e0e0;
-}
-
-body:not(.light-theme) .config-item label {
-    color: #e0e0e0;
-}
-
 body:not(.light-theme) .config-tooltip:hover::after {
     background: #1a1a1a;
     border: 1px solid #3a3a3a;
+}
+
+/* =============== MODAL DE EXCLUSÃO - SEMPRE CLARO =============== */
+/* Modal de excluir conta sempre com fundo claro e texto preto */
+.delete-modal,
+.delete-modal-overlay .modal-content,
+.confirm-delete-modal,
+[class*="delete"] .modal-content,
+[class*="excluir"] .modal-content {
+    background: #ffffff !important;
+    color: #333333 !important;
+}
+
+.delete-modal h2,
+.delete-modal h3,
+.delete-modal p,
+.delete-modal span,
+.delete-modal label,
+.confirm-delete-modal h2,
+.confirm-delete-modal h3,
+.confirm-delete-modal p,
+.confirm-delete-modal span,
+[class*="delete"] .modal-content h2,
+[class*="delete"] .modal-content h3,
+[class*="delete"] .modal-content p,
+[class*="excluir"] .modal-content h2,
+[class*="excluir"] .modal-content h3,
+[class*="excluir"] .modal-content p {
+    color: #333333 !important;
 }
