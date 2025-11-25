@@ -166,12 +166,18 @@ h2 {
 }
 
 .payfly-title {
-    font-size: 48px;
-    font-weight: 700;
+    font-size: 90px !important;
+    font-weight: 900;
     color: #183d3d;
     margin-bottom: 20px;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: 4px;
+    text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #183d3d 0%, #005951 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
 }
 
 .payfly-subtitle {
@@ -534,8 +540,9 @@ ion-con.md.hydrated {
     }
 
     .payfly-title {
-        font-size: 36px;
+        font-size: 65px !important;
         margin-bottom: 15px;
+        letter-spacing: 3px;
     }
 
     .payfly-subtitle {
@@ -629,8 +636,9 @@ ion-con.md.hydrated {
     }
 
     .payfly-title {
-        font-size: 28px;
+        font-size: 48px !important;
         margin-bottom: 12px;
+        letter-spacing: 2px;
     }
 
     .payfly-subtitle {
