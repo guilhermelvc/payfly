@@ -64,7 +64,7 @@
                     id="theme-toggle-btn"
                     title="Alternar tema (Ctrl + Shift + T)"
                 >
-                    <ion-icon name="sunny-outline"></ion-icon>
+                    <ion-icon name="moon-outline"></ion-icon>
                 </button>
             </div>
         </div>

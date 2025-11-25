@@ -14,29 +14,109 @@
     <link rel="stylesheet" href="../views/css/config-utils.css">
     <link rel="stylesheet" href="../assets/css/accessibility.css">
     
-    <!-- Sistema inteligente de estilos de tabela -->
-    <script>
-        // Sistema único de limpeza - SEM LOOPS
-        let tableStylesFixed = false;
-        
-        function cleanTableStyles() {
-            if (tableStylesFixed) return; // Executa apenas UMA vez
-            
-            console.debug('🧹 Limpando estilos de tabela...');
-            
-            // Remove backgrounds apenas das linhas de dados (tbody tr)
-            const dataRows = document.querySelectorAll('tbody tr');
-            dataRows.forEach(row => {
-                row.style.setProperty('background', '#ffffff', 'important');
-                row.style.setProperty('background-image', 'none', 'important');
-            });
-            
-            // Marca como concluído
-            tableStylesFixed = true;
-            console.debug('✅ Estilos limpos');
+    <!-- Forçar tema escuro nas tabelas -->
+    <style>
+        /* TEMA ESCURO - Container preto, tabela cinza */
+        body:not(.light-theme) .table-container {
+            background: #1a1a1a !important;
+            background-color: #1a1a1a !important;
+            border-radius: 10px !important;
+            padding: 15px !important;
         }
         
-        // Executa apenas uma vez após DOM carregar
+        body:not(.light-theme) .table-container table,
+        body:not(.light-theme) #data-table {
+            background: #2a2a2a !important;
+            background-color: #2a2a2a !important;
+            border-radius: 8px !important;
+        }
+        
+        body:not(.light-theme) .table-container tbody,
+        body:not(.light-theme) #data-table tbody {
+            background: #2a2a2a !important;
+            background-color: #2a2a2a !important;
+        }
+        
+        body:not(.light-theme) .table-container tbody tr,
+        body:not(.light-theme) #data-table tbody tr,
+        body:not(.light-theme) tbody tr[id^="row-"] {
+            background: #2a2a2a !important;
+            background-color: #2a2a2a !important;
+            background-image: none !important;
+        }
+        
+        body:not(.light-theme) .table-container tbody tr:hover,
+        body:not(.light-theme) #data-table tbody tr:hover,
+        body:not(.light-theme) tbody tr[id^="row-"]:hover {
+            background: #3a3a3a !important;
+            background-color: #3a3a3a !important;
+        }
+        
+        body:not(.light-theme) .table-container tbody tr td,
+        body:not(.light-theme) #data-table tbody tr td,
+        body:not(.light-theme) tbody tr[id^="row-"] td {
+            background: #2a2a2a !important;
+            background-color: #2a2a2a !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* Tema claro */
+        body.light-theme .table-container,
+        body.light-theme .table-container table,
+        body.light-theme .table-container tbody,
+        body.light-theme .table-container tbody tr,
+        body.light-theme .table-container tbody tr td {
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+        }
+    </style>
+    
+    <!-- Sistema de estilos de tabela com MutationObserver -->
+    <script>
+        function applyRowStyles(row) {
+            const isDarkTheme = !document.body.classList.contains('light-theme');
+            if (isDarkTheme) {
+                row.style.setProperty('background', '#2a2a2a', 'important');
+                row.style.setProperty('background-color', '#2a2a2a', 'important');
+                row.querySelectorAll('td').forEach(td => {
+                    td.style.setProperty('background', '#2a2a2a', 'important');
+                    td.style.setProperty('background-color', '#2a2a2a', 'important');
+                });
+            } else {
+                row.style.setProperty('background', '#ffffff', 'important');
+                row.style.setProperty('background-color', '#ffffff', 'important');
+                row.querySelectorAll('td').forEach(td => {
+                    td.style.setProperty('background', '#ffffff', 'important');
+                    td.style.setProperty('background-color', '#ffffff', 'important');
+                });
+            }
+        }
+        
+        function cleanTableStyles() {
+            document.querySelectorAll('tbody tr').forEach(applyRowStyles);
+        }
+        
+        // Observa mudanças na tabela para aplicar estilos em novas linhas
+        document.addEventListener('DOMContentLoaded', function() {
+            const tbody = document.querySelector('#data-table tbody') || document.querySelector('tbody');
+            if (tbody) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeName === 'TR') {
+                                applyRowStyles(node);
+                            }
+                        });
+                    });
+                });
+                observer.observe(tbody, { childList: true });
+            }
+            // Aplica nos existentes também
+            setTimeout(cleanTableStyles, 100);
+            setTimeout(cleanTableStyles, 500);
+            setTimeout(cleanTableStyles, 1500);
+        });
+    </script>
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(cleanTableStyles, 500); // Aguarda carregamento completo
         });

@@ -229,3 +229,57 @@ button[disabled] {
 .container {
     animation: fadeIn 0.4s ease-out;
 }
+
+/* =============== TEMA ESCURO - AUTENTICAÇÃO =============== */
+/* As páginas de login e cadastro mantêm o design original */
+/* pois já têm um bom contraste e design moderno */
+body:not(.light-theme) .auth-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+body:not(.light-theme) .form-container {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+body:not(.light-theme) .form-container h1 {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .form-container p {
+    color: #999;
+}
+
+body:not(.light-theme) .input-group input {
+    background: #333;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .input-group input:focus {
+    background: #3a3a3a;
+    border-color: #005951;
+}
+
+body:not(.light-theme) .input-group label {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .link {
+    color: #4db8a8;
+}
+
+body:not(.light-theme) .link:hover {
+    color: #5dc9b8;
+}
+
+body:not(.light-theme) .divider span {
+    background: #2a2a2a;
+    color: #999;
+}
+
+body:not(.light-theme) .divider::before,
+body:not(.light-theme) .divider::after {
+    background: #444;
+}

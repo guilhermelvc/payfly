@@ -2,416 +2,471 @@
 
 /* Estilos específicos para página de configurações */
 #form2 {
-  margin-top: 30px;
+    margin-top: 30px;
 }
 
 .config-description {
-  color: #666;
-  margin-bottom: 20px;
+    color: #666;
+    margin-bottom: 20px;
 }
 
 /* Estilos para elementos de configuração bancária */
 .bank-config {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-  margin: 20px 0;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
 }
 
 .bank-config h3 {
-  color: #2a2185;
-  margin-bottom: 15px;
+    color: #2a2185;
+    margin-bottom: 15px;
 }
 
 /* Estilos para modais de boleto */
 .boleto-info h3 {
-  margin: 0 0 15px 0;
-  color: #667eea;
+    margin: 0 0 15px 0;
+    color: #667eea;
 }
 
 .boleto-info h4 {
-  margin: 0 0 10px 0;
+    margin: 0 0 10px 0;
 }
 
 .boleto-barcode {
-  margin: 10px 0;
+    margin: 10px 0;
 }
 
 .linha-digitavel {
-  background: #f8f9fa;
-  font-family: monospace;
+    background: #f8f9fa;
+    font-family: monospace;
 }
 
 /* Estilos para loading de IA */
 .ai-loading {
-  display: none;
-  text-align: center;
-  padding: 40px;
-  color: #666;
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: #666;
 }
 
 .ai-loading .loading-spinner {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 3px solid #f3f3f3;
-  border-radius: 50%;
-  border-top-color: #2a2185;
-  animation: spin 1s ease-in-out infinite;
-  margin-bottom: 15px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-radius: 50%;
+    border-top-color: #2a2185;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 15px;
 }
 
 /* Estilos para formulários de configuração */
 .config-form {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 25px;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
 }
 
 .config-form h2 {
-  color: #2a2185;
-  margin-bottom: 20px;
-  font-size: 20px;
+    color: #2a2185;
+    margin-bottom: 20px;
+    font-size: 20px;
 }
 
 .config-section {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #f1f3f4;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f3f4;
 }
 
 .config-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
 /* Grupos de input específicos para configurações */
 .input-group1 {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .input-group1 label {
-  display: block;
-  margin-bottom: 8px;
-  color: #333;
-  font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
 }
 
 .input-group1 input,
 .input-group1 select,
 .input-group1 textarea {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .input-group1 input:focus,
 .input-group1 select:focus,
 .input-group1 textarea:focus {
-  outline: none;
-  border-color: #2a2185;
-  box-shadow: 0 0 0 3px rgba(42, 33, 133, 0.1);
+    outline: none;
+    border-color: #2a2185;
+    box-shadow: 0 0 0 3px rgba(42, 33, 133, 0.1);
 }
 
 .input-group1 textarea {
-  resize: vertical;
-  min-height: 100px;
+    resize: vertical;
+    min-height: 100px;
 }
 
 /* Botões de configuração */
 .config-btn {
-  background: linear-gradient(135deg, #2a2185, #667eea);
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  margin-right: 10px;
+    background: linear-gradient(135deg, #2a2185, #667eea);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-right: 10px;
 }
 
 .config-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(42, 33, 133, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(42, 33, 133, 0.3);
 }
 
 .config-btn.secondary {
-  background: #6c757d;
+    background: #6c757d;
 }
 
 .config-btn.danger {
-  background: linear-gradient(135deg, #dc3545, #fd7e14);
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
 }
 
 /* Toggle switches */
 .toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
 }
 
 .toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.3s;
-  border-radius: 24px;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
 }
 
 .toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
-  border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
 }
 
 input:checked + .toggle-slider {
-  background-color: #2a2185;
+    background-color: #2a2185;
 }
 
 input:checked + .toggle-slider:before {
-  transform: translateX(26px);
+    transform: translateX(26px);
 }
 
 /* Configurações de aparência */
 .appearance-config {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .theme-option {
-  padding: 20px;
-  border: 2px solid #f1f3f4;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
+    padding: 20px;
+    border: 2px solid #f1f3f4;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .theme-option:hover {
-  border-color: #2a2185;
+    border-color: #2a2185;
 }
 
 .theme-option.selected {
-  border-color: #2a2185;
-  background: rgba(42, 33, 133, 0.05);
+    border-color: #2a2185;
+    background: rgba(42, 33, 133, 0.05);
 }
 
 .theme-preview {
-  width: 100%;
-  height: 80px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 500;
+    width: 100%;
+    height: 80px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 500;
 }
 
 .theme-preview.light {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  color: #333;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #333;
 }
 
 .theme-preview.dark {
-  background: linear-gradient(135deg, #343a40, #495057);
+    background: linear-gradient(135deg, #343a40, #495057);
 }
 
 .theme-preview.auto {
-  background: linear-gradient(135deg, #2a2185, #667eea);
+    background: linear-gradient(135deg, #2a2185, #667eea);
 }
 
 /* Configurações de notificação */
 .notification-settings {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .notification-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
 }
 
 .notification-item h4 {
-  margin: 0 0 5px 0;
-  color: #2a2185;
+    margin: 0 0 5px 0;
+    color: #2a2185;
 }
 
 .notification-item p {
-  margin: 0;
-  font-size: 13px;
-  color: #666;
+    margin: 0;
+    font-size: 13px;
+    color: #666;
 }
 
 /* Configurações de backup */
 .backup-section {
-  text-align: center;
-  padding: 30px;
-  background: linear-gradient(
-    135deg,
-    rgba(42, 33, 133, 0.05),
-    rgba(40, 167, 69, 0.05)
-  );
-  border-radius: 10px;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(
+        135deg,
+        rgba(42, 33, 133, 0.05),
+        rgba(40, 167, 69, 0.05)
+    );
+    border-radius: 10px;
 }
 
 .backup-icon {
-  font-size: 48px;
-  color: #2a2185;
-  margin-bottom: 15px;
+    font-size: 48px;
+    color: #2a2185;
+    margin-bottom: 15px;
 }
 
 .backup-info {
-  color: #666;
-  margin-bottom: 20px;
+    color: #666;
+    margin-bottom: 20px;
 }
 
 .backup-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .config-form {
-    padding: 15px;
-    margin: 10px;
-  }
+    .config-form {
+        padding: 15px;
+        margin: 10px;
+    }
 
-  .appearance-config {
-    grid-template-columns: 1fr;
-  }
+    .appearance-config {
+        grid-template-columns: 1fr;
+    }
 
-  .backup-actions {
-    flex-direction: column;
-    align-items: center;
-  }
+    .backup-actions {
+        flex-direction: column;
+        align-items: center;
+    }
 
-  .config-btn {
-    width: 100%;
-    margin-bottom: 10px;
-    margin-right: 0;
-  }
+    .config-btn {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
 }
 
 /* Estados de sucesso e erro */
 .config-message {
-  padding: 12px 15px;
-  border-radius: 6px;
-  margin: 15px 0;
-  font-size: 14px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 14px;
 }
 
 .config-message.success {
-  background: rgba(40, 167, 69, 0.1);
-  color: #28a745;
-  border-left: 4px solid #28a745;
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-left: 4px solid #28a745;
 }
 
 .config-message.error {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  border-left: 4px solid #dc3545;
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
 }
 
 .config-message.warning {
-  background: rgba(255, 193, 7, 0.1);
-  color: #856404;
-  border-left: 4px solid #ffc107;
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+    border-left: 4px solid #ffc107;
 }
 
 /* Loading state para configurações */
 .config-loading {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #f3f3f3;
-  border-radius: 50%;
-  border-top-color: #2a2185;
-  animation: spin 1s ease-in-out infinite;
-  margin-left: 8px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-radius: 50%;
+    border-top-color: #2a2185;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 8px;
 }
 
 /* Validação de formulários */
 .input-error {
-  border-color: #dc3545 !important;
-  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
 }
 
 .error-message {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 5px;
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
 }
 
 .input-success {
-  border-color: #28a745 !important;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
+    border-color: #28a745 !important;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
 }
 
 /* Tooltips para configurações */
 .config-tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: help;
-  margin-left: 5px;
-  color: #666;
+    position: relative;
+    display: inline-block;
+    cursor: help;
+    margin-left: 5px;
+    color: #666;
 }
 
 .config-tooltip:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 125%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
 }
 
 .config-tooltip:hover::before {
-  content: "";
-  position: absolute;
-  bottom: 115%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: #333;
-  z-index: 1000;
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+    z-index: 1000;
+}
+
+/* =============== TEMA ESCURO - CONFIGURAÇÕES =============== */
+body:not(.light-theme) .bank-config {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .bank-config h3 {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .config-description {
+    color: #999;
+}
+
+body:not(.light-theme) .boleto-info h3 {
+    color: #4db8a8;
+}
+
+body:not(.light-theme) .boleto-info h4 {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .linha-digitavel {
+    background: #333;
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .ai-loading {
+    color: #999;
+}
+
+body:not(.light-theme) .tooltip-content {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .config-section {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .config-section h3 {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .config-item label {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .config-tooltip:hover::after {
+    background: #1a1a1a;
+    border: 1px solid #3a3a3a;
 }

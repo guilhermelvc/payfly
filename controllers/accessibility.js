@@ -11,7 +11,7 @@
 
     // Estado atual
     let currentFontSize = DEFAULT_FONT_SIZE;
-    let currentTheme = "dark";
+    let currentTheme = "light"; // Tema claro como padrão
 
     // Inicialização
     function init() {

@@ -3567,3 +3567,522 @@ input:disabled + .slider {
 .standardized-input-group select:hover {
     border-color: #667eea;
 }
+
+/* =============== TEMA ESCURO =============== */
+body.light-theme {
+    /* Tema Claro (padrão) - Sidebar preto com hover verde */
+    --sidebar-bg: #222;
+    --sidebar-border: #222;
+    --sidebar-hover: #005951;
+    --main-bg: #fff;
+    --card-bg: #222;
+    --card-hover: #005951;
+    --text-primary: #222;
+    --text-secondary: #999;
+    --text-white: #fff;
+    --bg-light: #f5f5f5;
+    --table-bg: #fff;
+    --table-row-hover: rgba(0, 89, 81, 0.1);
+    --input-bg: #fff;
+    --input-border: #ddd;
+}
+
+/* Tema Escuro - Sidebar verde com hover preto, fundo preto/cinza escuro */
+body:not(.light-theme) {
+    --sidebar-bg: #183d3d;
+    --sidebar-border: #183d3d;
+    --sidebar-hover: #1a1a1a;
+    --main-bg: #1a1a1a;
+    --card-bg: #2a2a2a;
+    --card-hover: #1a1a1a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #999;
+    --text-white: #fff;
+    --bg-light: #2a2a2a;
+    --table-bg: #2a2a2a;
+    --table-row-hover: rgba(0, 0, 0, 0.3);
+    --input-bg: #333;
+    --input-border: #444;
+}
+
+/* Aplicar cores do tema escuro */
+body:not(.light-theme) .navigation {
+    background: var(--sidebar-bg);
+    border-left-color: var(--sidebar-border);
+}
+
+body:not(.light-theme) .navigation ul li:hover,
+body:not(.light-theme) .navigation ul li.hovered {
+    background-color: var(--sidebar-hover) !important;
+}
+
+/* Curvas decorativas do sidebar em preto no tema escuro */
+body:not(.light-theme) .navigation ul li:hover a::before,
+body:not(.light-theme) .navigation ul li.hovered a::before {
+    box-shadow: 35px 35px 0 10px #1a1a1a !important;
+}
+
+body:not(.light-theme) .navigation ul li:hover a::after,
+body:not(.light-theme) .navigation ul li.hovered a::after {
+    box-shadow: 35px -35px 0 10px #1a1a1a !important;
+}
+
+body:not(.light-theme) .main {
+    background: var(--main-bg) !important;
+    color: var(--text-primary);
+}
+
+body:not(.light-theme) .cardBox .card {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .cardBox .card:hover {
+    background: var(--card-hover);
+    border-color: #4a4a4a;
+}
+
+body:not(.light-theme) .cardBox .card .numbers,
+body:not(.light-theme) .cardBox .card .cardName {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .details {
+    background: #1a1a1a !important;
+    border: 1px solid #3a3a3a;
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+body:not(.light-theme) .details .cardHeader {
+    background: #1a1a1a !important;
+}
+
+body:not(.light-theme) .details .cardHeader h2 {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .details table {
+    background: var(--table-bg);
+}
+
+body:not(.light-theme) .details table thead td {
+    background: #183d3d !important;
+    color: var(--text-white) !important;
+}
+
+body:not(.light-theme) .details table thead th {
+    background: #183d3d !important;
+    color: var(--text-white) !important;
+}
+
+body:not(.light-theme) .details table tbody tr {
+    background: #1a1a1a !important;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .details table tbody tr:hover {
+    background: #2a2a2a !important;
+}
+
+body:not(.light-theme) .details table tbody tr td {
+    color: #e0e0e0 !important;
+}
+
+body:not(.light-theme) .recentCustomers {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .recentCustomers .imgBx {
+    border: 2px solid #3a3a3a;
+}
+
+body:not(.light-theme) .recentCustomers table tr {
+    background: #1a1a1a !important;
+}
+
+body:not(.light-theme) .recentCustomers table tr:hover {
+    background: #2a2a2a !important;
+}
+
+body:not(.light-theme) .recentCustomers table tr td h4 {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .recentCustomers table tr td span {
+    color: var(--text-secondary);
+}
+
+/* Formulários e inputs no tema escuro */
+body:not(.light-theme) .standardized-input-group input,
+body:not(.light-theme) .standardized-input-group select,
+body:not(.light-theme) .standardized-input-group textarea {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .standardized-input-group input:focus,
+body:not(.light-theme) .standardized-input-group select:focus,
+body:not(.light-theme) .standardized-input-group textarea:focus {
+    background: #3a3a3a;
+    border-color: #005951;
+}
+
+body:not(.light-theme) .standardized-input-group label {
+    color: var(--text-primary);
+}
+
+/* Modais no tema escuro */
+body:not(.light-theme) .modal-content {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .modal-header {
+    border-bottom-color: #3a3a3a;
+}
+
+body:not(.light-theme) .modal-header h2 {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .modal-footer {
+    border-top-color: #3a3a3a;
+}
+
+body:not(.light-theme) .btn-close {
+    filter: invert(1);
+}
+
+/* Cards especiais no tema escuro */
+body:not(.light-theme) .card1Box .card1 {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .card1Box .card1:hover {
+    background: var(--card-hover);
+}
+
+body:not(.light-theme) .card2Box .card2 {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .card2Box .card2:hover {
+    background: var(--card-hover);
+}
+
+/* Gráficos no tema escuro */
+body:not(.light-theme) .graphBox {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+/* Botões no tema escuro */
+body:not(.light-theme) .btn-primary {
+    background: #005951;
+}
+
+body:not(.light-theme) .btn-primary:hover {
+    background: #004940;
+}
+
+body:not(.light-theme) .btn-secondary {
+    background: #3a3a3a;
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .btn-secondary:hover {
+    background: #4a4a4a;
+}
+
+/* Topbar no tema escuro */
+body:not(.light-theme) .topbar {
+    background: var(--card-bg);
+    border-bottom: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .search input {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .user {
+    color: var(--text-white);
+}
+
+/* Alertas e notificações no tema escuro */
+body:not(.light-theme) .alert {
+    background: var(--card-bg);
+    border-color: #3a3a3a;
+    color: var(--text-primary);
+}
+
+/* Paginação no tema escuro */
+body:not(.light-theme) .pagination {
+    background: var(--card-bg);
+}
+
+body:not(.light-theme) .pagination button {
+    background: var(--input-bg);
+    color: var(--text-white);
+    border-color: var(--input-border);
+}
+
+body:not(.light-theme) .pagination button:hover {
+    background: #3a3a3a;
+}
+
+/* Scrollbar no tema escuro */
+body:not(.light-theme) ::-webkit-scrollbar {
+    background: #2a2a2a;
+}
+
+body:not(.light-theme) ::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+}
+
+body:not(.light-theme) ::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a;
+}
+
+/* Ajustes adicionais para garantir tema escuro completo */
+body:not(.light-theme) {
+    background: #1a1a1a;
+}
+
+body:not(.light-theme) .container {
+    background: transparent;
+}
+
+/* Detalhes e tabelas adicionais */
+body:not(.light-theme) .recentOrders {
+    background: #1a1a1a !important;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+body:not(.light-theme) .recentOrders table {
+    background: #2a2a2a !important;
+    border-radius: 8px;
+}
+
+body:not(.light-theme) .recentOrders tbody tr {
+    background: var(--table-bg) !important;
+}
+
+body:not(.light-theme) .recentOrders tbody tr:hover {
+    background: var(--table-row-hover) !important;
+}
+
+/* User info display */
+body:not(.light-theme) .user-info-display {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .user-info-display span {
+    color: var(--text-white);
+}
+
+/* Cards de estatísticas */
+body:not(.light-theme) .card1Box .card1 {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .card1Box .card1 .numbers,
+body:not(.light-theme) .card1Box .card1 .cardName {
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .card2Box .card2 {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .card2Box .card2 .numbers,
+body:not(.light-theme) .card2Box .card2 .cardName {
+    color: var(--text-white);
+}
+
+/* Cabeçalhos de seção */
+body:not(.light-theme) .cardHeader h2 {
+    color: var(--text-white);
+}
+
+/* Badges de status */
+body:not(.light-theme) .status {
+    background: #333;
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .status.delivered,
+body:not(.light-theme) .status.pago {
+    background: #1a4d3d;
+    color: #4ade80;
+}
+
+body:not(.light-theme) .status.pending,
+body:not(.light-theme) .status.pendente {
+    background: #4d3d1a;
+    color: #fbbf24;
+}
+
+body:not(.light-theme) .status.return,
+body:not(.light-theme) .status.atrasado {
+    background: #4d1a1a;
+    color: #f87171;
+}
+
+body:not(.light-theme) .status.inProgress {
+    background: #2a2a3d;
+    color: #818cf8;
+}
+
+/* Linhas de tabela */
+body:not(.light-theme) tr {
+    border-bottom-color: #3a3a3a !important;
+}
+
+body:not(.light-theme) td {
+    color: var(--text-primary);
+}
+
+body:not(.light-theme) th {
+    color: var(--text-white);
+    background: #333;
+}
+
+/* Imagens e ícones */
+body:not(.light-theme) .imgBx {
+    border-color: #3a3a3a;
+}
+
+/* Formulários dentro do painel */
+body:not(.light-theme) input[type="text"],
+body:not(.light-theme) input[type="email"],
+body:not(.light-theme) input[type="password"],
+body:not(.light-theme) input[type="number"],
+body:not(.light-theme) input[type="date"],
+body:not(.light-theme) textarea,
+body:not(.light-theme) select {
+    background: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-white);
+}
+
+body:not(.light-theme) input[type="text"]:focus,
+body:not(.light-theme) input[type="email"]:focus,
+body:not(.light-theme) input[type="password"]:focus,
+body:not(.light-theme) input[type="number"]:focus,
+body:not(.light-theme) input[type="date"]:focus,
+body:not(.light-theme) textarea:focus,
+body:not(.light-theme) select:focus {
+    background: #3a3a3a;
+    border-color: #005951;
+}
+
+/* Placeholders */
+body:not(.light-theme) ::placeholder {
+    color: #777;
+}
+
+/* Links */
+body:not(.light-theme) a {
+    color: #4db8a8;
+}
+
+body:not(.light-theme) a:hover {
+    color: #5dc9b8;
+}
+
+/* Divisores */
+body:not(.light-theme) hr {
+    border-color: #3a3a3a;
+}
+
+/* Cards hover effect */
+body:not(.light-theme) .card:hover,
+body:not(.light-theme) .card1:hover,
+body:not(.light-theme) .card2:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* Texto de ajuda */
+body:not(.light-theme) .help-text,
+body:not(.light-theme) .description {
+    color: #999;
+}
+
+/* Títulos */
+body:not(.light-theme) h1,
+body:not(.light-theme) h2,
+body:not(.light-theme) h3,
+body:not(.light-theme) h4,
+body:not(.light-theme) h5,
+body:not(.light-theme) h6 {
+    color: var(--text-white);
+}
+
+/* Parágrafos */
+body:not(.light-theme) p {
+    color: var(--text-primary);
+}
+
+/* Labels */
+body:not(.light-theme) label {
+    color: var(--text-primary);
+}
+
+/* Seção de gráficos */
+body:not(.light-theme) .chart-wrapper,
+body:not(.light-theme) .graph-container {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+/* Rodapé da tabela */
+body:not(.light-theme) tfoot {
+    background: #333;
+}
+
+body:not(.light-theme) tfoot td {
+    color: var(--text-white);
+}
+
+/* Seções de conteúdo */
+body:not(.light-theme) .content-section {
+    background: var(--card-bg);
+    border: 1px solid #3a3a3a;
+}
+
+/* Avisos e alertas */
+body:not(.light-theme) .warning {
+    background: #4d3d1a;
+    border-color: #5d4d2a;
+    color: #fbbf24;
+}
+
+body:not(.light-theme) .error {
+    background: #4d1a1a;
+    border-color: #5d2a2a;
+    color: #f87171;
+}
+
+body:not(.light-theme) .success {
+    background: #1a4d3d;
+    border-color: #2a5d4d;
+    color: #4ade80;
+}
+
+body:not(.light-theme) .info {
+    background: #2a2a3d;
+    border-color: #3a3a4d;
+    color: #818cf8;
+}

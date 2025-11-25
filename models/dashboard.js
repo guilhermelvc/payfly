@@ -752,6 +752,11 @@ function updateTimelineChart(period) {
   });
 
   const ctx = document.getElementById("timelineChart").getContext("2d");
+  
+  // Detecta tema para cores
+  const isDarkTheme = !document.body.classList.contains('light-theme');
+  const axisColor = isDarkTheme ? '#e0e0e0' : '#666';
+  const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
   if (timelineChart) {
     timelineChart.destroy();
@@ -847,9 +852,21 @@ function updateTimelineChart(period) {
         y: {
           beginAtZero: true,
           ticks: {
+            color: axisColor,
             callback: function (value) {
               return "R$ " + value.toFixed(2);
             },
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+        x: {
+          ticks: {
+            color: axisColor,
+          },
+          grid: {
+            color: gridColor,
           },
         },
       },
@@ -865,6 +882,10 @@ function createCustomLegend() {
   if (!legendContainer || !timelineChart) return;
 
   const datasets = timelineChart.data.datasets;
+  
+  // Detecta se está no tema escuro
+  const isDarkTheme = !document.body.classList.contains('light-theme');
+  const textColor = isDarkTheme ? '#ffffff' : '#333';
 
   // Divide datasets em contínuas (0-2) e pontilhadas (3-5)
   const continuousDatasets = datasets.slice(0, 3);
@@ -879,7 +900,7 @@ function createCustomLegend() {
             (dataset, index) => `
           <div onclick="toggleDataset(${index})" class="timeline-legend-item" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
             <div style="width: 16px; height: 2px; background-color: ${dataset.borderColor}; margin-right: 5px; border-radius: 1px;"></div>
-            <span class="timeline-legend-label" style="white-space: nowrap; color: #333;">${dataset.label}</span>
+            <span class="timeline-legend-label" style="white-space: nowrap; color: ${textColor};">${dataset.label}</span>
           </div>
         `
           )
@@ -893,7 +914,7 @@ function createCustomLegend() {
             return `
           <div onclick="toggleDataset(${actualIndex})" class="timeline-legend-item" style="display: flex; align-items: center; cursor: pointer; font-size: 10px; font-weight: 500; padding: 1px 3px;">
             <div style="width: 16px; height: 2px; background: linear-gradient(to right, ${dataset.borderColor} 60%, transparent 60%); background-size: 5px 2px; margin-right: 5px; border-radius: 1px;"></div>
-            <span class="timeline-legend-label" style="white-space: nowrap; color: #333;">${dataset.label}</span>
+            <span class="timeline-legend-label" style="white-space: nowrap; color: ${textColor};">${dataset.label}</span>
           </div>
         `;
           })
@@ -1668,6 +1689,10 @@ function updateCategoryChart(chartContext) {
   }
 
   const ctx = canvas.getContext("2d");
+  
+  // Detecta tema para cores das legendas
+  const isDarkTheme = !document.body.classList.contains('light-theme');
+  const legendTextColor = isDarkTheme ? '#ffffff' : '#333';
 
   if (categoryChart) {
     categoryChart.destroy();
@@ -1682,7 +1707,7 @@ function updateCategoryChart(chartContext) {
           data: values,
           backgroundColor: colors,
           borderWidth: 2,
-          borderColor: "#fff",
+          borderColor: isDarkTheme ? "#2a2a2a" : "#fff",
         },
       ],
     },
@@ -1707,7 +1732,7 @@ function updateCategoryChart(chartContext) {
             font: {
               size: 12,
             },
-            color: "#333",
+            color: legendTextColor,
           },
         },
         tooltip: {
