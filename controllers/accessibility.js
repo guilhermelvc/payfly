@@ -24,7 +24,6 @@
     // Carregar preferências do localStorage
     function loadPreferences() {
         const savedFontSize = localStorage.getItem("fontSize");
-        const savedTheme = localStorage.getItem("theme");
 
         if (savedFontSize) {
             currentFontSize = parseInt(savedFontSize, 10);
@@ -34,9 +33,8 @@
                 currentFontSize = MAX_FONT_SIZE;
         }
 
-        if (savedTheme) {
-            currentTheme = savedTheme;
-        }
+        // Tema sempre inicia como claro (não carrega do localStorage)
+        currentTheme = "light";
     }
 
     // Aplicar preferências
@@ -198,7 +196,7 @@
     // Salvar preferências
     function savePreferences() {
         localStorage.setItem("fontSize", currentFontSize.toString());
-        localStorage.setItem("theme", currentTheme);
+        // Tema não é salvo - sempre inicia como claro
     }
 
     // Mostrar notificação
