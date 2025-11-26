@@ -139,6 +139,51 @@ body {
     transform-origin: center;
 }
 
+.navigation ul li a .icon .target-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.navigation ul li a .icon .target-icon::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.9;
+}
+
+.navigation ul li a .icon .target-icon .target-arrow {
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    background: currentColor;
+    top: -2px;
+    right: 1px;
+    transform: rotate(45deg);
+    transform-origin: center;
+    border-radius: 1px;
+}
+
+.navigation ul li a .icon .target-icon .target-arrow::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 5px solid currentColor;
+    top: 6px;
+    right: -4px;
+}
+
 @keyframes wingFlap {
     0% {
         transform: scaleX(1) rotateZ(0deg);
