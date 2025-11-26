@@ -8,6 +8,7 @@
     const MIN_FONT_SIZE = 12;
     const MAX_FONT_SIZE = 24;
     const FONT_STEP = 2;
+    const THEME_STORAGE_KEY = "themePreference";
 
     // Estado atual
     let currentFontSize = DEFAULT_FONT_SIZE;
@@ -33,8 +34,8 @@
                 currentFontSize = MAX_FONT_SIZE;
         }
 
-        // Tema sempre inicia como claro (não carrega do localStorage)
-        currentTheme = "light";
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        currentTheme = savedTheme === "dark" ? "dark" : "light";
     }
 
     // Aplicar preferências
@@ -121,11 +122,36 @@
 
     // Aplicar tema
     function applyTheme() {
+        if (!document.body) return;
+
         if (currentTheme === "light") {
             document.body.classList.add("light-theme");
+            document.body.classList.remove("dark-theme");
         } else {
             document.body.classList.remove("light-theme");
+            document.body.classList.add("dark-theme");
         }
+
+        updateThemeToggleIcon();
+
+        document.dispatchEvent(
+            new CustomEvent("themeChange", {
+                detail: { theme: currentTheme },
+            })
+        );
+    }
+
+    function updateThemeToggleIcon() {
+        const themeBtn = document.getElementById("theme-toggle-btn");
+        if (!themeBtn) return;
+
+        const icon = themeBtn.querySelector("ion-icon");
+        if (!icon) return;
+
+        icon.setAttribute(
+            "name",
+            currentTheme === "light" ? "moon-outline" : "sunny-outline"
+        );
     }
 
     // Atualizar display do tamanho de fonte
@@ -179,31 +205,12 @@
 
         const themeName = currentTheme === "light" ? "Claro" : "Escuro";
         showNotification(`Tema ${themeName} ativado`);
-
-        // Notifica outros componentes sobre a mudança de tema
-        document.dispatchEvent(
-            new CustomEvent("themeChange", {
-                detail: { theme: currentTheme },
-            })
-        );
-
-        // Atualizar ícone do botão
-        const themeBtn = document.getElementById("theme-toggle-btn");
-        if (themeBtn) {
-            const icon = themeBtn.querySelector("ion-icon");
-            if (icon) {
-                icon.setAttribute(
-                    "name",
-                    currentTheme === "light" ? "moon-outline" : "sunny-outline"
-                );
-            }
-        }
     }
 
     // Salvar preferências
     function savePreferences() {
         localStorage.setItem("fontSize", currentFontSize.toString());
-        // Tema não é salvo - sempre inicia como claro
+        localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
     }
 
     // Mostrar notificação
