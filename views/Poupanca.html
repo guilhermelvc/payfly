@@ -141,6 +141,11 @@
                 setTimeout(cleanTableStyles, 500);
                 setTimeout(cleanTableStyles, 1500);
             });
+
+            document.addEventListener("themeChange", function () {
+                cleanTableStyles();
+                setTimeout(cleanTableStyles, 100);
+            });
         </script>
     </head>
 
@@ -748,6 +753,34 @@
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação de Exclusão -->
+        <div class="delete-confirm-modal-overlay" id="deleteConfirmModal">
+            <div class="delete-confirm-modal">
+                <h3>
+                    <ion-icon name="warning-outline"></ion-icon>
+                    Confirmar Exclusão
+                </h3>
+                <p>
+                    Tem certeza que deseja excluir este item? Esta ação não pode
+                    ser desfeita.
+                </p>
+                <div class="delete-confirm-actions">
+                    <button
+                        class="delete-cancel-btn"
+                        onclick="closeDeleteConfirm()"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        class="delete-confirm-btn"
+                        onclick="confirmDelete()"
+                    >
+                        Excluir
+                    </button>
                 </div>
             </div>
         </div>

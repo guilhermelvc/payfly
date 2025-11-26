@@ -180,6 +180,13 @@
         const themeName = currentTheme === "light" ? "Claro" : "Escuro";
         showNotification(`Tema ${themeName} ativado`);
 
+        // Notifica outros componentes sobre a mudança de tema
+        document.dispatchEvent(
+            new CustomEvent("themeChange", {
+                detail: { theme: currentTheme },
+            })
+        );
+
         // Atualizar ícone do botão
         const themeBtn = document.getElementById("theme-toggle-btn");
         if (themeBtn) {

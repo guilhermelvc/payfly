@@ -244,8 +244,31 @@ function addReceitaToTable(receita, receitaId) {
         '<ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon>';
     deleteButton.title = "Excluir";
     deleteButton.onclick = () =>
-        removeReceitaFromSupabase(receitaId, Number(receita.valor || 0));
+        showDeleteConfirm(receitaId, Number(receita.valor || 0));
     deleteCell.appendChild(deleteButton);
+}
+
+// Variáveis globais para controle do modal de exclusão
+let pendingDeleteId = null;
+let pendingDeleteValue = null;
+
+function showDeleteConfirm(receitaId, valor) {
+    pendingDeleteId = receitaId;
+    pendingDeleteValue = valor;
+    document.getElementById("deleteConfirmModal").classList.add("active");
+}
+
+function closeDeleteConfirm() {
+    document.getElementById("deleteConfirmModal").classList.remove("active");
+    pendingDeleteId = null;
+    pendingDeleteValue = null;
+}
+
+function confirmDelete() {
+    if (pendingDeleteId !== null) {
+        removeReceitaFromSupabase(pendingDeleteId, pendingDeleteValue);
+        closeDeleteConfirm();
+    }
 }
 
 let editingReceitaId = null;

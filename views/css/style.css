@@ -593,18 +593,13 @@ table thead th:not(:last-child)::after {
 }
 
 .delete-button {
-    color: #6c757d;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
+    color: #dc3545;
+    background: transparent;
 }
 
 .delete-button:hover {
-    color: #e74c3c;
-    background: #fff5f5;
-    border-color: #f8d7da;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+    color: #c82333;
+    transform: scale(1.2);
 }
 
 /* Ícones dentro dos botões */
@@ -2811,8 +2806,7 @@ table thead th:not(:last-child)::after {
 }
 
 /* Botão delete no modal específico de exclusão de conta */
-.delete-account-button,
-.delete-button {
+.delete-account-button {
     background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
     color: #ffffff !important;
     border: 2px solid #c82333 !important;
@@ -2841,8 +2835,7 @@ table thead th:not(:last-child)::after {
     }
 }
 
-.delete-account-button:hover,
-.delete-button:hover {
+.delete-account-button:hover {
     background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%) !important;
     color: #ffffff !important;
     transform: translateY(-2px);
@@ -3560,9 +3553,9 @@ input:disabled + .slider {
     border-color: #667eea;
 }
 
-/* =============== TEMA ESCURO =============== */
+/* =============== TEMA CLARO E ESCURO - v2 =============== */
 body.light-theme {
-    /* Tema Claro - Sidebar preto com hover verde */
+    /* Tema Claro - Sidebar PRETO com hover VERDE */
     --sidebar-bg: #222;
     --sidebar-border: #222;
     --sidebar-hover: #005951;
@@ -3579,29 +3572,39 @@ body.light-theme {
     --input-border: #ddd;
 }
 
-/* Aplicar cores do tema claro ao sidebar - Fundo PRETO, Hover VERDE */
+/* FORÇAR SIDEBAR PRETO NO TEMA CLARO */
+.light-theme .navigation,
 body.light-theme .navigation {
     background: #222 !important;
+    background-color: #222 !important;
+    border-left: 10px solid #222 !important;
     border-left-color: #222 !important;
 }
 
+.light-theme .navigation ul li:hover,
+.light-theme .navigation ul li.hovered,
 body.light-theme .navigation ul li:hover,
 body.light-theme .navigation ul li.hovered {
+    background: #005951 !important;
     background-color: #005951 !important;
 }
 
-/* Curvas decorativas - mesma cor do fundo do main (branco) */
+/* Curvas VERDES no tema claro (mesma cor do hover) */
+.light-theme .navigation ul li:hover a::before,
+.light-theme .navigation ul li.hovered a::before,
 body.light-theme .navigation ul li:hover a::before,
 body.light-theme .navigation ul li.hovered a::before {
-    box-shadow: 35px 35px 0 10px #fff !important;
+    box-shadow: 35px 35px 0 10px #005951 !important;
 }
 
+.light-theme .navigation ul li:hover a::after,
+.light-theme .navigation ul li.hovered a::after,
 body.light-theme .navigation ul li:hover a::after,
 body.light-theme .navigation ul li.hovered a::after {
-    box-shadow: 35px -35px 0 10px #fff !important;
+    box-shadow: 35px -35px 0 10px #005951 !important;
 }
 
-/* Tema Escuro - Sidebar verde com hover preto, fundo preto/cinza escuro */
+/* Tema Escuro - Sidebar VERDE com hover PRETO */
 body:not(.light-theme) {
     --sidebar-bg: #183d3d;
     --sidebar-border: #183d3d;
@@ -3691,13 +3694,95 @@ body:not(.light-theme) .details table thead th {
     color: var(--text-white) !important;
 }
 
+/* Tabelas no tema escuro */
+body:not(.light-theme) .table-container {
+    background: #2a2a2a !important;
+    border: 1px solid #3a3a3a !important;
+}
+
+body:not(.light-theme) #data-table {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body:not(.light-theme) table,
+body:not(.light-theme) .data-table,
+body:not(.light-theme) .data-table-wrapper,
+body:not(.light-theme) .recentOrders table {
+    background: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body:not(.light-theme) table thead th,
+body:not(.light-theme) table thead td {
+    background: #183d3d !important;
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) #data-table tbody tr {
+    background: #2a2a2a !important;
+    border-bottom: 1px solid #3a3a3a !important;
+}
+
+body:not(.light-theme) #data-table tbody tr:hover {
+    background: #333 !important;
+}
+
+body:not(.light-theme) #data-table tbody td {
+    color: #e0e0e0 !important;
+}
+
+body:not(.light-theme) table tbody tr {
+    background: #2a2a2a !important;
+    border-bottom: 1px solid #3a3a3a !important;
+}
+
+body:not(.light-theme) table tbody tr:hover {
+    background: #333 !important;
+}
+
+body:not(.light-theme) table tbody td {
+    color: #e0e0e0 !important;
+    border-color: #3a3a3a !important;
+}
+
+/* Legendas de gráficos no tema escuro */
+body:not(.light-theme) #chartLegend,
+body:not(.light-theme) #chartLegend li,
+body:not(.light-theme) .chart-legend,
+body:not(.light-theme) .chart-legend li,
+body:not(.light-theme) .chart-legend span,
+body:not(.light-theme) .chart-selector-info,
+body:not(.light-theme) .chart-title,
+body:not(.light-theme) .timeline-legend-container,
+body:not(.light-theme) .timeline-legend-item,
+body:not(.light-theme) .timeline-legend-label,
+body:not(.light-theme) #timelineChartLegend,
+body:not(.light-theme) #timelineChartLegend button,
+body:not(.light-theme) #timelineChartLegend span {
+    color: #ffffff !important;
+}
+
+/* Botões de ação no tema escuro */
+body:not(.light-theme) .edit-button {
+    background: rgba(42, 33, 133, 0.2);
+}
+
+body:not(.light-theme) .delete-button {
+    color: #ff6b6b !important;
+}
+
+body:not(.light-theme) .delete-button:hover {
+    color: #ff4757 !important;
+}
+
 body:not(.light-theme) .details table tbody tr {
-    background: #1a1a1a !important;
-    border-bottom: 1px solid #3a3a3a;
+    background: #2a2a2a !important;
+    border-bottom: 1px solid #3a3a3a !important;
 }
 
 body:not(.light-theme) .details table tbody tr:hover {
-    background: #2a2a2a !important;
+    background: #333 !important;
 }
 
 body:not(.light-theme) .details table tbody tr td {
@@ -4166,4 +4251,101 @@ body:not(.light-theme) .info {
     background: #2a2a3d;
     border-color: #3a3a4d;
     color: #818cf8;
+}
+
+/* Modal de Confirma��o de Exclus�o */
+.delete-confirm-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-confirm-modal-overlay.active {
+    display: flex;
+}
+
+.delete-confirm-modal {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.delete-confirm-modal h3 {
+    color: #dc3545;
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.delete-confirm-modal h3 ion-icon {
+    font-size: 24px;
+}
+
+.delete-confirm-modal p {
+    color: #333;
+    margin: 0 0 24px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.delete-confirm-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.delete-confirm-btn,
+.delete-cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.delete-cancel-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.delete-cancel-btn:hover {
+    background: #5a6268;
+}
+
+.delete-confirm-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-confirm-btn:hover {
+    background: #c82333;
+}
+
+/* Tema escuro para modal de confirma��o */
+body:not(.light-theme) .delete-confirm-modal {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+}
+
+body:not(.light-theme) .delete-confirm-modal p {
+    color: #e0e0e0;
+}
+
+body:not(.light-theme) .delete-confirm-modal h3 {
+    color: #ff6b6b;
 }

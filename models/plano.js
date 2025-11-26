@@ -214,9 +214,32 @@ function addPlanoToTable(plano, planoId) {
         '<ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon>';
     deleteButton.title = "Excluir";
     deleteButton.onclick = function () {
-        removePlanoFromSupabase(planoId, Number(plano.valor || 0));
+        showDeleteConfirm(planoId, Number(plano.valor || 0));
     };
     deleteCell.appendChild(deleteButton);
+}
+
+// Variáveis globais para controle do modal de exclusão
+let pendingDeleteId = null;
+let pendingDeleteValue = null;
+
+function showDeleteConfirm(planoId, valor) {
+    pendingDeleteId = planoId;
+    pendingDeleteValue = valor;
+    document.getElementById("deleteConfirmModal").classList.add("active");
+}
+
+function closeDeleteConfirm() {
+    document.getElementById("deleteConfirmModal").classList.remove("active");
+    pendingDeleteId = null;
+    pendingDeleteValue = null;
+}
+
+function confirmDelete() {
+    if (pendingDeleteId !== null) {
+        removePlanoFromSupabase(pendingDeleteId, pendingDeleteValue);
+        closeDeleteConfirm();
+    }
 }
 
 let editingPlanoId = null;

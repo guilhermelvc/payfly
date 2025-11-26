@@ -42,19 +42,31 @@ body.light-theme {
     --hover-bg: #e9e9e9;
 }
 
+/* Sidebar no tema claro - Fundo PRETO, Hover VERDE */
 body.light-theme .navigation {
-    background: #fff !important;
-    border-left: 10px solid #f0f0f0 !important;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    background: #222 !important;
+    border-left: 10px solid #222 !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 body.light-theme .navigation ul li a {
-    color: var(--black1) !important;
+    color: #fff !important;
 }
 
 body.light-theme .navigation ul li:hover,
 body.light-theme .navigation ul li.hovered {
-    background-color: var(--gray) !important;
+    background-color: #005951 !important;
+}
+
+/* Curvas decorativas VERDES no tema claro (mesma cor do hover) */
+body.light-theme .navigation ul li:hover a::before,
+body.light-theme .navigation ul li.hovered a::before {
+    box-shadow: 35px 35px 0 10px #005951 !important;
+}
+
+body.light-theme .navigation ul li:hover a::after,
+body.light-theme .navigation ul li.hovered a::after {
+    box-shadow: 35px -35px 0 10px #005951 !important;
 }
 
 body.light-theme .main {
@@ -547,10 +559,26 @@ body.light-theme table tbody tr:hover {
     background: #f8f9fa !important;
 }
 
+/* Tema escuro - Botões */
+body:not(.light-theme) .period-btn {
+    color: #fff !important;
+}
+
+body:not(.light-theme) .period-btn.active {
+    color: #fff !important;
+}
+
 /* Tema claro - Botões */
 body.light-theme .btn-primary,
-body.light-theme .period-btn,
 body.light-theme .pdf-btn {
+    color: #fff !important;
+}
+
+body.light-theme .period-btn:not(.active) {
+    color: #222 !important;
+}
+
+body.light-theme .period-btn.active {
     color: #fff !important;
 }
 

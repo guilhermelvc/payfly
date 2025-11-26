@@ -42,18 +42,23 @@
 .period-btn {
     padding: 8px 16px;
     border: none;
-    background: transparent;
+    background: #e9ecef;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    color: #666;
+    color: #222 !important;
 }
 
-.period-btn.active,
-.period-btn:hover {
+.period-btn:hover:not(.active) {
+    background: #dee2e6;
+    color: #222 !important;
+}
+
+.period-btn.active {
     background: linear-gradient(135deg, #2a2185, #28a745);
     color: white;
+    box-shadow: 0 2px 8px rgba(42, 33, 133, 0.3);
 }
 
 .pdf-btn {
@@ -960,26 +965,49 @@ body:not(.light-theme) .period-filters {
 }
 
 body:not(.light-theme) .period-btn {
-    color: #b0b0b0;
+    background: #333;
+    color: #fff !important;
 }
 
 body:not(.light-theme) .period-btn.active {
-    background: #005951;
-    color: #fff;
+    background: linear-gradient(135deg, #2a2185, #28a745);
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(42, 33, 133, 0.3);
 }
 
 body:not(.light-theme) .period-btn:hover:not(.active) {
-    background: #333;
-    color: #e0e0e0;
+    background: #444;
+    color: #fff !important;
+}
+
+/* Tema claro - Botões sempre visíveis */
+body.light-theme .period-filters {
+    background: #f1f3f5;
+}
+
+body.light-theme .period-btn {
+    background: #e9ecef;
+    color: #222 !important;
+}
+
+body.light-theme .period-btn.active {
+    background: linear-gradient(135deg, #2a2185, #28a745);
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(42, 33, 133, 0.3);
+}
+
+body.light-theme .period-btn:hover:not(.active) {
+    background: #dee2e6;
+    color: #222 !important;
 }
 
 body:not(.light-theme) .pdf-btn {
-    background: #005951;
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
     color: #fff;
 }
 
 body:not(.light-theme) .pdf-btn:hover {
-    background: #004940;
+    background: linear-gradient(135deg, #c82333, #e8690b);
 }
 
 body:not(.light-theme) .summary-cards {

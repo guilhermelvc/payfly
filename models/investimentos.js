@@ -218,13 +218,36 @@ function addInvestimentoToTable(investimento, investimentoId) {
       </button>
     </td>
     <td>
-      <button onclick="removeInvestimentoFromSupabase('${investimentoId}', ${valorInvestido})"
+      <button onclick="showDeleteConfirm('${investimentoId}', ${valorInvestido})"
               class="delete-button" title="Excluir">
         <ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon>
       </button>
     </td>
   `;
     tbody.appendChild(row);
+}
+
+// Variáveis globais para controle do modal de exclusão
+let pendingDeleteId = null;
+let pendingDeleteValue = null;
+
+function showDeleteConfirm(investimentoId, valor) {
+    pendingDeleteId = investimentoId;
+    pendingDeleteValue = valor;
+    document.getElementById("deleteConfirmModal").classList.add("active");
+}
+
+function closeDeleteConfirm() {
+    document.getElementById("deleteConfirmModal").classList.remove("active");
+    pendingDeleteId = null;
+    pendingDeleteValue = null;
+}
+
+function confirmDelete() {
+    if (pendingDeleteId !== null) {
+        removeInvestimentoFromSupabase(pendingDeleteId, pendingDeleteValue);
+        closeDeleteConfirm();
+    }
 }
 
 function editInvestimento(investimentoId, investimento) {
@@ -987,13 +1010,33 @@ function addInvestmentRowToTable(item, index) {
     )}%</td>
     <td>${formatDate(item.date)}</td>
     <td><button onclick="editInvestment(${index})" class="edit-button" title="Editar"><ion-icon name="create-outline" style="font-size: 20px;"></ion-icon></button></td>
-    <td><button onclick="deleteInvestmentTransaction('${
+    <td><button onclick="showDeleteInvestmentConfirm('${
         item.id
     }')" class="delete-button" title="Excluir"><ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon></button></td>
   `;
 
     tbody.appendChild(row);
 }
+
+// Funções para confirmação de exclusão de transação de investimento
+function showDeleteInvestmentConfirm(investmentId) {
+    window.pendingDeleteInvestmentId = investmentId;
+    document.getElementById("deleteConfirmModal").classList.add("active");
+}
+
+window.showDeleteInvestmentConfirm = showDeleteInvestmentConfirm;
+
+// Adicionar ao escopo global para confirmar exclusão de transação
+const originalConfirmDelete = window.confirmDelete;
+window.confirmDelete = function () {
+    if (window.pendingDeleteInvestmentId) {
+        deleteInvestmentTransaction(window.pendingDeleteInvestmentId);
+        window.pendingDeleteInvestmentId = null;
+        closeDeleteConfirm();
+    } else if (originalConfirmDelete) {
+        originalConfirmDelete();
+    }
+};
 
 function updateTotalDisplay() {
     const totalInvestido = investments.reduce((sum, i) => sum + i.amount, 0);

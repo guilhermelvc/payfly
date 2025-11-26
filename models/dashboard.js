@@ -958,6 +958,55 @@ function toggleDataset(index) {
     timelineChart.update();
 }
 
+function applyChartThemeStyles() {
+    const isDarkTheme = !document.body.classList.contains("light-theme");
+
+    if (categoryChart) {
+        const legendColor = isDarkTheme ? "#ffffff" : "#333";
+        const borderColor = isDarkTheme ? "#2a2a2a" : "#ffffff";
+
+        const legendOptions =
+            categoryChart.options?.plugins?.legend?.labels || {};
+        legendOptions.color = legendColor;
+        if (categoryChart.data?.datasets?.[0]) {
+            categoryChart.data.datasets[0].borderColor = borderColor;
+        }
+
+        categoryChart.update();
+    }
+
+    if (timelineChart) {
+        const axisColor = isDarkTheme ? "#e0e0e0" : "#666";
+        const gridColor = isDarkTheme
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(0, 0, 0, 0.05)";
+
+        if (timelineChart.options?.scales) {
+            if (timelineChart.options.scales.x) {
+                timelineChart.options.scales.x.ticks.color = axisColor;
+                timelineChart.options.scales.x.grid.color = gridColor;
+            }
+            if (timelineChart.options.scales.y) {
+                timelineChart.options.scales.y.ticks.color = axisColor;
+                timelineChart.options.scales.y.grid.color = gridColor;
+            }
+        }
+
+        timelineChart.update();
+        createCustomLegend();
+    }
+
+    const chartTitle = document.getElementById("chartTitle");
+    if (chartTitle) {
+        chartTitle.style.color = isDarkTheme ? "#ffffff" : "#333333";
+    }
+
+    const chartInfo = document.querySelector(".chart-selector-info");
+    if (chartInfo) {
+        chartInfo.style.color = isDarkTheme ? "#f1f3f5" : "#666666";
+    }
+}
+
 // ================ Controles de UI ================
 
 function showDashboardLoading(show) {
@@ -1809,3 +1858,8 @@ window.loadDashboardData = loadDashboardDataWithToast;
 window.changePeriod = changePeriod;
 window.refreshDashboard = refreshDashboard;
 window.updateCategoryChart = updateCategoryChart;
+window.toggleDataset = toggleDataset;
+
+document.addEventListener("themeChange", () => {
+    setTimeout(applyChartThemeStyles, 50);
+});
