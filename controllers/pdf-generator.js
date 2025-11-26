@@ -4,7 +4,7 @@ console.log("📄 PDF Generator carregado");
 // Cache for processed logo assets reused across PDF generations
 const payFlyLogoCache = {
     svgDataUrl: null,
-    pngDataUrl: null,
+    rasterDataUrl: null,
 };
 
 // ================ Geração de PDF do Dashboard ================
@@ -322,13 +322,13 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
 // Desenha logo do PayFly usando formas geométricas
 async function drawPayFlyLogo(pdf, centerX, centerY) {
     try {
-        const pngDataUrl = await getPayFlyLogoPngDataUrl();
+        const rasterDataUrl = await getPayFlyLogoRasterDataUrl();
 
-        if (!pngDataUrl) {
-            throw new Error("Logo PNG data URL não disponível");
+        if (!rasterDataUrl) {
+            throw new Error("Logo rasterizada não disponível");
         }
 
-        pdf.addImage(pngDataUrl, "PNG", centerX - 15, centerY - 15, 30, 30);
+        pdf.addImage(rasterDataUrl, "JPEG", centerX - 15, centerY - 15, 30, 30);
         console.log(
             "✅ Logo PayFly adicionada ao PDF a partir do cache/processamento"
         );
@@ -341,9 +341,9 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
     }
 }
 
-async function getPayFlyLogoPngDataUrl() {
-    if (payFlyLogoCache.pngDataUrl) {
-        return payFlyLogoCache.pngDataUrl;
+async function getPayFlyLogoRasterDataUrl() {
+    if (payFlyLogoCache.rasterDataUrl) {
+        return payFlyLogoCache.rasterDataUrl;
     }
 
     const svgDataUrl = await getPayFlyLogoSvgDataUrl();
@@ -373,8 +373,8 @@ async function getPayFlyLogoPngDataUrl() {
     const offset = (canvasSize - imgSize) / 2;
     ctx.drawImage(img, offset, offset, imgSize, imgSize);
 
-    payFlyLogoCache.pngDataUrl = canvas.toDataURL("image/png", 0.95);
-    return payFlyLogoCache.pngDataUrl;
+    payFlyLogoCache.rasterDataUrl = canvas.toDataURL("image/jpeg", 0.92);
+    return payFlyLogoCache.rasterDataUrl;
 }
 
 async function getPayFlyLogoSvgDataUrl() {
@@ -447,6 +447,7 @@ function blobToDataUrl(blob) {
 function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
+        img.crossOrigin = "anonymous";
         img.onload = () => resolve(img);
         img.onerror = (err) => reject(err);
         img.src = src;
