@@ -567,17 +567,12 @@ function addPoupancaRowToTable(item) {
     const amountClass =
         item.amount >= 0 ? "performance-positive" : "performance-negative";
 
-    const recorrenciaCell = item.is_recorrente
-        ? `<span class="recorrencia-badge">✓ ${item.recorrencia_meses}x</span>`
-        : "-";
-
     row.innerHTML = `
     <td>${item.description}</td>
     <td class="${amountClass}">${formatCurrency(Math.abs(item.amount))}</td>
     <td>${formatDate(item.date)}</td>
     <td>${item.tipo}</td>
     <td>${item.plano || "-"}</td>
-    <td>${recorrenciaCell}</td>
     <td><button onclick="editPoupancaTransaction('${
         item.id
     }')" class="edit-button" title="Editar"><ion-icon name="create-outline" style="font-size: 20px;"></ion-icon></button></td>
@@ -644,10 +639,6 @@ function updateTable() {
                 ? "performance-positive"
                 : "performance-negative";
 
-        const recorrenciaCell = transaction.is_recorrente
-            ? `<span class="recorrencia-badge">✓ ${transaction.recorrencia_meses}x</span>`
-            : "-";
-
         row.innerHTML = `
             <td>${transaction.description}</td>
             <td class="${amountClass}">${formatCurrency(
@@ -656,7 +647,6 @@ function updateTable() {
             <td>${formatDate(transaction.date)}</td>
             <td>${transaction.tipo}</td>
             <td>${transaction.plano || "-"}</td>
-            <td>${recorrenciaCell}</td>
             <td><button onclick="editTransaction(${index})" class="edit-button" title="Editar"><ion-icon name="create-outline" style="font-size: 20px;"></ion-icon></button></td>
             <td><button onclick="showDeleteTransactionConfirm(${index})" class="delete-button" title="Excluir"><ion-icon name="trash-outline" style="font-size: 20px;"></ion-icon></button></td>
         `;

@@ -221,13 +221,7 @@ function addDespesaToTable(despesa, despesaId) {
     } else {
         categoriaCell.textContent = "-";
     }
-    const recorrenciaCell = newRow.insertCell(4);
-    if (despesa.is_recorrente) {
-        recorrenciaCell.innerHTML = `<span class="recorrencia-badge">✓ ${despesa.recorrencia_meses}x</span>`;
-    } else {
-        recorrenciaCell.textContent = "-";
-    }
-    const editCell = newRow.insertCell(5);
+    const editCell = newRow.insertCell(4);
     const editButton = document.createElement("button");
     editButton.classList.add("edit-button");
     editButton.innerHTML =
@@ -235,7 +229,7 @@ function addDespesaToTable(despesa, despesaId) {
     editButton.title = "Editar";
     editButton.onclick = () => editDespesa(despesaId, despesa);
     editCell.appendChild(editButton);
-    const deleteCell = newRow.insertCell(6);
+    const deleteCell = newRow.insertCell(5);
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("delete-button");
     deleteButton.innerHTML =

@@ -197,17 +197,12 @@ function addInvestimentoToTable(investimento, investimentoId) {
     const performanceClass =
         rentabilidade >= 0 ? "performance-positive" : "performance-negative";
 
-    const recorrenciaHTML = investimento.is_recorrente
-        ? `<span class="recorrencia-badge">✓ ${investimento.recorrencia_meses}x</span>`
-        : "-";
-
     row.innerHTML = `
     <td>${investimento.descricao}</td>
     <td>${investimento.tipo}</td>
     <td>R$ ${valorInvestido.toFixed(2)}</td>
     <td>R$ ${valorAtual.toFixed(2)}</td>
     <td class="${performanceClass}">${rentabilidade.toFixed(2)}%</td>
-    <td>${recorrenciaHTML}</td>
     <td>${formatarData(investimento.data_aplicacao)}</td>
     <td>
       <button onclick="editInvestimento('${investimentoId}', ${JSON.stringify(

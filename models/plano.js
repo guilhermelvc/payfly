@@ -187,15 +187,8 @@ function addPlanoToTable(plano, planoId) {
         categoriaCell.textContent = "-";
     }
 
-    const recorrenciaCell = newRow.insertCell(4);
-    if (plano.is_recorrente) {
-        recorrenciaCell.innerHTML = `<span class="recorrencia-badge">✓ ${plano.recorrencia_meses}x</span>`;
-    } else {
-        recorrenciaCell.textContent = "-";
-    }
-
     // Edit button
-    const editCell = newRow.insertCell(5);
+    const editCell = newRow.insertCell(4);
     const editButton = document.createElement("button");
     editButton.classList.add("edit-button");
     editButton.innerHTML =
@@ -207,7 +200,7 @@ function addPlanoToTable(plano, planoId) {
     editCell.appendChild(editButton);
 
     // Delete button
-    const deleteCell = newRow.insertCell(6);
+    const deleteCell = newRow.insertCell(5);
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("delete-button");
     deleteButton.innerHTML =
