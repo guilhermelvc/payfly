@@ -398,21 +398,33 @@
                                     />
                                 </div>
 
-                                <div class="standardized-input-group">
+                                <div
+                                    class="standardized-input-group categoria-group"
+                                >
                                     <label for="tipo"
                                         >Tipo de Investimento</label
                                     >
-                                    <input
-                                        type="text"
-                                        id="tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Ação, Tesouro Direto, CDB..."
-                                    />
+                                    <div class="categoria-input-wrapper">
+                                        <input
+                                            type="text"
+                                            id="tipo"
+                                            name="tipo"
+                                            placeholder="Ex: Ação, Tesouro Direto, CDB..."
+                                        />
+                                        <button
+                                            type="button"
+                                            class="ia-suggest-btn"
+                                            onclick="suggestInvestmentTypeSimple()"
+                                            title="Sugestão com IA"
+                                        >
+                                            🤖 IA
+                                        </button>
+                                    </div>
                                     <div class="predefined-categories">
                                         <span
                                             class="category-tag"
                                             onclick="setTipoInvest('Ação')"
-                                            >� Ação</span
+                                            >📈 Ação</span
                                         >
                                         <span
                                             class="category-tag"
@@ -695,14 +707,26 @@
                                     />
                                 </div>
 
-                                <div class="standardized-input-group">
+                                <div
+                                    class="standardized-input-group categoria-group"
+                                >
                                     <label for="edit-tipo">Tipo</label>
-                                    <input
-                                        type="text"
-                                        id="edit-tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Ação, Tesouro Direto, CDB..."
-                                    />
+                                    <div class="categoria-input-wrapper">
+                                        <input
+                                            type="text"
+                                            id="edit-tipo"
+                                            name="tipo"
+                                            placeholder="Ex: Ação, Tesouro Direto, CDB..."
+                                        />
+                                        <button
+                                            type="button"
+                                            class="ia-suggest-btn"
+                                            onclick="suggestInvestmentEditTypeSimple()"
+                                            title="Sugestão com IA"
+                                        >
+                                            🤖 IA
+                                        </button>
+                                    </div>
                                     <div class="predefined-categories">
                                         <span
                                             class="category-tag"
@@ -895,6 +919,103 @@
                     }
                     window.location.href = "../views/Login.html";
                 });
+
+            function getSuggestedInvestmentType(name) {
+                const value = name.toLowerCase();
+                let tipo = "Ação";
+
+                if (
+                    value.includes("tesouro") ||
+                    value.includes("selic") ||
+                    value.includes("ipca")
+                ) {
+                    tipo = "Tesouro Direto";
+                } else if (value.includes("cdb")) {
+                    tipo = "CDB";
+                } else if (value.includes("lci") || value.includes("lca")) {
+                    tipo = "LCI";
+                } else if (
+                    value.includes("fii") ||
+                    value.includes("fundo imobili") ||
+                    value.includes("reit")
+                ) {
+                    tipo = "Fundo Imobiliário";
+                } else if (
+                    value.includes("cripto") ||
+                    value.includes("bitcoin") ||
+                    value.includes("btc") ||
+                    value.includes("ethereum") ||
+                    value.includes("eth")
+                ) {
+                    tipo = "Criptomoeda";
+                }
+
+                return tipo;
+            }
+
+            function applyInvestmentTypeSuggestion(tipo, isEdit = false) {
+                if (isEdit) {
+                    if (typeof setEditTipoInvest === "function") {
+                        setEditTipoInvest(tipo);
+                    } else {
+                        const input = document.getElementById("edit-tipo");
+                        if (input) input.value = tipo;
+                    }
+                } else if (typeof setTipoInvest === "function") {
+                    setTipoInvest(tipo);
+                } else {
+                    const input = document.getElementById("tipo");
+                    if (input) input.value = tipo;
+                }
+            }
+
+            function suggestInvestmentTypeSimple() {
+                const nameInput = document.getElementById("nome");
+                if (!nameInput || !nameInput.value.trim()) {
+                    notifyToast(
+                        "Sugestão com IA",
+                        "Informe o nome do investimento para sugerirmos o tipo.",
+                        "warning"
+                    );
+                    nameInput?.focus();
+                    return;
+                }
+
+                const tipo = getSuggestedInvestmentType(nameInput.value);
+                applyInvestmentTypeSuggestion(tipo, false);
+                notifyToast(
+                    "Sugestão com IA",
+                    `Sugerimos o tipo "${tipo}" para este investimento.`,
+                    "success",
+                    3500
+                );
+            }
+
+            function suggestInvestmentEditTypeSimple() {
+                const nameInput = document.getElementById("edit-nome");
+                if (!nameInput || !nameInput.value.trim()) {
+                    notifyToast(
+                        "Sugestão com IA",
+                        "Informe o nome do investimento antes de solicitar a sugestão.",
+                        "warning"
+                    );
+                    nameInput?.focus();
+                    return;
+                }
+
+                const tipo = getSuggestedInvestmentType(nameInput.value);
+                applyInvestmentTypeSuggestion(tipo, true);
+                notifyToast(
+                    "Sugestão com IA",
+                    `Sugerimos o tipo "${tipo}" para este investimento.`,
+                    "success",
+                    3500
+                );
+            }
+
+            window.suggestInvestmentTypeSimple = suggestInvestmentTypeSimple;
+            window.suggestInvestmentEditTypeSimple =
+                suggestInvestmentEditTypeSimple;
         </script>
 
         <!-- ====== Injetor de Acessibilidade ======= -->

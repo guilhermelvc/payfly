@@ -745,7 +745,7 @@
             // Pega a descrição
             const descricaoInput = document.querySelector('#descricao');
             if (!descricaoInput || !descricaoInput.value.trim()) {
-                alert('Digite uma descrição primeiro!');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para que a IA sugira um tipo de plano.', 'warning');
                 return;
             }
             

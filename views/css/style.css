@@ -3497,6 +3497,24 @@ input:disabled + .slider {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+#edit-recorrencia-meses-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    box-sizing: border-box;
+}
+
+#edit-recorrencia-meses-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
     .recorrencia-label {
@@ -3796,6 +3814,98 @@ body:not(.light-theme) .recentCustomers {
 
 body:not(.light-theme) .recentCustomers .imgBx {
     border: 2px solid #3a3a3a;
+}
+
+/* Tema escuro - Modais padronizados */
+body:not(.light-theme) .standardized-modal {
+    background: #1f1f1f !important;
+    color: var(--text-primary);
+    border: 1px solid #2e2e2e;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+body:not(.light-theme) .standardized-modal-header {
+    background: linear-gradient(135deg, #0f766e 0%, #0b3b39 100%) !important;
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) .standardized-modal-close {
+    color: #ffffff !important;
+}
+
+body:not(.light-theme) .standardized-modal-body {
+    background: transparent;
+    color: var(--text-primary);
+}
+
+body:not(.light-theme) .standardized-input-group label {
+    color: var(--text-primary);
+}
+
+body:not(.light-theme) .standardized-input-group input,
+body:not(.light-theme) .standardized-input-group select,
+body:not(.light-theme) .standardized-input-group textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-white);
+}
+
+body:not(.light-theme) .standardized-input-group input::placeholder,
+body:not(.light-theme) .standardized-input-group textarea::placeholder {
+    color: var(--text-secondary);
+}
+
+body:not(.light-theme) .standardized-modal-actions {
+    border-top: 1px solid #2e2e2e;
+}
+
+body:not(.light-theme) .standardized-button-primary {
+    background: linear-gradient(135deg, #0f766e 0%, #0b3b39 100%) !important;
+    box-shadow: 0 8px 20px rgba(15, 118, 110, 0.25);
+}
+
+body:not(.light-theme) .standardized-button-primary:hover {
+    background: linear-gradient(135deg, #119081 0%, #0d4a47 100%) !important;
+}
+
+body:not(.light-theme) .standardized-button-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid #4a4a4a;
+}
+
+body:not(.light-theme) .standardized-button-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    border-color: #6a6a6a;
+}
+
+body:not(.light-theme) .recorrencia-text {
+    color: var(--text-white) !important;
+}
+
+body:not(.light-theme) #recorrencia_meses_group label,
+body:not(.light-theme) #edit-recorrencia-meses-group label {
+    color: var(--text-secondary) !important;
+}
+
+body:not(.light-theme) #recorrencia_meses_group input,
+body:not(.light-theme) #edit-recorrencia-meses-group input {
+    background: var(--input-bg) !important;
+    border: 1px solid var(--input-border) !important;
+    color: var(--text-white) !important;
+}
+
+body:not(.light-theme) #recorrencia_meses_group input:focus,
+body:not(.light-theme) #edit-recorrencia-meses-group input:focus {
+    background: var(--input-bg) !important;
+    border-color: #0f766e !important;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.25) !important;
+}
+
+body:not(.light-theme) #recorrencia_meses_group input::placeholder,
+body:not(.light-theme) #edit-recorrencia-meses-group input::placeholder {
+    color: var(--text-secondary) !important;
 }
 
 body:not(.light-theme) .recentCustomers table tr {

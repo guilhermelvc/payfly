@@ -1129,12 +1129,46 @@ function formatDate(dateString) {
 // Toast function removed - now using standardized toast system
 
 // ================ Quick Fill Functions ================
+function highlightTipoButtons(inputElement, tipo) {
+    if (!inputElement) return;
+
+    const container =
+        inputElement.closest(".standardized-input-group") ||
+        inputElement.parentElement;
+    if (!container) return;
+
+    const tags = container.querySelectorAll(".category-tag");
+    if (!tags.length) return;
+
+    tags.forEach((tag) => {
+        tag.classList.remove("selected");
+        tag.style.backgroundColor = "";
+        tag.style.color = "";
+    });
+
+    const match = Array.from(tags).find((tag) =>
+        tag.textContent?.toLowerCase().includes(tipo ? tipo.toLowerCase() : "")
+    );
+
+    if (match) {
+        match.classList.add("selected");
+        match.style.backgroundColor = "#2a2185";
+        match.style.color = "#fff";
+    }
+}
+
 function setTipo(tipo) {
-    document.getElementById("tipo").value = tipo;
+    const input = document.getElementById("tipo");
+    if (!input) return;
+    input.value = tipo;
+    highlightTipoButtons(input, tipo);
 }
 
 function setEditTipo(tipo) {
-    document.getElementById("edit-tipo").value = tipo;
+    const input = document.getElementById("edit-tipo");
+    if (!input) return;
+    input.value = tipo;
+    highlightTipoButtons(input, tipo);
 }
 
 // ================ Funções para Insights da IA ================

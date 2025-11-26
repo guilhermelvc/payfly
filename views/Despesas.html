@@ -751,11 +751,11 @@
             // Senão, mostra uma mensagem
             const descricaoInput = document.querySelector('input[name="descricao"]');
             if (!descricaoInput || !descricaoInput.value.trim()) {
-                alert('Digite uma descrição primeiro para a IA sugerir uma categoria');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para usar a IA.', 'warning');
                 return;
             }
             
-            alert('Sistema de IA carregando... Tente novamente em alguns segundos.');
+            notifyToast('Sugestão de categoria', 'Sistema de IA carregando... Tente novamente em alguns segundos.', 'info');
         }
 
         // Garante que as funções estão disponíveis globalmente
@@ -833,7 +833,7 @@
             const descricaoField = descInput || descInputByName;
             
             if (!descricaoField || !descricaoField.value || !descricaoField.value.trim()) {
-                alert('💡 Digite uma descrição primeiro para a IA sugerir uma categoria!');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para a IA sugerir uma categoria.', 'warning');
                 if (descricaoField) descricaoField.focus();
                 return; // SEM VALOR DE RETORNO
             }
@@ -902,7 +902,7 @@
                 }
             } catch (error) {
                 console.error('❌ Erro na sugestão de IA:', error);
-                alert('🤖 Sistema de IA temporariamente indisponível. Selecione uma categoria manualmente.');
+                notifyToast('Sugestão de categoria', 'Sistema de IA temporariamente indisponível. Selecione uma categoria manualmente.', 'error');
             } finally {
                 // Restaura botão
                 if (iaBtn) {
@@ -919,7 +919,7 @@
             // Pega a descrição
             const descricaoInput = document.querySelector('#descricao');
             if (!descricaoInput || !descricaoInput.value.trim()) {
-                alert('Digite uma descrição primeiro!');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para que a IA sugira uma categoria.', 'warning');
                 return;
             }
             

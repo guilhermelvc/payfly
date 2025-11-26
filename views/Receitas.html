@@ -714,11 +714,11 @@
             // Senão, mostra uma mensagem
             const descricaoInput = document.querySelector('input[name="descricao"]');
             if (!descricaoInput || !descricaoInput.value.trim()) {
-                alert('Digite uma descrição primeiro para a IA sugerir uma categoria');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para usar a IA.', 'warning');
                 return;
             }
             
-            alert('Sistema de IA carregando... Tente novamente em alguns segundos.');
+            notifyToast('Sugestão de categoria', 'Sistema de IA carregando... Tente novamente em alguns segundos.', 'info');
         }
 
         // Garante que as funções estão disponíveis globalmente
@@ -793,7 +793,7 @@
             // Pega a descrição
             const descricaoInput = document.querySelector('#descricao');
             if (!descricaoInput || !descricaoInput.value.trim()) {
-                alert('Digite uma descrição primeiro!');
+                notifyToast('Sugestão de categoria', 'Digite uma descrição primeiro para que a IA sugira uma categoria.', 'warning');
                 return;
             }
             

@@ -377,16 +377,28 @@
                                     <input type="date" id="data" name="data" />
                                 </div>
 
-                                <div class="standardized-input-group">
+                                <div
+                                    class="standardized-input-group categoria-group"
+                                >
                                     <label for="tipo"
                                         >Tipo de Movimentação</label
                                     >
-                                    <input
-                                        type="text"
-                                        id="tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Depósito, Saque, Rendimento..."
-                                    />
+                                    <div class="categoria-input-wrapper">
+                                        <input
+                                            type="text"
+                                            id="tipo"
+                                            name="tipo"
+                                            placeholder="Ex: Depósito, Saque, Rendimento..."
+                                        />
+                                        <button
+                                            type="button"
+                                            class="ia-suggest-btn"
+                                            onclick="suggestSavingsTypeSimple()"
+                                            title="Sugestão com IA"
+                                        >
+                                            🤖 IA
+                                        </button>
+                                    </div>
                                     <div class="predefined-categories">
                                         <span
                                             class="category-tag"
@@ -643,14 +655,26 @@
                                     />
                                 </div>
 
-                                <div class="standardized-input-group">
+                                <div
+                                    class="standardized-input-group categoria-group"
+                                >
                                     <label for="edit-tipo">Tipo</label>
-                                    <input
-                                        type="text"
-                                        id="edit-tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Depósito, Saque, Rendimento..."
-                                    />
+                                    <div class="categoria-input-wrapper">
+                                        <input
+                                            type="text"
+                                            id="edit-tipo"
+                                            name="tipo"
+                                            placeholder="Ex: Depósito, Saque, Rendimento..."
+                                        />
+                                        <button
+                                            type="button"
+                                            class="ia-suggest-btn"
+                                            onclick="suggestSavingsEditTypeSimple()"
+                                            title="Sugestão com IA"
+                                        >
+                                            🤖 IA
+                                        </button>
+                                    </div>
                                     <div class="predefined-categories">
                                         <span
                                             class="category-tag"
@@ -863,9 +887,109 @@
                 }
             }
 
+            function getSuggestedSavingsType(description) {
+                const desc = description.toLowerCase();
+                let tipo = "Depósito";
+
+                if (
+                    desc.includes("saque") ||
+                    desc.includes("retirada") ||
+                    desc.includes("retirei") ||
+                    desc.includes("levantei")
+                ) {
+                    tipo = "Saque";
+                } else if (
+                    desc.includes("rendimento") ||
+                    desc.includes("juros") ||
+                    desc.includes("rentabil") ||
+                    desc.includes("dividendo")
+                ) {
+                    tipo = "Rendimento";
+                } else if (
+                    desc.includes("transfer") ||
+                    desc.includes("pix") ||
+                    desc.includes("envio") ||
+                    desc.includes("recebi")
+                ) {
+                    tipo = "Transferência";
+                } else if (
+                    desc.includes("aplica") ||
+                    desc.includes("investi") ||
+                    desc.includes("aporte")
+                ) {
+                    tipo = "Aplicação";
+                }
+
+                return tipo;
+            }
+
+            function applySavingsTypeSuggestion(tipo, isEdit = false) {
+                if (isEdit) {
+                    if (typeof setEditTipo === "function") {
+                        setEditTipo(tipo);
+                    } else {
+                        const input = document.getElementById("edit-tipo");
+                        if (input) input.value = tipo;
+                    }
+                } else if (typeof setTipo === "function") {
+                    setTipo(tipo);
+                } else {
+                    const input = document.getElementById("tipo");
+                    if (input) input.value = tipo;
+                }
+            }
+
+            function suggestSavingsTypeSimple() {
+                const descricaoInput = document.getElementById("descricao");
+                if (!descricaoInput || !descricaoInput.value.trim()) {
+                    notifyToast(
+                        "Sugestão com IA",
+                        "Digite uma descrição primeiro para que a IA sugira o tipo de movimentação.",
+                        "warning"
+                    );
+                    descricaoInput?.focus();
+                    return;
+                }
+
+                const tipo = getSuggestedSavingsType(descricaoInput.value);
+                applySavingsTypeSuggestion(tipo, false);
+                notifyToast(
+                    "Sugestão com IA",
+                    `Sugerimos o tipo "${tipo}" para esta movimentação.`,
+                    "success",
+                    3500
+                );
+            }
+
+            function suggestSavingsEditTypeSimple() {
+                const descricaoInput = document.getElementById(
+                    "edit-description"
+                );
+                if (!descricaoInput || !descricaoInput.value.trim()) {
+                    notifyToast(
+                        "Sugestão com IA",
+                        "Informe a descrição antes de solicitar a sugestão da IA.",
+                        "warning"
+                    );
+                    descricaoInput?.focus();
+                    return;
+                }
+
+                const tipo = getSuggestedSavingsType(descricaoInput.value);
+                applySavingsTypeSuggestion(tipo, true);
+                notifyToast(
+                    "Sugestão com IA",
+                    `Sugerimos o tipo "${tipo}" para esta movimentação.",
+                    "success",
+                    3500
+                );
+            }
+
             // Garante que as funções estão disponíveis globalmente
             window.toggleRecorrenciaFields = toggleRecorrenciaFields;
             window.toggleEditRecorrenciaFields = toggleEditRecorrenciaFields;
+            window.suggestSavingsTypeSimple = suggestSavingsTypeSimple;
+            window.suggestSavingsEditTypeSimple = suggestSavingsEditTypeSimple;
 
             // Debug: Verifica se as funções foram definidas corretamente
             console.log("🔍 Debug - Verificando funções:");
