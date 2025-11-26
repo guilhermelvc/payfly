@@ -1209,14 +1209,18 @@ table thead th:not(:last-child)::after {
         width: 100%;
         left: -100%;
         z-index: 10002; /* Mais alto que as tabelas */
-        background: var(
-            --black1
-        ) !important; /* Mantém o fundo preto como no desktop */
+        background: var(--green2);
+        border-left-color: var(--green2);
     }
     .navigation.active {
         width: 100%;
         left: 0;
         z-index: 10002; /* Garantir que fique por cima */
+    }
+
+    body:not(.light-theme) .navigation {
+        background: var(--sidebar-bg);
+        border-left-color: var(--sidebar-border);
     }
 
     /* Mostrar títulos dos itens do menu em mobile */

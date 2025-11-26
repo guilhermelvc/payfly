@@ -314,7 +314,13 @@
         // Botão alternar tema
         const themeBtn = document.getElementById("theme-toggle-btn");
         if (themeBtn) {
-            themeBtn.addEventListener("click", toggleTheme);
+            themeBtn.addEventListener("click", () => {
+                toggleTheme();
+                if (controls) {
+                    isMenuOpen = false;
+                    controls.classList.remove("open");
+                }
+            });
         }
 
         // Atalhos de teclado
