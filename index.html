@@ -73,7 +73,7 @@
                     <div class="text-menu">CONTATO</div>
                 </a>
                 <!-- Avatar do usuário ou botão de login -->
-                <div class="user-menu" id="userMenu">
+                <div class="item-menu user-menu" id="userMenu">
                     <button
                         class="user-avatar"
                         id="userAvatar"
@@ -101,6 +101,8 @@
 
                 // Check if menu is visible
                 const isVisible = items[0].classList.contains("show");
+
+                fixedHeader.classList.toggle("menu-open", isVisible);
 
                 // Update header style
                 fixedHeader.style.backgroundColor = "white";
@@ -148,6 +150,7 @@
             const userAvatar = document.getElementById("userAvatar");
 
             async function updateUserAvatar() {
+                const isMobileViewport = window.innerWidth <= 768;
                 try {
                     // Verificar sessão atual no Supabase
                     if (window.supabase && window.supabase.auth) {
@@ -174,10 +177,13 @@
                             userAvatar.textContent = initial;
                             userAvatar.classList.add("logged-in");
                             userAvatar.classList.remove("login-button");
-                            userAvatar.style.fontSize = "18px";
+                            userAvatar.style.fontSize = isMobileViewport
+                                ? "14px"
+                                : "18px";
                             userAvatar.style.padding = "0";
-                            userAvatar.style.width = "45px";
-                            userAvatar.style.height = "45px";
+                            const avatarSize = isMobileViewport ? 40 : 45;
+                            userAvatar.style.width = `${avatarSize}px`;
+                            userAvatar.style.height = `${avatarSize}px`;
                             userAvatar.style.borderRadius = "50%";
                             userAvatar.title = `Olá, ${userName}! Clique para acessar sua conta`;
                             userAvatar.onclick = () =>
@@ -200,8 +206,10 @@
                 userAvatar.textContent = "Entrar / Cadastrar";
                 userAvatar.classList.remove("logged-in");
                 userAvatar.classList.add("login-button");
-                userAvatar.style.fontSize = "14px";
-                userAvatar.style.padding = "10px 20px";
+                userAvatar.style.fontSize = isMobileViewport ? "12px" : "14px";
+                userAvatar.style.padding = isMobileViewport
+                    ? "8px 16px"
+                    : "10px 20px";
                 userAvatar.style.width = "auto";
                 userAvatar.style.height = "auto";
                 userAvatar.style.borderRadius = "5px";
@@ -229,6 +237,10 @@
             setInterval(() => {
                 updateUserAvatar();
             }, 3000);
+
+            window.addEventListener("resize", () => {
+                updateUserAvatar();
+            });
         </script>
 
         <!-- Primeira seção da pagina -->

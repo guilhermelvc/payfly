@@ -40,6 +40,10 @@ h2 {
     transition: all 0.3s ease;
 }
 
+.fixed-header.menu-open {
+    align-items: flex-start;
+}
+
 .menu-icon {
     display: none;
     cursor: pointer;
@@ -119,6 +123,18 @@ h2 {
 
 .item-menu {
     transition: all 0.3s ease;
+}
+
+.item-menu.user-menu {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.item-menu.user-menu .user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .item-menu.hide {
@@ -489,6 +505,11 @@ ion-con.md.hydrated {
 
     .fixed-header {
         padding: 10px 15px;
+        flex-wrap: nowrap;
+    }
+
+    .fixed-header.menu-open {
+        flex-wrap: wrap;
     }
 
     .item-menu:not(.menu-icon) {
@@ -497,6 +518,8 @@ ion-con.md.hydrated {
 
     .item-menu.show {
         display: block;
+        width: 100%;
+        text-align: left;
     }
 
     .text-menu {
@@ -507,20 +530,20 @@ ion-con.md.hydrated {
     }
 
     .user-menu {
-        order: -1;
+        order: initial;
         margin-left: 0;
         margin-right: auto;
+        margin-top: 10px;
+        width: 100%;
     }
 
-    .user-avatar.logged-in {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
+    .item-menu.user-menu.show {
+        display: flex;
+        padding: 10px 0;
     }
 
-    .user-avatar.login-button {
-        padding: 8px 15px;
-        font-size: 12px;
+    .item-menu.user-menu.show .user-avatar {
+        margin-left: 0;
     }
 
     .central-div {
@@ -615,15 +638,8 @@ ion-con.md.hydrated {
         padding: 15px;
     }
 
-    .user-avatar.logged-in {
-        width: 38px;
-        height: 38px;
-        font-size: 12px;
-    }
-
-    .user-avatar.login-button {
-        padding: 8px 12px;
-        font-size: 11px;
+    .item-menu.user-menu.show {
+        padding: 8px 0;
     }
 
     .cta-button {

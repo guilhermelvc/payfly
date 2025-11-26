@@ -199,6 +199,11 @@ body {
     cursor: pointer;
 }
 
+body:not(.light-theme) .toggle,
+body:not(.light-theme) .toggle ion-icon {
+    color: #ffffff !important;
+}
+
 .search {
     position: relative;
     width: 400px;
