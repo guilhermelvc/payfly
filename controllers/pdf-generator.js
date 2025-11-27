@@ -530,7 +530,8 @@ async function getPayFlyLogoDataUrl({ grayscale = false } = {}) {
 
         // Se for SVG, rasteriza em alta resolucao via canvas antes de gerar o PNG
         const isSvg =
-            typeof sourceUrl === "string" && sourceUrl.toLowerCase().endsWith(".svg");
+            typeof sourceUrl === "string" &&
+            sourceUrl.toLowerCase().endsWith(".svg");
         if (isSvg) {
             const svgText = await blob.text();
             payFlyLogoCache.colorDataUrl = await rasterizeSvgToPngDataUrl(
@@ -644,7 +645,9 @@ async function convertImageToGrayscale(dataUrl) {
 
 // Rasteriza um SVG (texto) para PNG em alta qualidade usando canvas
 async function rasterizeSvgToPngDataUrl(svgText) {
-    const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+    const svgBlob = new Blob([svgText], {
+        type: "image/svg+xml;charset=utf-8",
+    });
     const url = URL.createObjectURL(svgBlob);
     try {
         const img = await loadImage(url);
