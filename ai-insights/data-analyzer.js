@@ -399,5 +399,3 @@ class FinancialDataAnalyzer {
 
 // Instância global do analisador
 window.FinancialAnalyzer = new FinancialDataAnalyzer();
-
-console.log("📊 Financial Data Analyzer initialized successfully");
