@@ -33,16 +33,57 @@
 
     const identities = user.identities || [];
     const isGoogleAuth = identities.some((i) => i.provider === "google");
+
+    const emailInput = document.getElementById("email");
+    const currentPasswordInput = document.getElementById("current-password");
+    const newPasswordInput = document.getElementById("password");
+    const resetPasswordBtn = document.getElementById("reset-password-btn");
+
     if (isGoogleAuth) {
-        document.getElementById("current-password-section").style.display =
-            "none";
-        document.getElementById("password-section").style.display = "block";
-        document.getElementById("reset-password-btn").style.display = "block";
+        if (emailInput) {
+            emailInput.disabled = true;
+            emailInput.classList.add("input-readonly");
+        }
+        if (currentPasswordInput) {
+            currentPasswordInput.disabled = true;
+            currentPasswordInput.value = "";
+            currentPasswordInput.placeholder =
+                "Indisponível para contas Google";
+            currentPasswordInput.classList.add("input-readonly");
+        }
+        if (newPasswordInput) {
+            newPasswordInput.disabled = true;
+            newPasswordInput.value = "";
+            newPasswordInput.placeholder = "Indisponível para contas Google";
+            newPasswordInput.classList.add("input-readonly");
+        }
+        if (resetPasswordBtn) {
+            resetPasswordBtn.style.display = "none";
+        }
+
+        showInfoToast(
+            "Conta Google",
+            "Você está logado com o Google e não pode alterar a senha."
+        );
     } else {
-        document.getElementById("current-password-section").style.display =
-            "block";
-        document.getElementById("password-section").style.display = "block";
-        document.getElementById("reset-password-btn").style.display = "none";
+        if (emailInput) {
+            emailInput.disabled = false;
+            emailInput.removeAttribute("disabled");
+            emailInput.classList.remove("input-readonly");
+        }
+        if (currentPasswordInput) {
+            currentPasswordInput.disabled = false;
+            currentPasswordInput.placeholder = "Senha Atual";
+            currentPasswordInput.classList.remove("input-readonly");
+        }
+        if (newPasswordInput) {
+            newPasswordInput.disabled = false;
+            newPasswordInput.placeholder = "Nova Senha";
+            newPasswordInput.classList.remove("input-readonly");
+        }
+        if (resetPasswordBtn) {
+            resetPasswordBtn.style.display = "block";
+        }
     }
 })();
 
@@ -64,52 +105,95 @@ async function saveUserName(event) {
             "Por favor, insira um nome."
         );
 
-    console.log("Salvando nome do usuário:", userName, "para ID:", user.id);
+    const emailInput = document.getElementById("email");
+    const currentPasswordInput = document.getElementById("current-password");
+    const newPasswordInput = document.getElementById("password");
+
+    const typedEmail = emailInput ? emailInput.value.trim() : user.email;
+    const currentPassword = currentPasswordInput?.value.trim() || "";
+    const newPassword = newPasswordInput?.value.trim() || "";
+
+    const isGoogleAuth = (user.identities || []).some(
+        (identity) => identity.provider === "google"
+    );
+
+    const emailChanged =
+        !isGoogleAuth && typedEmail && typedEmail !== user.email;
+    const wantsPasswordChange =
+        !isGoogleAuth && (currentPassword.length || newPassword.length);
+
+    if (wantsPasswordChange && (!currentPassword || !newPassword)) {
+        return showWarningToast(
+            "Campos obrigatórios",
+            "Informe a senha atual e a nova senha para atualizar sua senha."
+        );
+    }
+
+    console.log("💾 Iniciando atualização de configurações", {
+        userId: user.id,
+        emailChanged,
+        wantsPasswordChange,
+    });
 
     try {
-        // Primeiro, vamos verificar se o usuário já existe
-        const { data: existingUser } = await window.supabase
-            .from("usuarios")
-            .select("id, nome")
-            .eq("id", user.id)
-            .limit(1);
+        if (wantsPasswordChange) {
+            const { error: reauthError } =
+                await window.supabase.auth.signInWithPassword({
+                    email: user.email,
+                    password: currentPassword,
+                });
 
-        console.log("Usuário existente encontrado:", existingUser);
+            if (reauthError) {
+                console.error("❌ Reautenticação falhou", reauthError);
+                return showErrorToast(
+                    "Senha incorreta",
+                    "Não foi possível validar a senha atual informada."
+                );
+            }
+        }
 
-        // Salva/atualiza o nome
-        const { data: updatedData, error } = await window.supabase
+        const authPayload = {
+            data: {
+                name: userName,
+                full_name: userName,
+            },
+        };
+
+        if (emailChanged) authPayload.email = typedEmail;
+        if (wantsPasswordChange) authPayload.password = newPassword;
+
+        const { data: authData, error: authError } =
+            await window.supabase.auth.updateUser(authPayload);
+        if (authError) {
+            console.error("❌ Erro ao atualizar perfil Auth", authError);
+            throw authError;
+        }
+
+        const updatedAuthUser = authData?.user || user;
+        const finalEmail = emailChanged
+            ? typedEmail
+            : updatedAuthUser.email || user.email;
+
+        const { error: upsertError } = await window.supabase
             .from("usuarios")
             .upsert({
                 id: user.id,
                 nome: userName,
-                email: user.email,
-            })
-            .select("nome");
-
-        if (error) {
-            console.error("Erro ao salvar:", error);
-            throw error;
-        }
-
-        console.log("Nome salvo com sucesso:", updatedData);
-
-        // Também atualizar os metadados do usuário no Auth (importante para Google Auth)
-        try {
-            await window.supabase.auth.updateUser({
-                data: {
-                    name: userName,
-                    full_name: userName, // Para compatibilidade com Google Auth
-                },
+                email: finalEmail,
             });
-            console.log("Metadados do Auth também atualizados");
-        } catch (metaError) {
-            console.warn("Erro ao atualizar metadados:", metaError);
-            // Não é crítico se falhar
+
+        if (upsertError) {
+            console.error("❌ Erro ao atualizar tabela usuarios", upsertError);
+            throw upsertError;
         }
 
-        // VERIFICAÇÃO EXTRA: Confirma se o nome foi salvo corretamente
-        console.log("Verificando se o nome foi salvo corretamente...");
+        if (emailInput) {
+            emailInput.value = finalEmail;
+        }
+        if (currentPasswordInput) currentPasswordInput.value = "";
+        if (newPasswordInput) newPasswordInput.value = "";
 
+        // Verificação tardia para garantir persistência
         setTimeout(async () => {
             try {
                 const { data: verificacao } = await window.supabase
@@ -120,48 +204,26 @@ async function saveUserName(event) {
 
                 if (verificacao && verificacao[0]) {
                     const nomeSalvo = verificacao[0].nome;
-                    console.log("Nome verificado na tabela:", nomeSalvo);
-
                     if (nomeSalvo !== userName || nomeSalvo.includes("@")) {
-                        console.warn(
-                            "⚠️ Nome não foi salvo corretamente, tentando novamente..."
-                        );
-
-                        // FORÇA o salvamento novamente
-                        const { error: forcedError } = await window.supabase
+                        await window.supabase
                             .from("usuarios")
                             .update({ nome: userName })
                             .eq("id", user.id);
-
-                        if (!forcedError) {
-                            console.log(
-                                "✅ Nome forçado com sucesso na segunda tentativa"
-                            );
-                        } else {
-                            console.error(
-                                "❌ Erro na segunda tentativa:",
-                                forcedError
-                            );
-                        }
-                    } else {
-                        console.log(
-                            "✅ Nome verificado corretamente na tabela"
-                        );
                     }
                 }
             } catch (verError) {
-                console.warn("Erro na verificação:", verError);
+                console.warn("⚠️ Verificação pós-salvamento falhou", verError);
             }
         }, 2000);
 
-        showSuccessToast("Nome salvo!", "Nome atualizado com sucesso!");
+        showSuccessToast(
+            "Configurações salvas",
+            "Suas configurações foram atualizadas com sucesso."
+        );
 
-        // Usa a função global para forçar refresh
         if (window.forceUserNameRefresh) {
             await window.forceUserNameRefresh();
         } else {
-            // Fallback se a função não estiver disponível
-            console.log("Fallback: forçando atualização local...");
             if (window.updateUserInfo) {
                 await window.updateUserInfo();
             }
@@ -171,7 +233,7 @@ async function saveUserName(event) {
         console.error("Erro completo:", err);
         showErrorToast(
             "Erro ao salvar",
-            "Falha ao salvar o nome: " + (err.message || err)
+            "Falha ao salvar as configurações: " + (err.message || err)
         );
     }
 }

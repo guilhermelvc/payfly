@@ -69,6 +69,14 @@
     box-sizing: border-box;
 }
 
+.input-group1 input.input-readonly,
+.input-group1 select.input-readonly,
+.input-group1 textarea.input-readonly {
+    background: #f1f3f5;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
 .input-group1 input:focus,
 .input-group1 select:focus,
 .input-group1 textarea:focus {
@@ -393,6 +401,13 @@ body:not(.light-theme) .config-description {
 /* Labels e textos */
 body:not(.light-theme) .input-group1 label {
     color: #ffffff !important;
+}
+
+body:not(.light-theme) .input-group1 input.input-readonly,
+body:not(.light-theme) .input-group1 select.input-readonly,
+body:not(.light-theme) .input-group1 textarea.input-readonly {
+    background: #2a2a2a !important;
+    color: #888 !important;
 }
 
 body:not(.light-theme) .config-section {
