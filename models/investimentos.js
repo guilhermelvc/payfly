@@ -121,14 +121,12 @@ async function loadInvestimentosFromSupabase() {
 
         updateInvestimentoDisplay();
 
-        // Se não há filtro ativo, mostra o total também no card filtrado
+        // Se não há filtro ativo, mantém o total filtrado zerado
         if (!isInvestimentoFilterActive) {
             const elFiltrado = document.getElementById(
                 "filteredInvestimentosDisplay"
             );
-            if (elFiltrado)
-                elFiltrado.textContent =
-                    formatInvestimentoValue(totalInvestimento);
+            if (elFiltrado) elFiltrado.textContent = formatInvestimentoValue(0);
         }
 
         console.log(`✅ ${data?.length || 0} investimentos carregados`);

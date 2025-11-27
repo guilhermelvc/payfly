@@ -5,6 +5,7 @@ console.log("💰 Poupanca.js carregado");
 let transactions = [];
 let filteredTransactions = [];
 let totalPoupanca = 0;
+let filteredPoupancaTotal = 0;
 
 // Variável global para controlar estado do filtro
 let isPoupancaFilterActive = false;
@@ -73,6 +74,9 @@ async function applyStoredPoupancaFilter() {
             (sum, item) => sum + item.amount,
             0
         );
+        filteredTransactions = [...transactions];
+        recalculateFilteredPoupancaTotal();
+        isPoupancaFilterActive = true;
         transactions.forEach((item) => addPoupancaRowToTable(item));
         updatePoupancaDisplay();
     } catch (error) {
@@ -134,6 +138,9 @@ async function loadPoupancaFromSupabase() {
             (sum, item) => sum + item.amount,
             0
         );
+        filteredTransactions = [...transactions];
+        filteredPoupancaTotal = 0;
+        isPoupancaFilterActive = false;
         transactions.forEach((item) => addPoupancaRowToTable(item));
         updatePoupancaDisplay();
 
@@ -203,6 +210,8 @@ function loadDemoDataFallback() {
 
     totalPoupanca = transactions.reduce((sum, t) => sum + t.amount, 0);
     filteredTransactions = [...transactions];
+    filteredPoupancaTotal = 0;
+    isPoupancaFilterActive = false;
     console.log("✅ Dados de poupança carregados:", transactions);
 }
 
@@ -526,6 +535,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     filteredTransactions = [...transactions];
+    isPoupancaFilterActive = false;
+    filteredPoupancaTotal = 0;
     updateTotalDisplay();
     updateTable();
 
@@ -604,17 +615,28 @@ window.confirmDelete = function () {
     }
 };
 
-function updateTotalDisplay() {
-    const total = transactions.reduce((sum, t) => sum + t.amount, 0);
-    const filteredTotal = filteredTransactions.reduce(
+function recalculateFilteredPoupancaTotal() {
+    filteredPoupancaTotal = filteredTransactions.reduce(
         (sum, t) => sum + t.amount,
         0
     );
+}
 
-    document.getElementById("totalPoupancaDisplay").textContent =
-        formatCurrency(total);
-    document.getElementById("filteredPoupancaDisplay").textContent =
-        formatCurrency(filteredTotal);
+function updateTotalDisplay() {
+    const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+    const filteredTotal = isPoupancaFilterActive ? filteredPoupancaTotal : 0;
+
+    const totalDisplayEl = document.getElementById("totalPoupancaDisplay");
+    if (totalDisplayEl) {
+        totalDisplayEl.textContent = formatCurrency(total);
+    }
+
+    const filteredDisplayEl = document.getElementById(
+        "filteredPoupancaDisplay"
+    );
+    if (filteredDisplayEl) {
+        filteredDisplayEl.textContent = formatCurrency(filteredTotal);
+    }
 
     console.log(
         `💰 Total atualizado: ${formatCurrency(
@@ -753,6 +775,8 @@ const Form = {
 
             transactions.push(newTransaction);
             filteredTransactions = [...transactions];
+            isPoupancaFilterActive = false;
+            filteredPoupancaTotal = 0;
 
             updateTotalDisplay();
             updateTable();
@@ -957,6 +981,7 @@ function deleteTransaction(index) {
         }
 
         filteredTransactions.splice(index, 1);
+        recalculateFilteredPoupancaTotal();
         updateTotalDisplay();
         updateTable();
         showSuccessToast("Sucesso!", "Movimentação excluída com sucesso!");
@@ -1031,6 +1056,9 @@ function filterPoupanca(event) {
         return matchDescricao && matchValor && matchData && matchTipo;
     });
 
+    isPoupancaFilterActive = true;
+    recalculateFilteredPoupancaTotal();
+
     updateTotalDisplay();
     updateTable();
     FilterModal.close();
@@ -1046,6 +1074,8 @@ function filterPoupanca(event) {
 
 function filterClear() {
     console.log("🧹 Limpando filtros...");
+    isPoupancaFilterActive = false;
+    filteredPoupancaTotal = 0;
     filteredTransactions = [...transactions];
     updateTotalDisplay();
     updateTable();
