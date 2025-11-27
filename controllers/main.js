@@ -1,14 +1,177 @@
-// Adicionando a classe que muda cor ao passar o mouse
-let list = document.querySelectorAll(".navigation li");
+// ---------------- Navegação lateral: estado ativo persistente ----------------
+let navigationItems = [];
 
-function activeLink() {
-    list.forEach((item) => {
-        item.classList.remove("hovered");
-    });
-    this.classList.add("hovered");
+function refreshNavigationItems() {
+    navigationItems = Array.from(
+        document.querySelectorAll(".navigation ul li")
+    );
 }
 
-list.forEach((item) => item.addEventListener("mouseover", activeLink));
+function getNavigationLinks() {
+    return navigationItems
+        .map((item) => item.querySelector("a"))
+        .filter(Boolean);
+}
+
+function normalizePathSegment(path) {
+    if (typeof path !== "string") return "";
+
+    let normalized = path;
+
+    try {
+        normalized = decodeURIComponent(normalized);
+    } catch (decodeError) {
+        console.debug("main.js: falha ao decodificar caminho", decodeError);
+    }
+
+    normalized = normalized.replace(/\\/g, "/");
+    normalized = normalized.split("?")[0].split("#")[0];
+
+    if (normalized.endsWith("/")) {
+        normalized = normalized.slice(0, -1);
+    }
+
+    const segments = normalized.split("/");
+    return (segments.pop() || "").toLowerCase();
+}
+
+function restoreActiveHover() {
+    if (!navigationItems.length) return;
+
+    const activeItem = navigationItems.find(
+        (item, index) => index !== 0 && item.classList.contains("active")
+    );
+
+    navigationItems.forEach((item, index) => {
+        if (index === 0) return;
+
+        if (item === activeItem) {
+            item.classList.add("hovered");
+        } else {
+            item.classList.remove("hovered");
+        }
+    });
+}
+
+function setActiveNavItem(item) {
+    if (!item || !navigationItems.length) return;
+
+    const index = navigationItems.indexOf(item);
+    if (index === 0) return; // Ignora o item do logo
+
+    navigationItems.forEach((navItem, navIndex) => {
+        if (navIndex === 0) return;
+        if (navItem !== item) {
+            navItem.classList.remove("active");
+            navItem.classList.remove("hovered");
+        }
+    });
+
+    item.classList.add("active");
+    item.classList.add("hovered");
+
+    restoreActiveHover();
+}
+
+function applyTemporaryHover(item) {
+    if (!item || !navigationItems.length) return;
+
+    const index = navigationItems.indexOf(item);
+    if (index === 0) return;
+
+    navigationItems.forEach((navItem, navIndex) => {
+        if (navIndex === 0 || navItem === item) return;
+        navItem.classList.remove("hovered");
+    });
+
+    item.classList.add("hovered");
+}
+
+function registerNavigationHoverHandlers() {
+    if (!navigationItems.length) return;
+
+    navigationItems.forEach((item, index) => {
+        if (index === 0) return;
+
+        item.addEventListener("mouseover", () => applyTemporaryHover(item));
+        item.addEventListener("mouseleave", restoreActiveHover);
+        item.addEventListener("focusin", () => applyTemporaryHover(item));
+        item.addEventListener("focusout", restoreActiveHover);
+
+        const link = item.querySelector("a");
+        if (link && link.hasAttribute("href")) {
+            link.addEventListener("click", () => setActiveNavItem(item));
+        }
+    });
+}
+
+function syncActiveNavigationItem() {
+    refreshNavigationItems();
+    if (!navigationItems.length) return;
+
+    const links = getNavigationLinks();
+    let activeItem = navigationItems.find(
+        (item, index) => index !== 0 && item.classList.contains("active")
+    );
+
+    if (!activeItem) {
+        const explicitLink = links.find((link) => {
+            const href = (link.getAttribute("href") || "").trim();
+            if (href !== "#") return false;
+            const parent = link.closest("li");
+            if (!parent) return false;
+            return navigationItems.indexOf(parent) > 0;
+        });
+
+        if (explicitLink) {
+            activeItem = explicitLink.closest("li");
+        }
+    }
+
+    if (!activeItem) {
+        const currentFilename = normalizePathSegment(window.location.pathname);
+
+        const matched = links.find((link) => {
+            const rawHref = link.getAttribute("href");
+            if (
+                !rawHref ||
+                rawHref === "#" ||
+                rawHref.toLowerCase().startsWith("javascript:")
+            ) {
+                return false;
+            }
+
+            let linkFilename = "";
+
+            try {
+                const resolved = new URL(rawHref, window.location.href);
+                linkFilename = normalizePathSegment(resolved.pathname);
+            } catch (urlError) {
+                console.debug(
+                    "main.js: falha ao resolver href",
+                    rawHref,
+                    urlError
+                );
+            }
+
+            return linkFilename && linkFilename === currentFilename;
+        });
+
+        if (matched) {
+            activeItem = matched.closest("li");
+        }
+    }
+
+    if (!activeItem && navigationItems.length > 1) {
+        activeItem = navigationItems[1];
+    }
+
+    if (activeItem) {
+        setActiveNavItem(activeItem);
+    }
+
+    restoreActiveHover();
+}
 
 // Menu Toggle para recolher e mostar a navegação
 let toggle = document.querySelector(".toggle");
@@ -49,6 +212,10 @@ if (!window.formatCurrencyBRL) {
 
 // Inicializar sidebar baseado no localStorage (padrão: fechado)
 document.addEventListener("DOMContentLoaded", function () {
+    refreshNavigationItems();
+    registerNavigationHoverHandlers();
+    syncActiveNavigationItem();
+
     const isMobile = window.innerWidth <= 480;
 
     if (isMobile) {
@@ -68,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Fechar sidebar ao clicar em links de navegação no mobile
-    const navigationLinks = document.querySelectorAll(".navigation ul li a");
+    const navigationLinks = getNavigationLinks();
 
     navigationLinks.forEach((link) => {
         link.addEventListener("click", function () {

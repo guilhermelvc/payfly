@@ -27,6 +27,7 @@ a[onclick] {
     --red: red;
     --green2: #183d3d;
     --green3: #005951;
+    --sidebar-active: #0f7e72;
 }
 
 body {
@@ -81,6 +82,18 @@ body {
 .navigation ul li:hover,
 .navigation ul li.hovered {
     background-color: var(--black1);
+}
+
+.navigation ul li.active {
+    background-color: var(--sidebar-active, var(--black1));
+}
+
+.navigation ul li.active a {
+    color: var(--white);
+}
+
+.navigation ul li.active a .title {
+    font-weight: 600;
 }
 
 .navigation ul li:nth-child(1) {
@@ -228,6 +241,14 @@ body {
     border-radius: 50%;
     box-shadow: 35px -35px 0 10px var(--green2);
     pointer-events: none;
+}
+
+.navigation ul li.active a::before {
+    box-shadow: 35px 35px 0 10px var(--sidebar-active, var(--green2));
+}
+
+.navigation ul li.active a::after {
+    box-shadow: 35px -35px 0 10px var(--sidebar-active, var(--green2));
 }
 
 /* ===================== Principal ===================== */
@@ -3861,6 +3882,7 @@ body.light-theme {
     --sidebar-bg: #222;
     --sidebar-border: #222;
     --sidebar-hover: #005951;
+    --sidebar-active: #0f7e72;
     --main-bg: #fff;
     --card-bg: #222;
     --card-hover: #005951;
@@ -3891,19 +3913,35 @@ body.light-theme .navigation ul li.hovered {
     background-color: #005951 !important;
 }
 
-/* Curvas VERDES no tema claro (mesma cor do hover) */
+.light-theme .navigation ul li.active,
+.light-theme .navigation ul li.active.hovered,
+body.light-theme .navigation ul li.active,
+body.light-theme .navigation ul li.active.hovered {
+    background: var(--sidebar-active) !important;
+    background-color: var(--sidebar-active) !important;
+}
+
+/* Curvas no tema claro para hover e ativo */
 .light-theme .navigation ul li:hover a::before,
 .light-theme .navigation ul li.hovered a::before,
+.light-theme .navigation ul li.active a::before,
+.light-theme .navigation ul li.active.hovered a::before,
 body.light-theme .navigation ul li:hover a::before,
-body.light-theme .navigation ul li.hovered a::before {
-    box-shadow: 35px 35px 0 10px #005951 !important;
+body.light-theme .navigation ul li.hovered a::before,
+body.light-theme .navigation ul li.active a::before,
+body.light-theme .navigation ul li.active.hovered a::before {
+    box-shadow: 35px 35px 0 10px var(--sidebar-active) !important;
 }
 
 .light-theme .navigation ul li:hover a::after,
 .light-theme .navigation ul li.hovered a::after,
+.light-theme .navigation ul li.active a::after,
+.light-theme .navigation ul li.active.hovered a::after,
 body.light-theme .navigation ul li:hover a::after,
-body.light-theme .navigation ul li.hovered a::after {
-    box-shadow: 35px -35px 0 10px #005951 !important;
+body.light-theme .navigation ul li.hovered a::after,
+body.light-theme .navigation ul li.active a::after,
+body.light-theme .navigation ul li.active.hovered a::after {
+    box-shadow: 35px -35px 0 10px var(--sidebar-active) !important;
 }
 
 /* Tema Escuro - Sidebar VERDE com hover PRETO */
@@ -3911,6 +3949,7 @@ body:not(.light-theme) {
     --sidebar-bg: #183d3d;
     --sidebar-border: #183d3d;
     --sidebar-hover: #1a1a1a;
+    --sidebar-active: #2c2c2c;
     --main-bg: #1a1a1a;
     --card-bg: #2a2a2a;
     --card-hover: #1a1a1a;
@@ -3935,15 +3974,30 @@ body:not(.light-theme) .navigation ul li.hovered {
     background-color: var(--sidebar-hover) !important;
 }
 
-/* Curvas decorativas do sidebar em preto no tema escuro */
+body:not(.light-theme) .navigation ul li.active,
+body:not(.light-theme) .navigation ul li.active.hovered {
+    background-color: var(--sidebar-active) !important;
+}
+
+/* Curvas decorativas no tema escuro */
 body:not(.light-theme) .navigation ul li:hover a::before,
 body:not(.light-theme) .navigation ul li.hovered a::before {
     box-shadow: 35px 35px 0 10px #1a1a1a !important;
 }
 
+body:not(.light-theme) .navigation ul li.active a::before,
+body:not(.light-theme) .navigation ul li.active.hovered a::before {
+    box-shadow: 35px 35px 0 10px var(--sidebar-active) !important;
+}
+
 body:not(.light-theme) .navigation ul li:hover a::after,
 body:not(.light-theme) .navigation ul li.hovered a::after {
     box-shadow: 35px -35px 0 10px #1a1a1a !important;
+}
+
+body:not(.light-theme) .navigation ul li.active a::after,
+body:not(.light-theme) .navigation ul li.active.hovered a::after {
+    box-shadow: 35px -35px 0 10px var(--sidebar-active) !important;
 }
 
 body:not(.light-theme) .main {
