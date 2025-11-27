@@ -572,15 +572,15 @@ async function getPayFlyLogoDimensions() {
 }
 
 function resolvePayFlyLogoCandidates() {
-  // Caminhos relativos a partir da raiz do servidor (evita "views/views")
+  // Caminhos RELATIVOS ao app (funcionam em localhost e em /payfly no GitHub Pages)
   const relativePaths = [
-    // Logo libelula em SVG (alta qualidade)
-    "/views/imgs/pages/libelula.svg",
-    // Demais variantes mantidas como fallback
-    "/views/imgs/pages/logo.png",
-    "/views/imgs/Favicon.png",
-    "/imgs/pages/logo.png",
-    "/imgs/Favicon.png",
+    // Logo libélula em SVG (alta qualidade) na mesma estrutura do GitHub Pages
+    "views/imgs/pages/libelula.svg",
+    // Demais variantes PNG mantidas como fallback
+    "views/imgs/pages/logo.png",
+    "views/imgs/Favicon.png",
+    "imgs/pages/logo.png",
+    "imgs/Favicon.png",
   ];
 
   return relativePaths;
