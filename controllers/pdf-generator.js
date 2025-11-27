@@ -1,11 +1,146 @@
+function getBrandColor(key, fallback) {
+    var palette = BRAND_COLORS || {};
+    var selected = palette[key];
+    if (
+        !selected ||
+        typeof selected.r !== "number" ||
+        typeof selected.g !== "number" ||
+        typeof selected.b !== "number"
+    ) {
+        if (fallback) {
+            return fallback;
+        }
+        // Hard fallback to primary defaults to avoid crashing downstream calls
+        return { r: 0, g: 89, b: 81 };
+    }
+    return selected;
+}
 // ================ PDF Generator ================
 console.log("📄 PDF Generator carregado");
 
-// Cache for processed logo assets reused across PDF generations
-const payFlyLogoCache = {
-    svgDataUrl: null,
-    rasterDataUrl: null,
+// Brand palette aligned with the web experience
+var BRAND_COLORS = (function () {
+    var fallback = {
+        primary: { r: 0, g: 89, b: 81 }, // #005951
+        dark: { r: 24, g: 61, b: 61 }, // #183d3d
+        accent: { r: 147, g: 177, b: 166 }, // #93B1A6
+        muted: { r: 100, g: 100, b: 100 },
+    };
+
+    if (!window.PAYFLY_BRAND_COLORS) {
+        window.PAYFLY_BRAND_COLORS = fallback;
+        return fallback;
+    }
+
+    var palette = window.PAYFLY_BRAND_COLORS;
+    if (
+        !palette ||
+        !palette.primary ||
+        typeof palette.primary.r !== "number" ||
+        typeof palette.primary.g !== "number" ||
+        typeof palette.primary.b !== "number"
+    ) {
+        console.warn(
+            "⚠️ PAYFLY_BRAND_COLORS inválido detectado. Revertendo para fallback."
+        );
+        window.PAYFLY_BRAND_COLORS = fallback;
+        return fallback;
+    }
+
+    return palette;
+})();
+
+// Embedded PayFly logo (usada como fallback e para rodapé)
+const PAYFLY_EMBEDDED_LOGO_DATA_URL =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASCSURBVHgB7VkrcxxHEP6iEBt5jSKWMYqYD4plYFj0D3KBQZFZoP6BLBikCzSywsx8ZmY5sQvKhpnlzM7Imfb25+5Z757ubFlTLs1X1TWz8+jH9GPm6oCKioqKioqKioqKio/B1yPjMVFINEl0J9ErfDqaRPuJVr3xyTXxF4RERyor6Fgmb8jg6Db/lmia6PtEf6MzfoXdIUosdK8oc+iUuaN9adfYHUF5Pk/0Czr920RLDDjrqwEGjaOoSrWunWif31chuvXHiX5UJeVbDuGRkzvHdqB+Qb8Xqpd8P0z0ItGFfrdXMQuw0HirdKpzR86I6NZu4tVo/7nj5+m/ntxNaNy6oDowhM8dzyksJTPsDTBtXXumffHMYx1rtGWfkRAGeAWYwZuMYDuWLhMny/eZJlMlwQwWKYs+o7GiJUwknyQsJDwk9J/p3KEaQmZr5Iru6zxzc6nfl+gOpn8AEtIvYfnWOB7C+wB2uBxbOj6ttkF5/a5rBgvhUA57RJg3fe4Cea5TcHDrAQuplfZP8WEkHKseC52bI48e7m9c2zgZ3tv0/hwjuMpgIirDqMxoSIvcIH4Hp0CrrRSTkwHeMv8zzIi3Ti8ecEBefALsACiL+8fS4h32sB1o7ENYdaVCLcz77HsFePr3R3gHt0Za74TGrSH5HF6pTgFbGCsYMzgm+ivRP+iqa1SG/8IqIFR4dEodw07dh1/EZsxh+U2lW/0+gkULeXJe9lw6XbzOP2FA7lDRko1SQO4mepLoT3RFYh/mNRYEFodGW+95vqpIEQPXhM5d6v6ljpEn+1K4XvZkssgFp9MT5fVG21bn3xewvQFjGZqCc6VfdXyGvFh4b/pw8gUGumeOYVAxXwSDm28db8qawAydaSseFQ8/dfuoy3v0PSynJ57hyR1oK1fRXeRFRLzJq4dKyL7vEr1G/mT0iu73ZJ7BImLp2kNVmvpQDqNsDbvCTtClE5++vJrW6DljqEoH5E+2CKvSM1iuLXr7/FiAeW0CO23Ze97b96C3n3uHePQrMddMXX+B3MiskG26lgIsNFvkhYoMG+Re5/e36ELV74+qzFNYmP0Be/MukL+6GuQPHMqZuDHyXPR0azGCsZcWBbxyQvhrRkLombZrpxgLjRSXNzBvyLoD15fU+EHnz3TvUtcAFr4cb5zcb9BFxBLmhJXjT31Hscs9zFM8QlccAuw0L5C/dTnno6BFfoeT74X2W+Q/IWc63rh1EjWPlb9cPxG7/cra+qXVB407Rvdzb47u+qLiXCN9H4Y8DObxA+Tp4nnTcI5FdJX4kfIi753wsQZ7iBHHqtQUpmiEedTnuqw51bH7yB8o5HcP3SOH0TCDRdIcn4DrMNgjuL4vbr6QTGEe9vIjrBKzCPb3fpE4Qf7D/0axbdH6HNg5/64DpQxmqN44ShksefoaBVAypIughMEBhcJZUMJg/7C4cZQw+J62t+ZaalAQJa+lIihhsLyRi3m5hMH0bkQBlLyHi3i5ZNG6NQbzN+4L3BKIZ+WfgRNUVFRUVFRUVFRUVHwx+B+A1muTZbNYywAAAABJRU5ErkJggg==";
+
+// Cache for processed logo assets reutilizado nas chamadas da capa / gráficos
+var payFlyLogoCache = payFlyLogoCache || {
+    colorDataUrl: null,
+    grayDataUrl: null,
+    dimensions: null,
+    sourceUrl: null,
 };
+
+function togglePdfLoading(show) {
+    if (typeof showPDFLoading === "function") {
+        try {
+            showPDFLoading(show);
+        } catch (e) {
+            // Silencia qualquer erro de UI de loading para não poluir o console
+        }
+    }
+}
+
+function buildWeekRange() {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+
+    return `${startOfWeek.toLocaleDateString(
+        "pt-BR"
+    )} - ${today.toLocaleDateString("pt-BR")}`;
+}
+
+function buildMonthRange() {
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    return `${startOfMonth.toLocaleDateString(
+        "pt-BR"
+    )} - ${today.toLocaleDateString("pt-BR")}`;
+}
+
+function buildSemesterRange() {
+    const today = new Date();
+    const sixMonthsAgo = new Date(today);
+    sixMonthsAgo.setMonth(today.getMonth() - 6);
+
+    return `${sixMonthsAgo.toLocaleDateString(
+        "pt-BR"
+    )} - ${today.toLocaleDateString("pt-BR")}`;
+}
+
+function resolvePeriodRange(periodKey) {
+    const calculators = {
+        week: buildWeekRange,
+        month: buildMonthRange,
+        "6months": buildSemesterRange,
+    };
+
+    const calculator = calculators[periodKey];
+    if (typeof calculator === "function") {
+        try {
+            return calculator();
+        } catch (error) {
+            console.warn("⚠️ Falha ao calcular range do periodo:", error);
+        }
+    }
+
+    const legacyMap = {
+        week: "getWeekRange",
+        month: "getMonthRange",
+        "6months": "getSemesterRange",
+    };
+
+    const legacyMethod = legacyMap[periodKey];
+    if (legacyMethod && typeof window[legacyMethod] === "function") {
+        try {
+            return window[legacyMethod]();
+        } catch (error) {
+            console.warn(
+                `⚠️ Falha ao calcular range via ${legacyMethod}:`,
+                error
+            );
+        }
+    }
+
+    return "Periodo em analise";
+}
+
+window.getWeekRange = window.getWeekRange || buildWeekRange;
+window.getMonthRange = window.getMonthRange || buildMonthRange;
+window.getSemesterRange = window.getSemesterRange || buildSemesterRange;
 
 // ================ Geração de PDF do Dashboard ================
 
@@ -43,7 +178,7 @@ async function generateDashboardPDF() {
         }
 
         // Mostra loading
-        showPDFLoading(true);
+        togglePdfLoading(true);
 
         // Obtém informações do usuário
         const userInfo = await getCurrentUserInfo();
@@ -98,7 +233,7 @@ async function generateDashboardPDF() {
         }
 
         // ================ Rodapé de Direitos Autorais ================
-        addFooterToAllPages(pdf);
+        await addFooterToAllPages(pdf);
 
         // Salva o PDF
         const fileName = `PayFly_Relatorio_${userInfo.name.replace(
@@ -127,7 +262,8 @@ async function generateDashboardPDF() {
             alert("❌ Erro ao gerar PDF: " + error.message);
         }
     } finally {
-        showPDFLoading(false);
+        // Garante que tratamentos assíncronos do loading sejam resolvidos
+        Promise.resolve().then(() => togglePdfLoading(false));
     }
 }
 
@@ -193,20 +329,24 @@ async function getCurrentUserInfo() {
 
 // Gera página de capa
 async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
-    let currentY = 40;
+    // Comeca um pouco mais para cima para abrir espaco para o rodape
+    let currentY = 35;
 
     // ================ Logo PayFly ================
-    await drawPayFlyLogo(pdf, pageWidth / 2, currentY);
-    currentY += 50;
+    const logoHeight = await drawPayFlyLogo(pdf, pageWidth / 2, currentY);
+    // Pequeno espaçamento abaixo da logo
+    currentY += (logoHeight || 20) + 20;
 
     // ================ Título PayFly ================
     pdf.setFontSize(32);
-    pdf.setTextColor(42, 33, 133); // Cor principal do PayFly
+    const brandPrimary = getBrandColor("primary");
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text("PayFly", pageWidth / 2, currentY, { align: "center" });
 
     currentY += 15;
     pdf.setFontSize(16);
-    pdf.setTextColor(100, 100, 100);
+    const brandMuted = getBrandColor("muted", { r: 100, g: 100, b: 100 });
+    pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
     pdf.text(
         "Plataforma de Gestao Financeira Pessoal",
         pageWidth / 2,
@@ -220,7 +360,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
 
     // ================ Título do Relatório ================
     pdf.setFontSize(20);
-    pdf.setTextColor(42, 33, 133);
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text("RELATORIO FINANCEIRO", pageWidth / 2, currentY, {
         align: "center",
     });
@@ -236,7 +376,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
 
     currentY += 8;
     pdf.setFontSize(10);
-    pdf.setTextColor(100, 100, 100);
+    pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
     pdf.text("Email: " + userInfo.email, pageWidth / 2, currentY, {
         align: "center",
     });
@@ -269,7 +409,8 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
     currentY += 25;
 
     // ================ Resumo Geral ================
-    pdf.setDrawColor(42, 33, 133);
+    const brandDark = getBrandColor("dark", { r: 24, g: 61, b: 61 });
+    pdf.setDrawColor(brandDark.r, brandDark.g, brandDark.b);
     pdf.setFillColor(248, 249, 250);
     pdf.roundedRect(
         margin,
@@ -283,7 +424,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
 
     currentY += 0;
     pdf.setFontSize(12);
-    pdf.setTextColor(42, 33, 133);
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text("Conteudo do Relatorio", margin + 10, currentY);
 
     currentY += 10;
@@ -306,7 +447,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
 
     // ================ Aviso Legal ================
     pdf.setFontSize(8);
-    pdf.setTextColor(100, 100, 100);
+    pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
     const disclaimer = [
         "Este relatorio contem informacoes financeiras pessoais e confidenciais.",
         "Os dados apresentados sao baseados nas informacoes inseridas pelo usuario.",
@@ -319,119 +460,209 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
     });
 }
 
-// Desenha logo do PayFly usando formas geométricas
+// Desenha a logo do PayFly com o ativo oficial
 async function drawPayFlyLogo(pdf, centerX, centerY) {
     try {
-        const rasterDataUrl = await getPayFlyLogoRasterDataUrl();
+        const logoDataUrl = await getPayFlyLogoDataUrl();
+        const { width, height } = await getPayFlyLogoDimensions();
 
-        if (!rasterDataUrl) {
-            throw new Error("Logo rasterizada não disponível");
+        // Mantém a proporcao original; logo maior, mas ainda com margem para o conteudo
+        const maxWidth = 100;
+        const maxHeight = 36;
+        let drawWidth = maxWidth;
+        let drawHeight = (height / width) * drawWidth;
+
+        if (drawHeight > maxHeight) {
+            drawHeight = maxHeight;
+            drawWidth = (width / height) * drawHeight;
         }
 
-        pdf.addImage(rasterDataUrl, "JPEG", centerX - 15, centerY - 15, 30, 30);
-        console.log(
-            "✅ Logo PayFly adicionada ao PDF a partir do cache/processamento"
+        const x = centerX - drawWidth / 2;
+        const y = centerY - drawHeight / 2;
+
+        pdf.addImage(
+            logoDataUrl,
+            "PNG",
+            x,
+            y,
+            drawWidth,
+            drawHeight,
+            undefined,
+            "FAST"
         );
+        console.log("✅ Logo PayFly adicionada ao PDF");
+        return drawHeight;
     } catch (error) {
         console.warn(
             "❌ Falha ao adicionar logo processada, usando fallback:",
             error
         );
-        drawFallbackLogo(pdf, centerX, centerY);
+        return drawFallbackLogo(pdf, centerX, centerY);
     }
 }
 
-async function getPayFlyLogoRasterDataUrl() {
-    if (payFlyLogoCache.rasterDataUrl) {
-        return payFlyLogoCache.rasterDataUrl;
+async function getPayFlyLogoDataUrl({ grayscale = false } = {}) {
+    // Garante que o cache exista mesmo se algo externo mexer na variavel
+    if (!payFlyLogoCache) {
+        payFlyLogoCache = {
+            colorDataUrl: null,
+            grayDataUrl: null,
+            dimensions: null,
+            sourceUrl: null,
+        };
     }
 
-    const svgDataUrl = await getPayFlyLogoSvgDataUrl();
-    if (!svgDataUrl) {
-        return null;
+    if (!grayscale && payFlyLogoCache.colorDataUrl) {
+        return payFlyLogoCache.colorDataUrl;
     }
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", { alpha: false });
-    const scale = Math.min(window.devicePixelRatio || 1, 2);
-    const canvasSize = 200;
-
-    canvas.width = canvasSize * scale;
-    canvas.height = canvasSize * scale;
-    canvas.style.width = canvasSize + "px";
-    canvas.style.height = canvasSize + "px";
-    ctx.scale(scale, scale);
-
-    const img = await loadImage(svgDataUrl);
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-    const imgSize = canvasSize * 0.9;
-    const offset = (canvasSize - imgSize) / 2;
-    ctx.drawImage(img, offset, offset, imgSize, imgSize);
-
-    payFlyLogoCache.rasterDataUrl = canvas.toDataURL("image/jpeg", 0.92);
-    return payFlyLogoCache.rasterDataUrl;
-}
-
-async function getPayFlyLogoSvgDataUrl() {
-    if (payFlyLogoCache.svgDataUrl) {
-        return payFlyLogoCache.svgDataUrl;
+    if (grayscale && payFlyLogoCache.grayDataUrl) {
+        return payFlyLogoCache.grayDataUrl;
     }
 
-    const logoUrl = resolvePayFlyLogoPath();
-    console.log("📁 Caminho da logo resolvido:", logoUrl);
+    if (!payFlyLogoCache.colorDataUrl) {
+        const asset = await fetchPayFlyLogoAsset();
+        if (!asset || !asset.blob) {
+            throw new Error("Logo asset nao disponivel");
+        }
+        const { blob, sourceUrl } = asset;
+        console.log("📁 Caminho da logo resolvido:", sourceUrl);
 
-    try {
-        const response = await fetch(logoUrl, { cache: "no-cache" });
-        console.log(
-            "📡 Status ao buscar logo:",
-            response.status,
-            response.statusText
-        );
-
-        if (!response.ok) {
-            throw new Error(`Resposta ${response.status}`);
+        // Se for SVG, rasteriza em alta resolucao via canvas antes de gerar o PNG
+        const isSvg =
+            typeof sourceUrl === "string" && sourceUrl.toLowerCase().endsWith(".svg");
+        if (isSvg) {
+            const svgText = await blob.text();
+            payFlyLogoCache.colorDataUrl = await rasterizeSvgToPngDataUrl(
+                svgText
+            );
+        } else {
+            payFlyLogoCache.colorDataUrl = await blobToDataUrl(blob);
         }
 
-        const svgContent = await response.text();
-        console.log("✅ SVG carregado, tamanho:", svgContent.length, "chars");
-
-        const blackSvg = svgContent
-            .replace(/fill="[^"]*"/g, 'fill="#000000"')
-            .replace(/stroke="[^"]*"/g, 'stroke="#000000"')
-            .replace(/fill:[^;"]*/g, "fill:#000000")
-            .replace(/stroke:[^;"]*/g, "stroke:#000000");
-
-        const svgBlob = new Blob([blackSvg], {
-            type: "image/svg+xml;charset=utf-8",
-        });
-
-        payFlyLogoCache.svgDataUrl = await blobToDataUrl(svgBlob);
-    } catch (error) {
-        console.warn(
-            "⚠️ Falha ao processar logo SVG, usando arquivo original:",
-            error
-        );
-        payFlyLogoCache.svgDataUrl = logoUrl;
+        payFlyLogoCache.sourceUrl = sourceUrl;
     }
 
-    return payFlyLogoCache.svgDataUrl;
+    if (!grayscale) {
+        return payFlyLogoCache.colorDataUrl;
+    }
+
+    if (!payFlyLogoCache.grayDataUrl) {
+        payFlyLogoCache.grayDataUrl = await convertImageToGrayscale(
+            payFlyLogoCache.colorDataUrl
+        );
+    }
+
+    return payFlyLogoCache.grayDataUrl;
 }
 
-function resolvePayFlyLogoPath() {
+async function fetchPayFlyLogoAsset() {
+    const candidates = resolvePayFlyLogoCandidates();
+    let lastError = null;
+
+    for (const candidate of candidates) {
+        try {
+            const response = await fetch(candidate, { cache: "no-cache" });
+            if (!response.ok) {
+                throw new Error(`Falha ao carregar logo (${response.status})`);
+            }
+
+            const blob = await response.blob();
+            return { blob, sourceUrl: candidate };
+        } catch (error) {
+            lastError = error;
+            console.warn(
+                "⚠️ Tentativa de carregar logo falhou em",
+                candidate,
+                error
+            );
+        }
+    }
+
+    console.warn(
+        "⚠️ Todas as tentativas de carregar a logo falharam; usando versão embutida",
+        lastError
+    );
+
     try {
-        const baseUrl = new URL(".", window.location.href);
-        return new URL("views/imgs/logo.svg", baseUrl).href;
-    } catch (error) {
-        console.warn(
-            "⚠️ Falha ao resolver caminho da logo, usando relativo",
-            error
-        );
-        return "views/imgs/logo.svg";
+        const fallbackBlob = dataUrlToBlob(PAYFLY_EMBEDDED_LOGO_DATA_URL);
+        return { blob: fallbackBlob, sourceUrl: "embedded:payfly-logo" };
+    } catch (conversionError) {
+        throw lastError || conversionError;
+    }
+}
+
+async function getPayFlyLogoDimensions() {
+    if (payFlyLogoCache.dimensions) {
+        return payFlyLogoCache.dimensions;
+    }
+
+    const dataUrl = await getPayFlyLogoDataUrl();
+    const img = await loadImage(dataUrl);
+    payFlyLogoCache.dimensions = { width: img.width, height: img.height };
+    return payFlyLogoCache.dimensions;
+}
+
+function resolvePayFlyLogoCandidates() {
+    // Caminhos relativos a partir da raiz do servidor (evita "views/views")
+    const relativePaths = [
+        // Logo libelula em SVG (alta qualidade)
+        "/views/imgs/pages/libelula.svg",
+        // Demais variantes mantidas como fallback
+        "/views/imgs/pages/logo.png",
+        "/views/imgs/Favicon.png",
+        "/imgs/pages/logo.png",
+        "/imgs/Favicon.png",
+    ];
+
+    return relativePaths;
+}
+
+async function convertImageToGrayscale(dataUrl) {
+    const img = await loadImage(dataUrl);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const { data } = imageData;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const gray =
+            0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        const softenedGray = Math.min(200, gray * 0.7 + 60);
+        data[i] = softenedGray;
+        data[i + 1] = softenedGray;
+        data[i + 2] = softenedGray;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    return canvas.toDataURL("image/png");
+}
+
+// Rasteriza um SVG (texto) para PNG em alta qualidade usando canvas
+async function rasterizeSvgToPngDataUrl(svgText) {
+    const svgBlob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    try {
+        const img = await loadImage(url);
+
+        // Define uma resolucao base generosa para manter nitidez
+        const targetWidth = Math.min(img.width * 2, 800);
+        const scale = targetWidth / img.width;
+        const targetHeight = img.height * scale;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+        return canvas.toDataURL("image/png");
+    } finally {
+        URL.revokeObjectURL(url);
     }
 }
 
@@ -442,6 +673,24 @@ function blobToDataUrl(blob) {
         reader.onerror = (err) => reject(err);
         reader.readAsDataURL(blob);
     });
+}
+
+function dataUrlToBlob(dataUrl) {
+    const [header, base64Data] = dataUrl.split(",");
+    if (!header || !base64Data) {
+        throw new Error("Data URL inválida para conversão em blob");
+    }
+
+    const mimeMatch = header.match(/data:(.*?);base64/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "image/png";
+    const binary = atob(base64Data);
+    const buffer = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i += 1) {
+        buffer[i] = binary.charCodeAt(i);
+    }
+
+    return new Blob([buffer], { type: mimeType });
 }
 
 function loadImage(src) {
@@ -455,23 +704,28 @@ function loadImage(src) {
 }
 
 function drawFallbackLogo(pdf, centerX, centerY) {
-    console.log("🔄 Usando logo fallback geométrica em preto");
+    console.log("🔄 Usando logo fallback geométrica em verde");
 
     try {
+        const brandPrimary = getBrandColor("primary");
+        const brandDark = getBrandColor("dark", { r: 24, g: 61, b: 61 });
+
         // Salvar estado atual
         const currentDrawColor = pdf.getDrawColor();
         const currentFillColor = pdf.getFillColor();
         const currentTextColor = pdf.getTextColor();
         const currentLineWidth = pdf.getLineWidth();
 
-        // Círculo externo (borda) - PRETO
-        pdf.setDrawColor(0, 0, 0);
-        pdf.setLineWidth(1);
-        pdf.circle(centerX, centerY, 18, "S");
+        const fallbackRadius = 18;
 
-        // Círculo principal (moeda) - PRETO
-        pdf.setFillColor(0, 0, 0);
-        pdf.circle(centerX, centerY, 15, "F");
+        // Círculo externo (borda) - Verde escuro
+        pdf.setDrawColor(brandDark.r, brandDark.g, brandDark.b);
+        pdf.setLineWidth(1);
+        pdf.circle(centerX, centerY, fallbackRadius, "S");
+
+        // Círculo principal (moeda) - Verde principal
+        pdf.setFillColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
+        pdf.circle(centerX, centerY, fallbackRadius - 3, "F");
 
         // Círculo interno (brilho) - BRANCO
         pdf.setFillColor(255, 255, 255);
@@ -482,22 +736,24 @@ function drawFallbackLogo(pdf, centerX, centerY) {
         pdf.setFontSize(16);
         pdf.text("$", centerX, centerY + 2, { align: "center" });
 
-        console.log("✅ Logo fallback preta desenhada com sucesso");
+        console.log("✅ Logo fallback verde desenhada com sucesso");
 
         // Restaurar estado anterior
         pdf.setDrawColor(currentDrawColor);
         pdf.setFillColor(currentFillColor);
         pdf.setTextColor(currentTextColor);
         pdf.setLineWidth(currentLineWidth);
+        return fallbackRadius * 2;
     } catch (error) {
         console.error("❌ Erro ao desenhar logo fallback:", error);
 
         // Fallback mínimo: apenas um círculo preto com $
-        pdf.setFillColor(0, 0, 0);
+        pdf.setFillColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
         pdf.circle(centerX, centerY, 15, "F");
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(14);
         pdf.text("$", centerX, centerY + 2, { align: "center" });
+        return 30;
     }
 }
 
@@ -514,12 +770,14 @@ async function generatePeriodPage(
 
     // ================ Cabeçalho da Página ================
     pdf.setFontSize(20);
-    pdf.setTextColor(42, 33, 133);
+    const brandPrimary = getBrandColor("primary");
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text(period.name, margin, currentY);
 
     currentY += 8;
     pdf.setFontSize(12);
-    pdf.setTextColor(100, 100, 100);
+    const brandMuted = getBrandColor("muted", { r: 100, g: 100, b: 100 });
+    pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
     pdf.text(period.description, margin, currentY);
 
     currentY += 20;
@@ -528,7 +786,8 @@ async function generatePeriodPage(
     const periodData = getPeriodData(period.key);
 
     // Caixa de resumo
-    pdf.setDrawColor(42, 33, 133);
+    const brandDark = getBrandColor("dark", { r: 24, g: 61, b: 61 });
+    pdf.setDrawColor(brandDark.r, brandDark.g, brandDark.b);
     pdf.setFillColor(248, 249, 250);
     pdf.roundedRect(
         margin,
@@ -542,7 +801,7 @@ async function generatePeriodPage(
 
     currentY += 5;
     pdf.setFontSize(14);
-    pdf.setTextColor(42, 33, 133);
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text("Resumo Financeiro", margin + 10, currentY);
 
     currentY += 10;
@@ -562,7 +821,7 @@ async function generatePeriodPage(
         currentY
     );
 
-    pdf.setTextColor(42, 33, 133); // Azul
+    pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
     pdf.text(
         "Saldo: " + formatCurrency(periodData.receitas - periodData.despesas),
         margin + 120,
@@ -577,7 +836,7 @@ async function generatePeriodPage(
         Object.keys(periodData.categorias).length > 0
     ) {
         pdf.setFontSize(14);
-        pdf.setTextColor(42, 33, 133);
+        pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
         pdf.text("Detalhamento por Categoria", margin, currentY);
 
         currentY += 15;
@@ -639,7 +898,7 @@ async function generatePeriodPage(
         );
     } else {
         pdf.setFontSize(12);
-        pdf.setTextColor(100, 100, 100);
+        pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
         pdf.text(
             "Nenhuma movimentacao encontrada neste periodo",
             margin,
@@ -652,29 +911,30 @@ async function generatePeriodPage(
 
     if (currentY < pageHeight - 50) {
         pdf.setFontSize(12);
-        pdf.setTextColor(42, 33, 133);
+        pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
         pdf.text("Observacoes", margin, currentY);
 
         currentY += 10;
         pdf.setFontSize(10);
-        pdf.setTextColor(100, 100, 100);
+        pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
 
         let observations = [];
+        const periodRange = resolvePeriodRange(period.key);
         if (period.key === "week") {
             observations = [
-                "• Periodo analisado: " + getWeekRange(),
+                "• Periodo analisado: " + periodRange,
                 "• Dados refletem movimentacoes dos ultimos 7 dias",
                 "• Valores incluem lancamentos realizados e confirmados",
             ];
         } else if (period.key === "month") {
             observations = [
-                "• Periodo analisado: " + getMonthRange(),
+                "• Periodo analisado: " + periodRange,
                 "• Dados consolidados do mes atual ate a data presente",
                 "• Inclui todas as categorias de receitas e despesas",
             ];
         } else if (period.key === "6months") {
             observations = [
-                "• Periodo analisado: " + getSemesterRange(),
+                "• Periodo analisado: " + periodRange,
                 "• Historico completo dos ultimos 6 meses",
                 "• Ideal para analise de tendencias e padroes",
             ];
@@ -758,44 +1018,85 @@ function getPeriodData(periodKey) {
 }
 
 // Adiciona rodapé com direitos autorais em todas as páginas
-function addFooterToAllPages(pdf) {
+async function addFooterToAllPages(pdf) {
     const pageCount = pdf.internal.getNumberOfPages();
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    let logoDataUrl = null;
+    let logoWidth = 0;
+    let logoHeight = 0;
+
+    try {
+        // Rodapé sem logo para evitar qualquer problema de inicialização
+        logoDataUrl = null;
+        logoWidth = 0;
+        logoHeight = 0;
+    } catch (error) {
+        console.warn("⚠️ Falha ao carregar logo para o rodape:", error);
+        logoDataUrl = null;
+    }
+
+    const lineY = pageHeight - 25;
+    const logoY = lineY + 4;
+    const textY = logoDataUrl ? logoY + logoHeight - 1 : lineY + 7;
+    const subTextY = textY + 5;
+    const currentYear = new Date().getFullYear();
 
     for (let i = 1; i <= pageCount; i++) {
         pdf.setPage(i);
 
         // Linha divisória
-        pdf.setDrawColor(200, 200, 200);
-        pdf.line(20, 280, pageWidth - 20, 280);
+        pdf.setDrawColor(220, 220, 220);
+        pdf.line(20, lineY, pageWidth - 20, lineY);
+
+        // Logo cinza (opcional)
+        let leftTextX = 20;
+        if (logoDataUrl) {
+            pdf.addImage(
+                logoDataUrl,
+                "PNG",
+                20,
+                logoY,
+                logoWidth,
+                logoHeight,
+                undefined,
+                "FAST"
+            );
+            leftTextX = 20 + logoWidth + 4;
+        }
 
         // Texto do rodapé
+        const brandMuted = getBrandColor("muted", { r: 100, g: 100, b: 100 });
         pdf.setFontSize(8);
-        pdf.setTextColor(100, 100, 100);
+        pdf.setTextColor(brandMuted.r, brandMuted.g, brandMuted.b);
 
         // Esquerda - PayFly
-        pdf.text("PayFly - Gestao Financeira Pessoal", 20, 285);
+        pdf.text("PayFly - Gestao Financeira Pessoal", leftTextX, textY);
 
         // Centro - Direitos autorais
         pdf.text(
-            "(c) " +
-                new Date().getFullYear() +
-                " PayFly. Todos os direitos reservados.",
+            "(c) " + currentYear + " PayFly. Todos os direitos reservados.",
             pageWidth / 2,
-            285,
+            textY,
             { align: "center" }
         );
 
         // Direita - Página
-        pdf.text("Pagina " + i + " de " + pageCount, pageWidth - 20, 285, {
+        pdf.text("Pagina " + i + " de " + pageCount, pageWidth - 20, textY, {
             align: "right",
         });
 
         // Informações adicionais
         pdf.setFontSize(7);
-        pdf.text("Documento confidencial - Uso pessoal", pageWidth / 2, 290, {
-            align: "center",
-        });
+        pdf.text(
+            "Documento confidencial - Uso pessoal",
+            pageWidth / 2,
+            subTextY,
+            {
+                align: "center",
+            }
+        );
     }
 }
 
@@ -819,36 +1120,6 @@ function formatCurrency(value) {
         style: "currency",
         currency: "BRL",
     });
-}
-
-// Funções auxiliares para ranges de datas
-function getWeekRange() {
-    const today = new Date();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-
-    return `${startOfWeek.toLocaleDateString(
-        "pt-BR"
-    )} - ${today.toLocaleDateString("pt-BR")}`;
-}
-
-function getMonthRange() {
-    const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
-    return `${startOfMonth.toLocaleDateString(
-        "pt-BR"
-    )} - ${today.toLocaleDateString("pt-BR")}`;
-}
-
-function getSemesterRange() {
-    const today = new Date();
-    const sixMonthsAgo = new Date(today);
-    sixMonthsAgo.setMonth(today.getMonth() - 6);
-
-    return `${sixMonthsAgo.toLocaleDateString(
-        "pt-BR"
-    )} - ${today.toLocaleDateString("pt-BR")}`;
 }
 
 // ================ Sistema de Loading do PDF ================
