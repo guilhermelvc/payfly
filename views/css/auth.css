@@ -139,8 +139,8 @@ button[disabled] {
 }
 
 .outline:hover {
-    background: var(--green2);
-    color: var(--white);
+    background: rgba(24, 61, 61, 0.08);
+    color: var(--green2);
 }
 
 .error {
@@ -161,6 +161,7 @@ button[disabled] {
 
 #google-login-button:hover {
     background-color: var(--gray);
+    color: #000000;
 }
 
 #google-login-button img {
@@ -179,6 +180,7 @@ button[disabled] {
 
 #google-signup-button:hover {
     background-color: var(--gray);
+    color: #000000;
 }
 
 #google-signup-button img {
