@@ -32,7 +32,10 @@ class GeminiAIService {
         if (window?.formatCurrencyBRL) {
             return window.formatCurrencyBRL(numericValue);
         }
-        return `R$ ${numericValue.toFixed(2)}`;
+        return new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+        }).format(numericValue);
     }
 
     /**

@@ -9,7 +9,10 @@ function formatInvestimentoValue(value) {
     if (window.formatCurrencyBRL) {
         return window.formatCurrencyBRL(numericValue);
     }
-    return `R$ ${numericValue.toFixed(2)}`;
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(numericValue);
 }
 
 // Modal helpers (existing UI uses these)
@@ -1531,10 +1534,14 @@ function openAIInsights() {
 
 // ================ Utility Functions ================
 function formatCurrency(value) {
+    const numericValue = Number(value || 0);
+    if (window.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
+    }
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
-    }).format(value);
+    }).format(numericValue);
 }
 
 function formatDate(dateString) {

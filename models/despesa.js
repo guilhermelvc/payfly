@@ -712,7 +712,7 @@ function filterClear() {
 
     // Reseta o display do total filtrado
     const el = document.getElementById("filteredDespesaDisplay");
-    if (el) el.textContent = `R$ 0,00`;
+    if (el) el.textContent = formatCurrency(0);
 
     console.log("🔄 Filtros limpos - tabela completamente resetada");
 }

@@ -10,7 +10,10 @@ function formatPainelValue(value) {
     if (window.formatCurrencyBRL) {
         return window.formatCurrencyBRL(numericValue);
     }
-    return `R$ ${numericValue.toFixed(2)}`;
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(numericValue);
 }
 
 // Função para atualizar os valores dos cards

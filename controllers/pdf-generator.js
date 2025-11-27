@@ -801,11 +801,21 @@ function addFooterToAllPages(pdf) {
 
 // Formata valor monetário
 function formatCurrency(value) {
-    if (typeof value !== "number" || isNaN(value)) {
-        return "R$ 0,00";
+    const numericValue = Number(value || 0);
+    if (window?.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
     }
 
-    return value.toLocaleString("pt-BR", {
+    if (!Number.isFinite(numericValue)) {
+        return window?.formatCurrencyBRL
+            ? window.formatCurrencyBRL(0)
+            : new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+              }).format(0);
+    }
+
+    return numericValue.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
     });

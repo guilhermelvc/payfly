@@ -2287,18 +2287,24 @@ body:not(.light-theme) .ai-typing-indicator span {
 }
 
 /* Modal Body Padronizado */
-.standardized-modal-body {
-    padding: 24px;
-    max-height: calc(90vh - 80px);
-    overflow-y: auto;
+.standardized-modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
-
-/* Form Groups Padronizados */
-.standardized-input-group {
-    margin-bottom: 20px;
-}
-
-.standardized-input-group label {
+.standardized-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
@@ -2941,6 +2947,7 @@ body:not(.light-theme) .ai-typing-indicator span {
 /* Ações Especiais - Fixas na parte inferior */
 .delete-actions {
     display: flex;
+    flex-direction: column;
     gap: 16px;
     padding: 20px 24px 24px 24px;
     border-top: 1px solid #e2e8f0;
@@ -2948,8 +2955,18 @@ body:not(.light-theme) .ai-typing-indicator span {
     flex-shrink: 0;
     position: relative;
     z-index: 10;
+    align-items: stretch;
+}
+
+.delete-actions .standardized-button {
+    width: 100%;
     justify-content: center;
-    align-items: center;
+    min-height: 52px;
+    flex: none;
+}
+
+.delete-actions .delete-button {
+    width: 100%;
 }
 
 .safe-button {
@@ -2959,8 +2976,8 @@ body:not(.light-theme) .ai-typing-indicator span {
     font-weight: 600;
     position: relative;
     overflow: hidden;
-    min-height: 50px;
-    flex: 1;
+    min-height: 52px;
+    flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2969,6 +2986,7 @@ body:not(.light-theme) .ai-typing-indicator span {
     border-radius: 12px;
     font-size: 14px;
     cursor: pointer;
+    width: 100%;
 }
 
 .safe-button:hover {
@@ -3007,8 +3025,8 @@ body:not(.light-theme) .ai-typing-indicator span {
     position: relative;
     overflow: hidden;
     animation: deleteButtonPulse 3s infinite;
-    min-height: 50px;
-    flex: 1;
+    min-height: 52px;
+    flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3016,6 +3034,7 @@ body:not(.light-theme) .ai-typing-indicator span {
     border-radius: 12px;
     font-size: 14px;
     cursor: pointer;
+    width: 100%;
 }
 
 @keyframes deleteButtonPulse {
@@ -3064,7 +3083,7 @@ body:not(.light-theme) .ai-typing-indicator span {
     }
 
     .delete-actions {
-        flex-direction: column-reverse;
+        flex-direction: column;
         padding: 20px;
     }
 

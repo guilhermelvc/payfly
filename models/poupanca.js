@@ -1098,10 +1098,14 @@ function openAIInsights() {
 
 // ================ Utility Functions ================
 function formatCurrency(value) {
+    const numericValue = Number(value || 0);
+    if (window.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
+    }
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
-    }).format(value);
+    }).format(numericValue);
 }
 
 function formatDate(dateString) {
