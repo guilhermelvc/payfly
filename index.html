@@ -59,91 +59,143 @@
                 <!-- Define os itens compondo o cabeçalho -->
 
                 <!-- Icone do menu, importado com ion-icon -->
-                <div class="menu-icon" onclick="toggleMenu()">
+                <button
+                    class="menu-icon"
+                    onclick="toggleMenu()"
+                    aria-label="Abrir menu de navegação"
+                    aria-controls="nav-links"
+                    aria-expanded="false"
+                    type="button"
+                >
                     <ion-icon name="menu-outline"></ion-icon>
-                </div>
+                </button>
                 <!-- Textos do Menu -->
-                <a href="#" class="item-menu">
-                    <div class="text-menu">INÍCIO</div>
-                </a>
-                <a href="#quem-somos" class="item-menu">
-                    <div class="text-menu">QUEM SOMOS</div>
-                </a>
-                <a href="#contato" class="item-menu">
-                    <div class="text-menu">CONTATO</div>
-                </a>
-                <!-- Avatar do usuário ou botão de login -->
-                <div class="item-menu user-menu" id="userMenu">
-                    <button
-                        class="user-avatar"
-                        id="userAvatar"
-                        title="Clique para acessar a conta"
-                    >
-                        EN
-                    </button>
-                </div>
+                <nav class="nav-links" id="nav-links">
+                    <a href="#" class="nav-link">Início</a>
+                    <a href="#quem-somos" class="nav-link">Quem somos</a>
+                    <a href="#contato" class="nav-link">Contato</a>
+                    <!-- Avatar do usuário ou botão de login -->
+                    <div class="user-menu" id="userMenu">
+                        <button
+                            class="user-avatar"
+                            id="userAvatar"
+                            title="Clique para acessar a conta"
+                        >
+                            EN
+                        </button>
+                    </div>
+                </nav>
             </div>
         </div>
         <!-- Scripts relacionados ao cabeçalho -->
         <script>
-            // Menu toggle functionality
+            const navLinks = document.getElementById("nav-links");
+            const fixedHeader = document.getElementById("fixed-header");
+            const menuToggleButton = document.querySelector(".menu-icon");
+
             function toggleMenu() {
-                const items = document.querySelectorAll(
-                    ".item-menu:not(.menu-icon)"
+                if (!navLinks || !fixedHeader || !menuToggleButton) {
+                    return;
+                }
+
+                const isOpen = navLinks.classList.toggle("open");
+                fixedHeader.classList.toggle("menu-open", isOpen);
+                menuToggleButton.setAttribute(
+                    "aria-expanded",
+                    isOpen ? "true" : "false"
                 );
-                const fixedHeader = document.getElementById("fixed-header");
-                const menuIcon = document.querySelector(".menu-icon");
-
-                // Toggle menu items
-                items.forEach((item) => {
-                    item.classList.toggle("show");
-                });
-
-                // Check if menu is visible
-                const isVisible = items[0].classList.contains("show");
-
-                fixedHeader.classList.toggle("menu-open", isVisible);
-
-                // Update header style
-                fixedHeader.style.backgroundColor = "white";
-                fixedHeader.style.boxShadow = isVisible
-                    ? "0 2px 5px rgba(0,0,0,0.1)"
-                    : "none";
-
-                // Optional: Animate menu icon
-                menuIcon.style.transform = isVisible
-                    ? "rotate(90deg)"
-                    : "rotate(0)";
-                menuIcon.style.transition = "transform 0.3s ease";
+                menuToggleButton.classList.toggle("is-open", isOpen);
             }
 
-            // Handle window resize
-            let isMobileView = window.innerWidth <= 768;
+            function syncHeaderHeight() {
+                if (!fixedHeader) {
+                    return 0;
+                }
+                const headerHeight = fixedHeader.offsetHeight;
+                document.documentElement.style.setProperty(
+                    "--header-height",
+                    `${headerHeight}px`
+                );
+                return headerHeight;
+            }
 
-            window.addEventListener("resize", function () {
-                const wasMobile = isMobileView;
-                isMobileView = window.innerWidth <= 768;
+            function scrollToSection(targetSelector, pushHistory = true) {
+                if (!targetSelector || targetSelector === "#") {
+                    return;
+                }
 
-                // Only toggle if we're crossing the breakpoint
-                if (wasMobile !== isMobileView) {
-                    const items = document.querySelectorAll(
-                        ".item-menu:not(.menu-icon)"
-                    );
+                const targetElement = document.querySelector(targetSelector);
+                if (!targetElement) {
+                    return;
+                }
 
-                    if (!isMobileView) {
-                        // Switching to desktop
-                        items.forEach((item) => {
-                            item.classList.remove("show");
-                            item.classList.remove("hide");
-                        });
-                    } else {
-                        // Switching to mobile
-                        items.forEach((item) => {
-                            item.classList.remove("show");
-                            item.classList.add("hide");
-                        });
+                const headerHeight = syncHeaderHeight();
+                const offsetGap = window.innerWidth > 1024 ? -12 : -6;
+                const targetTop =
+                    targetElement.getBoundingClientRect().top +
+                    window.scrollY -
+                    headerHeight -
+                    offsetGap;
+
+                window.scrollTo({
+                    top: Math.max(targetTop, 0),
+                    behavior: "smooth",
+                });
+
+                if (pushHistory) {
+                    history.replaceState(null, "", targetSelector);
+                }
+            }
+
+            window.addEventListener("resize", () => {
+                if (navLinks && fixedHeader && menuToggleButton) {
+                    if (window.innerWidth > 900) {
+                        navLinks.classList.remove("open");
+                        fixedHeader.classList.remove("menu-open");
+                        menuToggleButton.setAttribute("aria-expanded", "false");
+                        menuToggleButton.classList.remove("is-open");
                     }
                 }
+
+                syncHeaderHeight();
+            });
+
+            document.querySelectorAll(".nav-links a").forEach((link) => {
+                link.addEventListener("click", (event) => {
+                    const targetSelector = link.getAttribute("href");
+                    if (
+                        targetSelector &&
+                        targetSelector.startsWith("#") &&
+                        targetSelector.length > 1
+                    ) {
+                        event.preventDefault();
+                        scrollToSection(targetSelector);
+                    }
+
+                    if (!navLinks || window.innerWidth > 900) {
+                        return;
+                    }
+
+                    if (navLinks.classList.contains("open")) {
+                        toggleMenu();
+                    }
+                });
+            });
+
+            syncHeaderHeight();
+
+            window.addEventListener("load", () => {
+                syncHeaderHeight();
+
+                if (window.location.hash) {
+                    setTimeout(() => {
+                        scrollToSection(window.location.hash, false);
+                    }, 180);
+                }
+            });
+
+            window.addEventListener("hashchange", () => {
+                scrollToSection(window.location.hash, false);
             });
 
             // Avatar dinâmico - mostra inicial do usuário ou botão entrar/cadastrar
@@ -261,37 +313,110 @@
                     artificial, arquitetura moderna e experiência intuitiva
                 </p>
             </div>
-            <div class="links-and-logo">
-                <a href="https://www.instagram.com/accounts/login/" class="link"
-                    >INSTAGRAM</a
-                >
-                <a
-                    href="https://br.linkedin.com/?src=go-pa&trk=sem-ga_campid.12619604099_asid.149519181115_crid.657343811713_kw.linkedin_d.c_tid.kwd-148086543_n.g_mt.e_geo.1001581&mcid=6821526239111716925&cid=&gad_source=1&gclid=EAIaIQobChMI2qmk86jOhQMVLAKtBh0zrQ1NEAAYASAAEgJ3v_D_BwE&gclsrc=aw.ds"
-                    class="link"
-                    >LINKEDIN</a
-                >
-                <img src="views/imgs/pages/logo.png" alt="Logo" class="logo" />
-            </div>
+            <div class="links-and-logo"></div>
         </div>
 
         <!-- Seção "Quem Somos?" da pagina -->
         <div id="quem-somos" class="quem-somos-section">
             <div class="quem-somos-content">
-                <div class="text">
+                <div class="quem-somos-text">
                     <h2>Quem Somos</h2>
                     <p>
-                        Gerenciar suas despesas nunca foi tão fácil e eficiente
-                        como agora. Seja você um indivíduo preocupado em
-                        controlar seu orçamento pessoal ou um empresário
-                        buscando otimizar as finanças da sua empresa, estamos
-                        aqui para simplificar esse processo para você.
+                        O PayFly é o sistema de gestão financeira que usa
+                        inteligência artificial para traduzir números confusos
+                        em planos simples. Enquanto você cuida do dia a dia,
+                        nossa IA monitora entradas e saídas, identifica riscos
+                        antecipadamente e sugere oportunidades para turbinar
+                        suas metas.
                     </p>
+                    <ul class="quem-somos-highlights">
+                        <li>
+                            <strong>Insights de IA em segundos:</strong>
+                            perguntas em linguagem natural geram análises e
+                            recomendações automáticas.
+                        </li>
+                        <li>
+                            <strong>Previsões que evitam surpresas:</strong>
+                            compare cenários, entenda tendências e ajuste o
+                            caixa antes de qualquer aperto.
+                        </li>
+                        <li>
+                            <strong>Assistente financeiro 24/7:</strong>
+                            recebe insights personalizados, metas guiadas e
+                            relatórios prontos para compartilhar.
+                        </li>
+                    </ul>
+                    <div class="quem-somos-metrics">
+                        <div class="metric-card">
+                            <span class="metric-value">+89%</span>
+                            <span class="metric-label"
+                                >dos usuários relatam clareza imediata sobre o
+                                orçamento</span
+                            >
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">+90%</span>
+                            <span class="metric-label"
+                                >de precisão nas sugestões automáticas</span
+                            >
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value">30 min</span>
+                            <span class="metric-label"
+                                >bastam para ter metas e alertas ajustados à sua
+                                rotina</span
+                            >
+                        </div>
+                    </div>
                 </div>
-                <img
-                    src="views/imgs/pages/compras 1.png"
-                    alt="Imagem"
-                    class="quem-somos-image"
-                />
+                <div class="dashboard-slider">
+                    <figure class="dashboard-shot light active">
+                        <img
+                            src="views/imgs/dashboard_light.png"
+                            alt="Dashboard PayFly com visual claro mostrando cards financeiros e gráficos"
+                            loading="lazy"
+                        />
+                        <figcaption>
+                            Tema claro evidencia resultados por trimestre e os
+                            próximos passos sugeridos pela IA.
+                        </figcaption>
+                    </figure>
+                    <figure class="dashboard-shot dark">
+                        <img
+                            src="views/imgs/dashboard_dark.png"
+                            alt="Dashboard PayFly em tema escuro destacando insights e gráficos preditivos"
+                            loading="lazy"
+                        />
+                        <figcaption>
+                            Tema escuro ideal para turnos noturnos com alertas
+                            inteligentes sempre visíveis.
+                        </figcaption>
+                    </figure>
+                    <div
+                        class="dashboard-controls"
+                        role="tablist"
+                        aria-label="Visualizações do dashboard PayFly"
+                    >
+                        <button
+                            type="button"
+                            class="dashboard-control-btn active"
+                            data-shot-index="0"
+                            role="tab"
+                            aria-selected="true"
+                        >
+                            Tema claro
+                        </button>
+                        <button
+                            type="button"
+                            class="dashboard-control-btn"
+                            data-shot-index="1"
+                            role="tab"
+                            aria-selected="false"
+                        >
+                            Tema escuro
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -312,78 +437,289 @@
 
         <!-- Seção de dados de contato da pagina -->
         <div id="contato" class="contato-section">
-            <div class="contato-left">
-                <h2>Contatos</h2>
-                <div class="contato-item">
-                    <ion-icon name="business"></ion-icon>
-                    <p>Para empresas</p>
-                    <p>empresa@payfly.com.br</p>
-                </div>
-                <div class="contato-item">
-                    <ion-icon name="person"></ion-icon>
-                    <p>Para colaboradores</p>
-                    <p>falecom@payfly.com.br</p>
-                </div>
-                <div class="contato-item">
-                    <ion-icon name="newspaper"></ion-icon>
-                    <p>Imprensa</p>
-                    <p>imprensa@payfly.com.br</p>
+            <div class="testimonial-wrapper">
+                <div class="testimonial-carousel" aria-live="polite">
+                    <h2>O que a comunidade diz</h2>
+                    <p class="testimonial-quote">
+                        "Em 30 minutos eu tinha dashboards claros e metas
+                        inteligentes para minha família."
+                    </p>
+                    <p class="testimonial-author">
+                        - Ana Ribeiro, Analista de Marketing
+                    </p>
+                    <div
+                        class="testimonial-dots"
+                        role="tablist"
+                        aria-label="Depoimentos sobre o PayFly"
+                    ></div>
                 </div>
             </div>
-            <div class="contato-right">
-                <img
-                    src="views/imgs/pages/Group 1Libelulas 1.svg"
-                    alt="Logo"
-                    class="logo"
-                />
+            <div class="contato-grid">
+                <h3 class="contato-title">Fale com o time PayFly</h3>
+                <div class="contato-card">
+                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                    <div>
+                        <p>Comunidade & Issues</p>
+                        <a
+                            href="https://github.com/guilhermelvc/payfly/issues"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >GitHub Issues</a
+                        >
+                    </div>
+                </div>
+                <div class="contato-card">
+                    <ion-icon name="people-outline"></ion-icon>
+                    <div>
+                        <p>Ideias de features</p>
+                        <a
+                            href="https://github.com/guilhermelvc/payfly/discussions"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Discussions</a
+                        >
+                    </div>
+                </div>
+                <div class="contato-card">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <div>
+                        <p>Contato direto</p>
+                        <a href="mailto:contato@payfly.app"
+                            >contato@payfly.app</a
+                        >
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Rodapé -->
         <div class="footer-container">
             <footer class="footer">
-                <div class="footer-column">
+                <div class="footer-column footer-brand">
                     <img
                         src="views/imgs/pages/logo2.svg"
-                        alt="Logo"
+                        alt="Logo PayFly"
                         width="180"
                         height="180"
                     />
-                </div>
-                <div class="footer-column">
-                    <p>Política de privacidade</p>
-                    <p>Central de ajuda</p>
-                    <p>Seja parceiro</p>
-                    <p>Trabalhe conosco</p>
-                    <p>Canal de ética</p>
-                    <p>Política de segurança</p>
-                </div>
-                <div class="footer-column">
-                    <p>CNPJ 95.690.622/0001-03</p>
-                    <p>Rua Joaquim Fernandes Veloso, 242</p>
-                    <p>Centro, Passos/MG</p>
-                    <p>CEP: 37900-000</p>
-                    <p>falecom@payfly.com.br</p>
-                    <p>(35) 3753-4647</p>
-                    <p>Release License | Payfly © 2024</p>
-                </div>
-                <!-- Icones de redes sociais do rodapé -->
-                <div class="footer-column social-icons">
                     <a
-                        href="https://www.instagram.com/accounts/login/"
-                        aria-label="Instagram"
+                        href="https://github.com/guilhermelvc/payfly"
+                        class="footer-link primary"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        <ion-icon name="logo-instagram"></ion-icon>
+                        <ion-icon name="logo-github"></ion-icon>
+                        <span>Acompanhe no GitHub</span>
                     </a>
-                    <a href="https://br.linkedin.com/" aria-label="LinkedIn">
-                        <ion-icon name="logo-linkedin"></ion-icon>
-                    </a>
-                    <a href="#" aria-label="WhatsApp">
-                        <ion-icon name="logo-whatsapp"></ion-icon>
-                    </a>
+                </div>
+                <div class="footer-column footer-about">
+                    <p>
+                        PayFly une inteligência artificial e uma arquitetura
+                        moderna web para transformar dados financeiros em
+                        decisões simples, seguras e acessíveis.
+                    </p>
+                    <p>Projeto open source licenciado sob MIT.</p>
+                </div>
+                <div class="footer-column footer-developers">
+                    <h3>Desenvolvedores</h3>
+                    <a
+                        href="https://github.com/guilhermelvc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Guilherme Carvalho</a
+                    >
+                    <a
+                        href="https://github.com/aMoraesBeatriz"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Beatriz Moraes</a
+                    >
                 </div>
             </footer>
         </div>
+
+        <script>
+            (function initDashboardShots() {
+                const shots = document.querySelectorAll(".dashboard-shot");
+                const controlsContainer = document.querySelector(
+                    ".dashboard-controls"
+                );
+                const controlButtons = controlsContainer
+                    ? controlsContainer.querySelectorAll(
+                          ".dashboard-control-btn"
+                      )
+                    : [];
+
+                if (!shots.length || !controlsContainer) {
+                    return;
+                }
+
+                let current = 0;
+                shots[current].classList.add("active");
+                showShot(current);
+                updateControls(current);
+
+                function showShot(index) {
+                    shots.forEach((shot, idx) => {
+                        shot.classList.toggle("active", idx === index);
+                    });
+                    const caption = shots[index].querySelector("figcaption");
+                    if (caption) {
+                        caption.parentNode.insertBefore(
+                            controlsContainer,
+                            caption
+                        );
+                    }
+                    updateControls(index);
+                }
+
+                function nextShot() {
+                    current = (current + 1) % shots.length;
+                    showShot(current);
+                }
+
+                const rotationDelay = 2000;
+                let rotationTimer = null;
+
+                function scheduleNext() {
+                    clearTimeout(rotationTimer);
+                    rotationTimer = setTimeout(() => {
+                        nextShot();
+                        scheduleNext();
+                    }, rotationDelay);
+                }
+
+                scheduleNext();
+
+                shots.forEach((shot, index) => {
+                    shot.addEventListener("mouseenter", () => {
+                        clearTimeout(rotationTimer);
+                        showShot(index);
+                        current = index;
+                    });
+                    shot.addEventListener("mouseleave", () => {
+                        scheduleNext();
+                    });
+                });
+
+                controlButtons.forEach((button) => {
+                    const targetIndex = Number(
+                        button.getAttribute("data-shot-index")
+                    );
+                    button.addEventListener("click", () => {
+                        if (Number.isNaN(targetIndex)) {
+                            return;
+                        }
+
+                        clearTimeout(rotationTimer);
+                        current = targetIndex % shots.length;
+                        if (current < 0) {
+                            current += shots.length;
+                        }
+                        showShot(current);
+                        scheduleNext();
+                    });
+                });
+
+                function updateControls(activeIndex) {
+                    controlButtons.forEach((button) => {
+                        const buttonIndex = Number(button.dataset.shotIndex);
+                        const isActive = buttonIndex === activeIndex;
+                        button.classList.toggle("active", isActive);
+                        button.setAttribute(
+                            "aria-selected",
+                            isActive ? "true" : "false"
+                        );
+                        button.setAttribute("tabindex", isActive ? "0" : "-1");
+                    });
+                }
+            })();
+
+            (function initTestimonials() {
+                const testimonials = [
+                    {
+                        quote: "Em 30 minutos eu tinha dashboards claros e metas inteligentes para minha família.",
+                        author: "- Ana Ribeiro, Analista de Marketing",
+                    },
+                    {
+                        quote: "O PayFly virou meu copiloto financeiro: categorização automática e alertas em tempo real.",
+                        author: "- Marcos Lima, Empreendedor",
+                    },
+                    {
+                        quote: "As projeções de investimento com IA me ajudaram a organizar a aposentadoria.",
+                        author: "- Carla Souza, Planejadora Financeira",
+                    },
+                    {
+                        quote: "Finalmente um sistema que funciona com insights precisos.",
+                        author: "- João Fernandes, Product Manager",
+                    },
+                    {
+                        quote: "A arquitetura modular simplificou a integração com meu time e reduziu bugs.",
+                        author: "- Beatriz Moraes, UX/UI Designer",
+                    },
+                    {
+                        quote: "Recomendo para qualquer pessoa que precise de clareza financeira rápida e sem burocracia.",
+                        author: "- Guilherme Carvalho, Lead Dev",
+                    },
+                ];
+
+                const quoteEl = document.querySelector(".testimonial-quote");
+                const authorEl = document.querySelector(".testimonial-author");
+                const dotsContainer =
+                    document.querySelector(".testimonial-dots");
+
+                if (!quoteEl || !authorEl || !dotsContainer) {
+                    return;
+                }
+
+                let current = 0;
+
+                const dots = testimonials.map((_, index) => {
+                    const button = document.createElement("button");
+                    button.className = "testimonial-dot";
+                    button.type = "button";
+                    button.setAttribute("aria-pressed", "false");
+                    button.setAttribute(
+                        "aria-label",
+                        `Ver depoimento ${index + 1}`
+                    );
+                    button.addEventListener("click", () => {
+                        current = index;
+                        updateTestimonial();
+                        restartInterval();
+                    });
+                    dotsContainer.appendChild(button);
+                    return button;
+                });
+
+                function updateTestimonial() {
+                    const { quote, author } = testimonials[current];
+                    quoteEl.textContent = '"' + quote + '"';
+                    authorEl.textContent = author;
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle("active", index === current);
+                        dot.setAttribute(
+                            "aria-pressed",
+                            index === current ? "true" : "false"
+                        );
+                    });
+                }
+
+                let intervalId = setInterval(nextTestimonial, 6000);
+
+                function nextTestimonial() {
+                    current = (current + 1) % testimonials.length;
+                    updateTestimonial();
+                }
+
+                function restartInterval() {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(nextTestimonial, 6000);
+                }
+
+                updateTestimonial();
+            })();
+        </script>
 
         <!-- ====== ionicons ======= -->
         <script
