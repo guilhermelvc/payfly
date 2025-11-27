@@ -695,13 +695,6 @@
     </script>
 
         <script>
-                async function logout () {
-            if (window.supabase) {
-                await window.supabase.auth.signOut();
-            }
-            window.location.replace("../index.html");
-        }
-
         // Função para selecionar categoria no filtro
         function selectFilterCategory(categoryName) {
             const filterCategoryInput = document.getElementById('filter-categoria');

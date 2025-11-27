@@ -130,9 +130,7 @@
             <ul>
                 <li>
                     <a href="#">
-                            <span class="target-icon" aria-hidden="true">
-                                <span class="target-arrow"></span>
-                            </span>
+                        <span class="icon">
                             <img src="../views/imgs/logo.svg" alt="Logo">
                         </span>
                         <span class="title">PayFly</span>
@@ -633,13 +631,6 @@
     </script>
 
     <script>
-                async function logout () {
-                    if (window.supabase) {
-                        await window.supabase.auth.signOut();
-                        window.location.replace("../index.html");
-                    }
-                }
-
         // Função para selecionar categoria no filtro
         function selectFilterCategory(categoryName) {
             const filterCategoryInput = document.getElementById('filter-categoria');
