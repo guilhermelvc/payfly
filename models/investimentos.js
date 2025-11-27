@@ -4,6 +4,14 @@
 let totalInvestimento = 0;
 let editingInvestimentoId = null;
 
+function formatInvestimentoValue(value) {
+    const numericValue = Number(value || 0);
+    if (window.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
+    }
+    return `R$ ${numericValue.toFixed(2)}`;
+}
+
 // Modal helpers (existing UI uses these)
 const Modal = {
     open() {
@@ -50,7 +58,7 @@ function formatarData(date) {
 
 function updateInvestimentoDisplay() {
     const el = document.getElementById("totalInvestimentosDisplay");
-    if (el) el.textContent = `R$ ${totalInvestimento.toFixed(2)}`;
+    if (el) el.textContent = formatInvestimentoValue(totalInvestimento);
 }
 
 // Variável global para controlar estado do filtro
@@ -116,7 +124,8 @@ async function loadInvestimentosFromSupabase() {
                 "filteredInvestimentosDisplay"
             );
             if (elFiltrado)
-                elFiltrado.textContent = `R$ ${totalInvestimento.toFixed(2)}`;
+                elFiltrado.textContent =
+                    formatInvestimentoValue(totalInvestimento);
         }
 
         console.log(`✅ ${data?.length || 0} investimentos carregados`);
@@ -197,11 +206,14 @@ function addInvestimentoToTable(investimento, investimentoId) {
     const performanceClass =
         rentabilidade >= 0 ? "performance-positive" : "performance-negative";
 
+    const formattedValorInvestido = formatInvestimentoValue(valorInvestido);
+    const formattedValorAtual = formatInvestimentoValue(valorAtual);
+
     row.innerHTML = `
     <td>${investimento.descricao}</td>
     <td>${investimento.tipo}</td>
-    <td>R$ ${valorInvestido.toFixed(2)}</td>
-    <td>R$ ${valorAtual.toFixed(2)}</td>
+    <td>${formattedValorInvestido}</td>
+    <td>${formattedValorAtual}</td>
     <td class="${performanceClass}">${rentabilidade.toFixed(2)}%</td>
     <td>${formatarData(investimento.data_aplicacao)}</td>
     <td>
@@ -1375,7 +1387,7 @@ async function filterInvestimentos(event) {
 
         // Atualiza o total filtrado
         const el = document.getElementById("filteredInvestimentosDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatInvestimentoValue(totalFiltered);
 
         // Mostra mensagem se nenhum resultado for encontrado
         if (!rows || rows.length === 0) {
@@ -1454,7 +1466,7 @@ function filterClear() {
 
     // Reseta o display do total filtrado
     const el = document.getElementById("filteredInvestimentosDisplay");
-    if (el) el.textContent = `R$ 0,00`;
+    if (el) el.textContent = formatInvestimentoValue(0);
 
     console.log("🔄 Filtros limpos - tabela completamente resetada");
 }

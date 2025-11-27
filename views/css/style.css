@@ -3563,9 +3563,15 @@ span.tipo-plano {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
     padding: 12px 0;
     user-select: none;
+    gap: 12px;
+    cursor: default;
+}
+
+.recorrencia-label .switch-toggle {
+    flex-shrink: 0;
+    cursor: pointer;
 }
 
 .recorrencia-text {

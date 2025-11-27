@@ -3,6 +3,16 @@
 
 let totalPlano = 0;
 
+const formatCurrency = (value) =>
+    (
+        window.formatCurrencyBRL ||
+        ((val) =>
+            new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+            }).format(Number(val) || 0))
+    )(value);
+
 // Modal helpers (existing UI uses these)
 const Modal = {
     open() {
@@ -40,7 +50,7 @@ function formatarData(date) {
 
 function updatePlanoDisplay() {
     const el = document.getElementById("totalPlanoDisplay");
-    if (el) el.textContent = `R$ ${totalPlano.toFixed(2)}`;
+    if (el) el.textContent = formatCurrency(totalPlano);
 }
 
 // Variável global para controlar estado do filtro
@@ -175,7 +185,7 @@ function addPlanoToTable(plano, planoId) {
     descricaoCell.textContent = plano.descricao || "";
 
     const valorCell = newRow.insertCell(1);
-    valorCell.textContent = `R$ ${Number(plano.valor || 0).toFixed(2)}`;
+    valorCell.textContent = formatCurrency(plano.valor || 0);
 
     const dataCell = newRow.insertCell(2);
     dataCell.textContent = formatarData(plano.data);
@@ -659,7 +669,7 @@ async function filterPlanos(event) {
 
         // Atualiza o total filtrado
         const el = document.getElementById("filteredPlanoDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatCurrency(totalFiltered);
 
         // Mostra mensagem se nenhum resultado for encontrado
         if (!rows || rows.length === 0) {

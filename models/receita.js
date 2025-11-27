@@ -1,6 +1,14 @@
 // Receita model adapted for Supabase
 let totalReceitaGlobal = 0;
 
+function formatReceitaValue(value) {
+    const numericValue = Number(value || 0);
+    if (window.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
+    }
+    return `R$ ${numericValue.toFixed(2)}`;
+}
+
 // Variável global para controlar estado do filtro
 let isReceitaFilterActive = false;
 let currentFilterCriteria = null;
@@ -58,7 +66,7 @@ async function applyStoredFilter() {
         });
 
         const el = document.getElementById("filteredReceitaDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatReceitaValue(totalFiltered);
 
         console.log(
             `🔍 Filtro reaplicado: ${rows ? rows.length : 0} resultados`
@@ -95,7 +103,7 @@ function formatarData(date) {
 
 function updateReceitaDisplay() {
     const el = document.getElementById("totalReceitaDisplay");
-    if (el) el.textContent = `R$ ${totalReceitaGlobal.toFixed(2)}`;
+    if (el) el.textContent = formatReceitaValue(totalReceitaGlobal);
 }
 
 async function loadReceitasFromSupabase() {
@@ -214,7 +222,7 @@ function addReceitaToTable(receita, receitaId) {
     const descricaoCell = newRow.insertCell(0);
     descricaoCell.textContent = receita.descricao || "";
     const valorCell = newRow.insertCell(1);
-    valorCell.textContent = `R$ ${Number(receita.valor || 0).toFixed(2)}`;
+    valorCell.textContent = formatReceitaValue(receita.valor);
     const dataCell = newRow.insertCell(2);
     dataCell.textContent = formatarData(receita.data);
     const categoriaCell = newRow.insertCell(3);
@@ -601,7 +609,7 @@ async function filterReceitas(event) {
 
         // Atualiza o total filtrado
         const el = document.getElementById("filteredReceitaDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatReceitaValue(totalFiltered);
 
         // Mostra mensagem se nenhum resultado for encontrado
         if (!rows || rows.length === 0) {
@@ -688,7 +696,7 @@ function filterClear() {
 
     // Reseta o display do total filtrado
     const el = document.getElementById("filteredReceitaDisplay");
-    if (el) el.textContent = `R$ 0,00`;
+    if (el) el.textContent = formatReceitaValue(0);
 
     console.log("🔄 Filtros limpos - tabela completamente resetada");
 }

@@ -27,6 +27,14 @@ class GeminiAIService {
         this.delayMultiplier = 1; // Multiplicador de delay progressivo
     }
 
+    formatCurrency(value) {
+        const numericValue = Number(value || 0);
+        if (window?.formatCurrencyBRL) {
+            return window.formatCurrencyBRL(numericValue);
+        }
+        return `R$ ${numericValue.toFixed(2)}`;
+    }
+
     /**
      * Fazer pergunta para o Gemini
      * @param {string} question - Pergunta do usuário
@@ -144,9 +152,13 @@ RESPOSTA:`;
         ) {
             const saldo = context.totalReceitas - context.totalDespesas;
             summary.push(`💰 RESUMO FINANCEIRO:`);
-            summary.push(`- Receitas: R$ ${context.totalReceitas.toFixed(2)}`);
-            summary.push(`- Despesas: R$ ${context.totalDespesas.toFixed(2)}`);
-            summary.push(`- Saldo: R$ ${saldo.toFixed(2)}`);
+            summary.push(
+                `- Receitas: ${this.formatCurrency(context.totalReceitas)}`
+            );
+            summary.push(
+                `- Despesas: ${this.formatCurrency(context.totalDespesas)}`
+            );
+            summary.push(`- Saldo: ${this.formatCurrency(saldo)}`);
             summary.push("");
         }
 
@@ -162,7 +174,7 @@ RESPOSTA:`;
                 .forEach(([categoria, valor]) => {
                     const valorSeguro = Number(valor) || 0;
                     summary.push(
-                        `- ${categoria}: R$ ${valorSeguro.toFixed(2)}`
+                        `- ${categoria}: ${this.formatCurrency(valorSeguro)}`
                     );
                 });
             summary.push("");
@@ -182,9 +194,9 @@ RESPOSTA:`;
                 summary.push(
                     `- ${
                         plano.descricao || "Plano"
-                    }: ${progresso}% concluído (R$ ${valorAtual.toFixed(
-                        2
-                    )} / R$ ${valorObjetivo.toFixed(2)})`
+                    }: ${progresso}% concluído (${this.formatCurrency(
+                        valorAtual
+                    )} / ${this.formatCurrency(valorObjetivo)})`
                 );
             });
             summary.push("");

@@ -516,23 +516,26 @@
                                 <div
                                     class="standardized-input-group recorrencia-group"
                                 >
-                                    <label
-                                        for="is_recorrente"
-                                        class="recorrencia-label"
-                                    >
-                                        <span class="recorrencia-text"
+                                    <div class="recorrencia-label">
+                                        <span
+                                            class="recorrencia-text"
+                                            id="investimento-recorrencia-text"
                                             >Investimento Recorrente?</span
                                         >
-                                        <div class="switch-toggle">
+                                        <label
+                                            class="switch-toggle"
+                                            aria-label="Alternar investimento recorrente"
+                                        >
                                             <input
                                                 type="checkbox"
                                                 id="is_recorrente"
                                                 name="is_recorrente"
                                                 onchange="toggleRecorrenciaFields()"
+                                                aria-labelledby="investimento-recorrencia-text"
                                             />
                                             <span class="slider"></span>
-                                        </div>
-                                    </label>
+                                        </label>
+                                    </div>
                                 </div>
 
                                 <div
@@ -548,27 +551,30 @@
                                         id="recorrencia_meses"
                                         name="recorrencia_meses"
                                         placeholder="Ex: 6, 12..."
-                                        min="1"
-                                        max="120"
-                                        value="1"
-                                    />
-                                    <div class="standardized-help-text">
-                                        O investimento será replicado a cada mês
-                                        até o prazo especificado.
-                                    </div>
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="Modal.close()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        💾 Salvar
+                                        <div
+                                            class="standardized-input-group recorrencia-group"
+                                        >
+                                            <div class="recorrencia-label">
+                                                <span
+                                                    class="recorrencia-text"
+                                                    id="edit-investimento-recorrencia-text"
+                                                    >Investimento Recorrente?</span
+                                                >
+                                                <label
+                                                    class="switch-toggle"
+                                                    aria-label="Alternar investimento recorrente"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id="edit-is-recorrente"
+                                                        name="is_recorrente"
+                                                        onchange="toggleEditRecorrenciaFields()"
+                                                        aria-labelledby="edit-investimento-recorrencia-text"
+                                                    />
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </button>
                                 </div>
                             </form>

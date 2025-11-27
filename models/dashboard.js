@@ -14,6 +14,24 @@ let dashboardData = {
 let categoryChart = null;
 let timelineChart = null;
 
+function formatDashboardValue(value) {
+    const numericValue = Number(value || 0);
+    if (window.formatCurrencyBRL) {
+        return window.formatCurrencyBRL(numericValue);
+    }
+    return `R$ ${numericValue.toFixed(2)}`;
+}
+
+function parseDashboardValue(text) {
+    if (typeof text !== "string") return 0;
+    const sanitized = text
+        .replace(/[^0-9,.-]/g, "")
+        .replace(/\.(?=\d{3}(?:\D|$))/g, "")
+        .replace(/,/g, ".");
+    const parsed = parseFloat(sanitized);
+    return Number.isNaN(parsed) ? 0 : parsed;
+}
+
 // ================ Carregamento de Dados ================
 
 async function loadDashboardData() {
@@ -609,28 +627,28 @@ function updateSummaryCards(period) {
     const plansEl = document.getElementById("summary-plans");
 
     if (incomeEl) {
-        incomeEl.textContent = `R$ ${totalReceitas.toFixed(2)}`;
+        incomeEl.textContent = formatDashboardValue(totalReceitas);
         console.log("💰 Receitas atualizadas:", totalReceitas);
     } else {
         console.error("❌ Elemento summary-income não encontrado!");
     }
 
     if (expenseEl) {
-        expenseEl.textContent = `R$ ${totalDespesas.toFixed(2)}`;
+        expenseEl.textContent = formatDashboardValue(totalDespesas);
         console.log("💰 Despesas atualizadas:", totalDespesas);
     } else {
         console.error("❌ Elemento summary-expense não encontrado!");
     }
 
     if (balanceEl) {
-        balanceEl.textContent = `R$ ${saldoLiquido.toFixed(2)}`;
+        balanceEl.textContent = formatDashboardValue(saldoLiquido);
         console.log("💰 Saldo atualizado:", saldoLiquido);
     } else {
         console.error("❌ Elemento summary-balance não encontrado!");
     }
 
     if (plansEl) {
-        plansEl.textContent = `R$ ${totalPlanos.toFixed(2)}`;
+        plansEl.textContent = formatDashboardValue(totalPlanos);
         console.log("📅 Planos atualizados:", totalPlanos);
     } else {
         console.error("❌ Elemento summary-plans não encontrado!");
@@ -665,14 +683,14 @@ function updateSummaryCards(period) {
     const investmentsEl = document.getElementById("summary-investments");
 
     if (savingsEl) {
-        savingsEl.textContent = `R$ ${totalPoupanca.toFixed(2)}`;
+        savingsEl.textContent = formatDashboardValue(totalPoupanca);
         console.log("💰 Poupança atualizada:", totalPoupanca);
     } else {
         console.error("❌ Elemento summary-savings não encontrado!");
     }
 
     if (investmentsEl) {
-        investmentsEl.textContent = `R$ ${totalInvestimentos.toFixed(2)}`;
+        investmentsEl.textContent = formatDashboardValue(totalInvestimentos);
         console.log("📈 Investimentos atualizados:", totalInvestimentos);
     } else {
         console.error("❌ Elemento summary-investments não encontrado!");
@@ -875,9 +893,7 @@ function updateTimelineChart(period) {
                     beginAtZero: true,
                     ticks: {
                         color: axisColor,
-                        callback: function (value) {
-                            return "R$ " + value.toFixed(2);
-                        },
+                        callback: (value) => formatDashboardValue(value),
                     },
                     grid: {
                         color: gridColor,
@@ -1195,9 +1211,7 @@ function updateSummaryCardsAnimated(period) {
     if (incomeEl) {
         animateValue(
             incomeEl,
-            parseFloat(
-                incomeEl.textContent.replace(/[R$\s,]/g, "").replace(".", "")
-            ) || 0,
+            parseDashboardValue(incomeEl.textContent),
             totalReceitas
         );
         animateCardUpdate("summary-income");
@@ -1206,9 +1220,7 @@ function updateSummaryCardsAnimated(period) {
     if (expenseEl) {
         animateValue(
             expenseEl,
-            parseFloat(
-                expenseEl.textContent.replace(/[R$\s,]/g, "").replace(".", "")
-            ) || 0,
+            parseDashboardValue(expenseEl.textContent),
             totalDespesas
         );
         animateCardUpdate("summary-expense");
@@ -1217,9 +1229,7 @@ function updateSummaryCardsAnimated(period) {
     if (balanceEl) {
         animateValue(
             balanceEl,
-            parseFloat(
-                balanceEl.textContent.replace(/[R$\s,]/g, "").replace(".", "")
-            ) || 0,
+            parseDashboardValue(balanceEl.textContent),
             saldoLiquido
         );
         animateCardUpdate("summary-balance");
@@ -1242,7 +1252,7 @@ function animateValue(element, start, end) {
         const progress = Math.min(elapsed / duration, 1);
 
         const current = start + (end - start) * easeOutCubic(progress);
-        element.textContent = `R$ ${current.toFixed(2)}`;
+        element.textContent = formatDashboardValue(current);
 
         if (progress < 1) {
             requestAnimationFrame(animate);
@@ -1838,9 +1848,8 @@ function updateCategoryChart(chartContext) {
                             const percentage = ((value / total) * 100).toFixed(
                                 1
                             );
-                            return `${label}: R$ ${value.toFixed(
-                                2
-                            )} (${percentage}%)`;
+                            const formattedValue = formatDashboardValue(value);
+                            return `${label}: ${formattedValue} (${percentage}%)`;
                         },
                     },
                 },

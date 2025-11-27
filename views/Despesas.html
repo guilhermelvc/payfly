@@ -375,13 +375,19 @@
                     </div>
 
                     <div class="standardized-input-group recorrencia-group">
-                        <label for="is_recorrente" class="recorrencia-label">
-                            <span class="recorrencia-text">Despesa Recorrente?</span>
-                            <div class="switch-toggle">
-                                <input type="checkbox" id="is_recorrente" name="is_recorrente" onchange="toggleRecorrenciaFields()">
+                        <div class="recorrencia-label">
+                            <span class="recorrencia-text" id="despesa-recorrencia-text">Despesa Recorrente?</span>
+                            <label class="switch-toggle" aria-label="Alternar despesa recorrente">
+                                <input
+                                    type="checkbox"
+                                    id="is_recorrente"
+                                    name="is_recorrente"
+                                    onchange="toggleRecorrenciaFields()"
+                                    aria-labelledby="despesa-recorrencia-text"
+                                >
                                 <span class="slider"></span>
-                            </div>
-                        </label>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="standardized-input-group" id="recorrencia_meses_group" style="display: none;">
@@ -495,13 +501,19 @@
                 </div>
 
                 <div class="standardized-input-group recorrencia-group">
-                    <label for="edit-is-recorrente" class="recorrencia-label">
-                        <span class="recorrencia-text">Despesa Recorrente?</span>
-                        <div class="switch-toggle">
-                            <input type="checkbox" id="edit-is-recorrente" name="is_recorrente" onchange="toggleEditRecorrenciaFields()">
+                    <div class="recorrencia-label">
+                        <span class="recorrencia-text" id="edit-despesa-recorrencia-text">Despesa Recorrente?</span>
+                        <label class="switch-toggle" aria-label="Alternar despesa recorrente">
+                            <input
+                                type="checkbox"
+                                id="edit-is-recorrente"
+                                name="is_recorrente"
+                                onchange="toggleEditRecorrenciaFields()"
+                                aria-labelledby="edit-despesa-recorrencia-text"
+                            >
                             <span class="slider"></span>
-                        </div>
-                    </label>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="standardized-input-group" id="edit-recorrencia-meses-group" style="display: none;">

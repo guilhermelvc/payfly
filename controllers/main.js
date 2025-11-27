@@ -15,6 +15,38 @@ let toggle = document.querySelector(".toggle");
 let navigation = document.querySelector(".navigation");
 let main = document.querySelector(".main");
 
+// Utilitário central para formatação monetária em BRL
+if (!window.formatCurrencyBRL) {
+    window.formatCurrencyBRL = function formatCurrencyBRL(value) {
+        let rawValue = value;
+
+        if (typeof rawValue === "string") {
+            rawValue = rawValue.replace(/[R$\u00A0\s]/g, "");
+
+            const hasComma = rawValue.includes(",");
+            const hasDot = rawValue.includes(".");
+
+            if (hasComma && hasDot) {
+                rawValue = rawValue.replace(/\./g, "").replace(/,/g, ".");
+            } else if (hasComma) {
+                rawValue = rawValue.replace(/,/g, ".");
+            }
+
+            rawValue = rawValue.replace(/[^0-9.+-]/g, "");
+        }
+
+        const numericValue = Number(rawValue);
+        const safeValue = Number.isFinite(numericValue) ? numericValue : 0;
+
+        return new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(safeValue);
+    };
+}
+
 // Inicializar sidebar baseado no localStorage (padrão: fechado)
 document.addEventListener("DOMContentLoaded", function () {
     const isMobile = window.innerWidth <= 480;

@@ -1,6 +1,16 @@
 // Despesa model adapted for Supabase
 let totalDespesa = 0;
 
+const formatCurrency = (value) =>
+    (
+        window.formatCurrencyBRL ||
+        ((val) =>
+            new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+            }).format(Number(val) || 0))
+    )(value);
+
 // Variável global para controlar estado do filtro
 let isDespesaFilterActive = false;
 let currentDespesaFilterCriteria = null;
@@ -55,7 +65,7 @@ async function applyStoredDespesaFilter() {
         });
 
         const el = document.getElementById("filteredDespesaDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatCurrency(totalFiltered);
 
         console.log(
             `🔍 Filtro de despesas reaplicado: ${
@@ -94,7 +104,7 @@ function formatarData(date) {
 
 function updateDespesaDisplay() {
     const el = document.getElementById("totalDespesaDisplay");
-    if (el) el.textContent = `R$ ${totalDespesa.toFixed(2)}`;
+    if (el) el.textContent = formatCurrency(totalDespesa);
 }
 
 async function loadDespesasFromSupabase() {
@@ -212,7 +222,7 @@ function addDespesaToTable(despesa, despesaId) {
     const descricaoCell = newRow.insertCell(0);
     descricaoCell.textContent = despesa.descricao || "";
     const valorCell = newRow.insertCell(1);
-    valorCell.textContent = `R$ ${Number(despesa.valor || 0).toFixed(2)}`;
+    valorCell.textContent = formatCurrency(despesa.valor || 0);
     const dataCell = newRow.insertCell(2);
     dataCell.textContent = formatarData(despesa.data);
     const categoriaCell = newRow.insertCell(3);
@@ -623,7 +633,7 @@ async function filterDespesas(event) {
 
         // Atualiza o total filtrado
         const el = document.getElementById("filteredDespesaDisplay");
-        if (el) el.textContent = `R$ ${totalFiltered.toFixed(2)}`;
+        if (el) el.textContent = formatCurrency(totalFiltered);
 
         // Mostra mensagem se nenhum resultado for encontrado
         if (!rows || rows.length === 0) {
