@@ -316,13 +316,13 @@ async function getCurrentUserInfo() {
 
 // Gera página de capa
 async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
-  // Comeca um pouco mais para cima para abrir espaco para o rodape
-  let currentY = 35;
+  // Comeca mais proximo do topo para liberar espaco para o rodape
+  let currentY = 25;
 
   // ================ Logo PayFly ================
   const logoHeight = await drawPayFlyLogo(pdf, pageWidth / 2, currentY);
-  // Pequeno espaçamento abaixo da logo
-  currentY += (logoHeight || 20) + 20;
+  // Espaçamento controlado abaixo da logo
+  currentY += (logoHeight || 20) + 15;
 
   // ================ Título PayFly ================
   pdf.setFontSize(32);
@@ -338,7 +338,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
     align: "center",
   });
 
-  currentY += 35;
+  currentY += 28;
 
   // ================ Título do Relatório ================
   pdf.setFontSize(20);
@@ -363,7 +363,7 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
     align: "center",
   });
 
-  currentY += 20;
+  currentY += 16;
 
   // ================ Data e Hora de Geração ================
   const currentDate = new Date();
@@ -388,20 +388,20 @@ async function generateCoverPage(pdf, pageWidth, pageHeight, margin, userInfo) {
     align: "center",
   });
 
-  currentY += 25;
+  currentY += 18;
 
   // ================ Resumo Geral ================
   const brandDark = getBrandColor("dark", { r: 24, g: 61, b: 61 });
   pdf.setDrawColor(brandDark.r, brandDark.g, brandDark.b);
   pdf.setFillColor(248, 249, 250);
-  pdf.roundedRect(margin, currentY - 6, pageWidth - margin * 2, 40, 5, 5, "FD");
+  pdf.roundedRect(margin, currentY - 6, pageWidth - margin * 2, 36, 5, 5, "FD");
 
   currentY += 0;
   pdf.setFontSize(12);
   pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
   pdf.text("Conteudo do Relatorio", margin + 10, currentY);
 
-  currentY += 10;
+  currentY += 8;
   pdf.setFontSize(9);
   pdf.setTextColor(0, 0, 0);
 
