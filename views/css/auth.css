@@ -3,285 +3,349 @@
 
 /* =============== Globals ============== */
 * {
-    font-family: "Ubuntu", sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  font-family: "Ubuntu", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-    --blue: #2a2185;
-    --white: #fff;
-    --gray: #f5f5f5;
-    --black1: #222;
-    --black2: #999;
-    --green: #93b1a6;
-    --red: #ff3b3b;
-    --green2: #183d3d;
-    --green3: #005951;
+  --blue: #2a2185;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+  --green: #93b1a6;
+  --red: #ff3b3b;
+  --green2: #183d3d;
+  --green3: #005951;
 }
 
 body {
-    background: var(--white);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-family: "Ubuntu", sans-serif;
-    padding: 20px;
+  background: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: "Ubuntu", sans-serif;
+  padding: 20px;
 }
 
 .centralizer {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 .container {
-    width: 100%;
-    background-color: var(--green);
-    padding: 30px;
-    border: 1px solid var(--green2);
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  background-color: var(--green);
+  padding: 30px;
+  border: 1px solid var(--green2);
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.auth-logo-wrapper {
+  flex: 0 0 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-logo-libelula {
+  width: 56px;
+  height: 56px;
+  animation: floatLibelula 3s ease-in-out infinite;
+}
+
+.auth-header-texts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-header--stacked {
+  flex-direction: column;
+}
+
+.auth-logo-wrapper--center {
+  margin-bottom: 6px;
+}
+
+.auth-header-texts--center {
+  align-items: center;
 }
 
 .title {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--green2);
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green2);
+  margin-bottom: 0;
+  text-align: center;
 }
 
 .welcome {
-    font-size: 18px;
-    color: var(--green2);
-    margin-bottom: 25px;
-    text-align: center;
-    font-weight: 500;
+  font-size: 18px;
+  color: var(--green2);
+  margin-bottom: 2px;
+  text-align: center;
+  font-weight: 500;
 }
 
 .form-field {
-    margin-bottom: 20px;
-    width: 100%;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .form-field label {
-    display: block;
-    color: var(--green2);
-    margin-bottom: 8px;
-    font-weight: 500;
+  display: block;
+  color: var(--green2);
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
 input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    background-color: var(--white);
-    font-size: 16px;
-    transition: all 0.3s ease;
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: var(--white);
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 input:focus {
-    outline: none;
-    border-color: var(--green2);
+  outline: none;
+  border-color: var(--green2);
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 button:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
 }
 
 button[disabled] {
-    opacity: 0.7;
-    cursor: not-allowed;
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .clear {
-    background: transparent;
-    border: none;
-    color: var(--green2);
+  background: transparent;
+  border: none;
+  color: var(--green2);
 }
 
 .clear:hover {
-    background-color: rgba(24, 61, 61, 0.1);
+  background-color: rgba(24, 61, 61, 0.1);
 }
 
 .solid {
-    background: var(--green2);
-    border: none;
-    color: var(--white);
+  background: var(--green2);
+  border: none;
+  color: var(--white);
 }
 
 .solid:hover:not([disabled]) {
-    background: var(--green3);
+  background: var(--green3);
 }
 
 .outline {
-    background: transparent;
-    border: 2px solid var(--green2);
-    color: var(--green2);
+  background: transparent;
+  border: 2px solid var(--green2);
+  color: var(--green2);
 }
 
 .outline:hover {
-    background: rgba(24, 61, 61, 0.08);
-    color: var(--green2);
+  background: rgba(24, 61, 61, 0.08);
+  color: var(--green2);
 }
 
 .error {
-    color: var(--red);
-    font-size: 14px;
-    margin-top: 5px;
-    display: none;
+  color: var(--red);
+  font-size: 14px;
+  margin-top: 5px;
+  display: none;
 }
 
 #google-login-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: var(--white);
-    border: 2px solid var(--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--white);
+  border: 2px solid var(--gray);
 }
 
 #google-login-button:hover {
-    background-color: var(--gray);
-    color: #000000;
+  background-color: var(--gray);
+  color: #000000;
 }
 
 #google-login-button img {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 #google-signup-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background-color: var(--white);
-    border: 2px solid var(--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--white);
+  border: 2px solid var(--gray);
 }
 
 #google-signup-button:hover {
-    background-color: var(--gray);
-    color: #000000;
+  background-color: var(--gray);
+  color: #000000;
 }
 
 #google-signup-button img {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Media Queries */
 @media screen and (max-width: 480px) {
-    .container {
-        padding: 20px;
-    }
+  .container {
+    padding: 20px;
+  }
 
-    .title {
-        font-size: 28px;
-    }
+  .auth-header {
+    gap: 8px;
+  }
 
-    .welcome {
-        font-size: 16px;
-    }
+  .auth-logo-wrapper {
+    flex-basis: 46px;
+  }
 
-    input,
-    button {
-        padding: 10px;
-        font-size: 14px;
-    }
+  .auth-logo-libelula {
+    width: 46px;
+    height: 46px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .welcome {
+    font-size: 16px;
+  }
+
+  input,
+  button {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
 
 @media screen and (max-height: 600px) {
-    body {
-        align-items: flex-start;
-        padding-top: 40px;
-    }
+  body {
+    align-items: flex-start;
+    padding-top: 40px;
+  }
 }
 
 /* Animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .container {
-    animation: fadeIn 0.4s ease-out;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes floatLibelula {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(6px);
+  }
 }
 
 /* =============== TEMA ESCURO - AUTENTICAÇÃO =============== */
 /* As páginas de login e cadastro mantêm o design original */
 /* pois já têm um bom contraste e design moderno */
 body:not(.light-theme) .auth-container {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
 }
 
 body:not(.light-theme) .form-container {
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 body:not(.light-theme) .form-container h1 {
-    color: #e0e0e0;
+  color: #e0e0e0;
 }
 
 body:not(.light-theme) .form-container p {
-    color: #999;
+  color: #999;
 }
 
 body:not(.light-theme) .input-group input {
-    background: #333;
-    border-color: #444;
-    color: #e0e0e0;
+  background: #333;
+  border-color: #444;
+  color: #e0e0e0;
 }
 
 body:not(.light-theme) .input-group input:focus {
-    background: #3a3a3a;
-    border-color: #005951;
+  background: #3a3a3a;
+  border-color: #005951;
 }
 
 body:not(.light-theme) .input-group label {
-    color: #e0e0e0;
+  color: #e0e0e0;
 }
 
 body:not(.light-theme) .link {
-    color: #4db8a8;
+  color: #4db8a8;
 }
 
 body:not(.light-theme) .link:hover {
-    color: #5dc9b8;
+  color: #5dc9b8;
 }
 
 body:not(.light-theme) .divider span {
-    background: #2a2a2a;
-    color: #999;
+  background: #2a2a2a;
+  color: #999;
 }
 
 body:not(.light-theme) .divider::before,
 body:not(.light-theme) .divider::after {
-    background: #444;
+  background: #444;
 }
