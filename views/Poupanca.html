@@ -1,1056 +1,961 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PayFly - Poupança</title>
-        <link rel="icon" type="image/png" href="../view/imgs/Favicon.png" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PayFly - Poupança</title>
+    <link rel="icon" type="image/png" href="../view/imgs/Favicon.png" />
 
-        <!-- ======= Estilos ====== -->
-        <link rel="stylesheet" href="../views/css/style.css" />
-        <link rel="stylesheet" href="../views/css/data-tables.css" />
-        <link rel="stylesheet" href="../assets/css/accessibility.css" />
+    <!-- ======= Estilos ====== -->
+    <link rel="stylesheet" href="../views/css/style.css" />
+    <link rel="stylesheet" href="../views/css/data-tables.css" />
+    <link rel="stylesheet" href="../assets/css/accessibility.css" />
 
-        <!-- Forçar tema escuro nas tabelas -->
-        <style>
-            /* TEMA ESCURO - Container preto, tabela cinza */
-            body:not(.light-theme) .table-container {
-                background: #1a1a1a !important;
-                background-color: #1a1a1a !important;
-                border-radius: 10px !important;
-                padding: 15px !important;
-            }
+    <!-- Forçar tema escuro nas tabelas -->
+    <style>
+      /* TEMA ESCURO - Container preto, tabela cinza */
+      body:not(.light-theme) .table-container {
+        background: #1a1a1a !important;
+        background-color: #1a1a1a !important;
+        border-radius: 10px !important;
+        padding: 15px !important;
+      }
 
-            body:not(.light-theme) .table-container table,
-            body:not(.light-theme) #data-table {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                border-radius: 8px !important;
-            }
+      body:not(.light-theme) .table-container table,
+      body:not(.light-theme) #data-table {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        border-radius: 8px !important;
+      }
 
-            body:not(.light-theme) .table-container tbody,
-            body:not(.light-theme) #data-table tbody {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-            }
+      body:not(.light-theme) .table-container tbody,
+      body:not(.light-theme) #data-table tbody {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr,
-            body:not(.light-theme) #data-table tbody tr,
-            body:not(.light-theme) tbody tr[id^="row-"] {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                background-image: none !important;
-            }
+      body:not(.light-theme) .table-container tbody tr,
+      body:not(.light-theme) #data-table tbody tr,
+      body:not(.light-theme) tbody tr[id^="row-"] {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        background-image: none !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr:hover,
-            body:not(.light-theme) #data-table tbody tr:hover,
-            body:not(.light-theme) tbody tr[id^="row-"]:hover {
-                background: #3a3a3a !important;
-                background-color: #3a3a3a !important;
-            }
+      body:not(.light-theme) .table-container tbody tr:hover,
+      body:not(.light-theme) #data-table tbody tr:hover,
+      body:not(.light-theme) tbody tr[id^="row-"]:hover {
+        background: #3a3a3a !important;
+        background-color: #3a3a3a !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr td,
-            body:not(.light-theme) #data-table tbody tr td,
-            body:not(.light-theme) tbody tr[id^="row-"] td {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                color: #e0e0e0 !important;
-            }
+      body:not(.light-theme) .table-container tbody tr td,
+      body:not(.light-theme) #data-table tbody tr td,
+      body:not(.light-theme) tbody tr[id^="row-"] td {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        color: #e0e0e0 !important;
+      }
 
-            /* Tema claro */
-            body.light-theme .table-container,
-            body.light-theme .table-container table,
-            body.light-theme .table-container tbody,
-            body.light-theme .table-container tbody tr,
-            body.light-theme .table-container tbody tr td {
-                background: #ffffff !important;
-                background-color: #ffffff !important;
-            }
-        </style>
+      /* Tema claro */
+      body.light-theme .table-container,
+      body.light-theme .table-container table,
+      body.light-theme .table-container tbody,
+      body.light-theme .table-container tbody tr,
+      body.light-theme .table-container tbody tr td {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+      }
+    </style>
 
-        <!-- Sistema de estilos de tabela com MutationObserver -->
-        <script>
-            function applyRowStyles(row) {
-                const isDarkTheme =
-                    !document.body.classList.contains("light-theme");
-                if (isDarkTheme) {
-                    row.style.setProperty("background", "#2a2a2a", "important");
-                    row.style.setProperty(
-                        "background-color",
-                        "#2a2a2a",
-                        "important"
-                    );
-                    row.querySelectorAll("td").forEach((td) => {
-                        td.style.setProperty(
-                            "background",
-                            "#2a2a2a",
-                            "important"
-                        );
-                        td.style.setProperty(
-                            "background-color",
-                            "#2a2a2a",
-                            "important"
-                        );
-                    });
-                } else {
-                    row.style.setProperty("background", "#ffffff", "important");
-                    row.style.setProperty(
-                        "background-color",
-                        "#ffffff",
-                        "important"
-                    );
-                    row.querySelectorAll("td").forEach((td) => {
-                        td.style.setProperty(
-                            "background",
-                            "#ffffff",
-                            "important"
-                        );
-                        td.style.setProperty(
-                            "background-color",
-                            "#ffffff",
-                            "important"
-                        );
-                    });
+    <!-- Sistema de estilos de tabela com MutationObserver -->
+    <script>
+      function applyRowStyles(row) {
+        const isDarkTheme = !document.body.classList.contains("light-theme");
+        if (isDarkTheme) {
+          row.style.setProperty("background", "#2a2a2a", "important");
+          row.style.setProperty("background-color", "#2a2a2a", "important");
+          row.querySelectorAll("td").forEach((td) => {
+            td.style.setProperty("background", "#2a2a2a", "important");
+            td.style.setProperty("background-color", "#2a2a2a", "important");
+          });
+        } else {
+          row.style.setProperty("background", "#ffffff", "important");
+          row.style.setProperty("background-color", "#ffffff", "important");
+          row.querySelectorAll("td").forEach((td) => {
+            td.style.setProperty("background", "#ffffff", "important");
+            td.style.setProperty("background-color", "#ffffff", "important");
+          });
+        }
+      }
+
+      function cleanTableStyles() {
+        document.querySelectorAll("tbody tr").forEach(applyRowStyles);
+      }
+
+      // Observa mudanças na tabela para aplicar estilos em novas linhas
+      document.addEventListener("DOMContentLoaded", function () {
+        const tbody =
+          document.querySelector("#data-table tbody") ||
+          document.querySelector("tbody");
+        if (tbody) {
+          const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+              mutation.addedNodes.forEach(function (node) {
+                if (node.nodeName === "TR") {
+                  applyRowStyles(node);
                 }
-            }
-
-            function cleanTableStyles() {
-                document.querySelectorAll("tbody tr").forEach(applyRowStyles);
-            }
-
-            // Observa mudanças na tabela para aplicar estilos em novas linhas
-            document.addEventListener("DOMContentLoaded", function () {
-                const tbody =
-                    document.querySelector("#data-table tbody") ||
-                    document.querySelector("tbody");
-                if (tbody) {
-                    const observer = new MutationObserver(function (mutations) {
-                        mutations.forEach(function (mutation) {
-                            mutation.addedNodes.forEach(function (node) {
-                                if (node.nodeName === "TR") {
-                                    applyRowStyles(node);
-                                }
-                            });
-                        });
-                    });
-                    observer.observe(tbody, { childList: true });
-                }
-                // Aplica nos existentes também
-                setTimeout(cleanTableStyles, 100);
-                setTimeout(cleanTableStyles, 500);
-                setTimeout(cleanTableStyles, 1500);
+              });
             });
+          });
+          observer.observe(tbody, { childList: true });
+        }
+        // Aplica nos existentes também
+        setTimeout(cleanTableStyles, 100);
+        setTimeout(cleanTableStyles, 500);
+        setTimeout(cleanTableStyles, 1500);
+      });
 
-            document.addEventListener("themeChange", function () {
-                cleanTableStyles();
-                setTimeout(cleanTableStyles, 100);
-            });
-        </script>
-    </head>
+      document.addEventListener("themeChange", function () {
+        cleanTableStyles();
+        setTimeout(cleanTableStyles, 100);
+      });
+    </script>
+  </head>
 
-    <body class="light-theme">
-        <!-- =============== Menu Navegação ================ -->
-        <div class="container">
-            <div class="navigation">
-                <ul>
-                    <li>
-                        <a href="#">
-                            <span class="icon">
-                                <img src="../views/imgs/logo.svg" alt="Logo" />
-                            </span>
-                            <span class="title">PayFly</span>
-                        </a>
-                    </li>
+  <body class="light-theme">
+    <!-- =============== Menu Navegação ================ -->
+    <div class="container">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon">
+                <img src="../views/imgs/logo.svg" alt="Logo" />
+              </span>
+              <span class="title">PayFly</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Painel.html">
-                            <span class="icon">
-                                <ion-icon name="home-outline"></ion-icon>
-                            </span>
-                            <span class="title">Painel Principal</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Painel.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Painel Principal</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Receitas.html">
-                            <span class="icon">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </span>
-                            <span class="title">Receitas</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Receitas.html">
+              <span class="icon">
+                <ion-icon name="card-outline"></ion-icon>
+              </span>
+              <span class="title">Receitas</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Despesas.html">
-                            <span class="icon">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </span>
-                            <span class="title">Despesas</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Despesas.html">
+              <span class="icon">
+                <ion-icon name="cart-outline"></ion-icon>
+              </span>
+              <span class="title">Despesas</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Planos.html">
-                            <span class="icon">
-                                <span class="target-icon" aria-hidden="true">
-                                    <span class="target-arrow"></span>
-                                </span>
-                            </span>
-                            <span class="title">Planos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="Poupanca.html">
-                            <span class="icon">
-                                <ion-icon name="wallet-outline"></ion-icon>
-                            </span>
-                            <span class="title">Poupança</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Planos.html">
+              <span class="icon">
+                <span class="target-icon" aria-hidden="true">
+                  <span class="target-arrow"></span>
+                </span>
+              </span>
+              <span class="title">Planos</span>
+            </a>
+          </li>
+          <li>
+            <a href="Poupanca.html">
+              <span class="icon">
+                <ion-icon name="wallet-outline"></ion-icon>
+              </span>
+              <span class="title">Poupança</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Investimentos.html">
-                            <span class="icon">
-                                <ion-icon name="trending-up-outline"></ion-icon>
-                            </span>
-                            <span class="title">Investimentos</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Investimentos.html">
+              <span class="icon">
+                <ion-icon name="trending-up-outline"></ion-icon>
+              </span>
+              <span class="title">Investimentos</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a href="Configurações.html">
-                            <span class="icon">
-                                <ion-icon name="settings-outline"></ion-icon>
-                            </span>
-                            <span class="title">Configurações</span>
-                        </a>
-                    </li>
+          <li>
+            <a href="Configurações.html">
+              <span class="icon">
+                <ion-icon name="settings-outline"></ion-icon>
+              </span>
+              <span class="title">Configurações</span>
+            </a>
+          </li>
 
-                    <li>
-                        <a onclick="logout()">
-                            <span class="icon">
-                                <ion-icon name="log-out-outline"></ion-icon>
-                            </span>
-                            <span class="title">Sair</span>
-                        </a>
-                    </li>
-                </ul>
+          <li>
+            <a onclick="logout()">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title">Sair</span>
+            </a>
+          </li>
+        </ul>
 
-                <!-- Informação do usuário no rodapé do sidebar -->
-                <div class="user-sidebar-footer">
-                    <div class="user-info-display">
-                        <ion-icon name="person-circle-outline"></ion-icon>
-                        <span id="user-sidebar-name">Usuário</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Informação do usuário no rodapé do sidebar -->
+        <div class="user-sidebar-footer">
+          <div class="user-info-display">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <span id="user-sidebar-name">Usuário</span>
+          </div>
+        </div>
+      </div>
 
-            <!-- ========================= Principal ==================== -->
-            <div class="main">
-                <div class="topbar">
-                    <div class="toggle">
-                        <ion-icon name="menu-outline"></ion-icon>
-                    </div>
+      <!-- ========================= Principal ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
 
-                    <!-- Botão AI Insights -->
-                    <div class="ai-insights-button" onclick="openAIInsights()">
-                        <ion-icon name="bulb-outline"></ion-icon>
-                        <span>AI Insights</span>
-                    </div>
-                </div>
-
-                <!-- ======================= Cartões ================== -->
-                <div class="cardBox">
-                    <div class="card">
-                        <div>
-                            <div class="numbers">
-                                <p id="totalPoupancaDisplay">R$ 0,00</p>
-                            </div>
-                            <div class="cardName">Total Poupado</div>
-                        </div>
-                        <div class="iconBx">
-                            <ion-icon name="wallet-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div>
-                            <div class="numbers">
-                                <p id="filteredPoupancaDisplay">R$ 0,00</p>
-                            </div>
-                            <div class="cardName">Poupança Filtrada</div>
-                        </div>
-                        <div class="iconBx">
-                            <ion-icon name="filter-outline"></ion-icon>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================ Dashboard ================= -->
-                <section id="transaction">
-                    <div class="details" style="grid-template-columns: 1fr">
-                        <div class="recentOrders">
-                            <div class="cardHeader">
-                                <a
-                                    onclick="Modal.open()"
-                                    class="add-transaction-button"
-                                    >+ Adicionar Poupança</a
-                                >
-                                <a
-                                    href="#"
-                                    onclick="FilterModal.open()"
-                                    class="btn1"
-                                    ><ion-icon name="filter-outline"></ion-icon>
-                                    Filtrar</a
-                                >
-                            </div>
-
-                            <div class="table-container">
-                                <table id="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Descrição</th>
-                                            <th>Valor</th>
-                                            <th>Data</th>
-                                            <th>Tipo</th>
-                                            <th>Plano</th>
-                                            <th>Editar</th>
-                                            <th>Excluir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Dados inseridos dinamicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="footOptions">
-                                <a href="#" onclick="filterClear()" class="btn1"
-                                    >Limpar Filtro</a
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =========== Modal Adicionar (Padronizado) =========  -->
-                <div class="standardized-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>💰 Adicionar à Poupança</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="Modal.close()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form onsubmit="Form.submit(event)" id="form">
-                                <div class="standardized-input-group">
-                                    <label for="descricao">Descrição</label>
-                                    <input
-                                        type="text"
-                                        id="descricao"
-                                        name="descricao"
-                                        placeholder="Ex: Depósito mensal, Rendimento..."
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="valor">Valor (R$)</label>
-                                    <input
-                                        type="number"
-                                        id="valor"
-                                        name="valor"
-                                        placeholder="0,00"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-help-text">
-                                    Use o sinal (-) para saques.
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="data">Data</label>
-                                    <input type="date" id="data" name="data" />
-                                </div>
-
-                                <div
-                                    class="standardized-input-group categoria-group"
-                                >
-                                    <label for="tipo"
-                                        >Tipo de Movimentação</label
-                                    >
-                                    <div class="categoria-input-wrapper">
-                                        <input
-                                            type="text"
-                                            id="tipo"
-                                            name="tipo"
-                                            placeholder="Ex: Depósito, Saque, Rendimento..."
-                                        />
-                                        <button
-                                            type="button"
-                                            class="ia-suggest-btn"
-                                            onclick="suggestSavingsTypeSimple()"
-                                            title="Sugestão com IA"
-                                        >
-                                            🤖 IA
-                                        </button>
-                                    </div>
-                                    <div class="predefined-categories">
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipo('Depósito')"
-                                            >💵 Depósito</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipo('Saque')"
-                                            >💸 Saque</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipo('Rendimento')"
-                                            >📈 Rendimento</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipo('Transferência')"
-                                            >🔄 Transferência</span
-                                        >
-                                        <!-- PIX removido -->
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipo('Aplicação')"
-                                            >💼 Aplicação</span
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="plano">Plano Vinculado</label>
-                                    <select id="plano" name="plano">
-                                        <option value="">
-                                            Nenhum plano específico
-                                        </option>
-                                        <!-- Opções carregadas dinamicamente do banco de dados -->
-                                    </select>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group recorrencia-group"
-                                >
-                                    <div class="recorrencia-label">
-                                        <span
-                                            class="recorrencia-text"
-                                            id="poupanca-recorrencia-text"
-                                            >Poupança Recorrente?</span
-                                        >
-                                        <label
-                                            class="switch-toggle"
-                                            aria-label="Alternar poupança recorrente"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                id="is_recorrente"
-                                                name="is_recorrente"
-                                                onchange="toggleRecorrenciaFields()"
-                                                aria-labelledby="poupanca-recorrencia-text"
-                                            />
-                                            <span class="slider"></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group"
-                                    id="recorrencia_meses_group"
-                                    style="display: none"
-                                >
-                                    <label for="recorrencia_meses"
-                                        >Duração (meses)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="recorrencia_meses"
-                                        name="recorrencia_meses"
-                                        placeholder="Ex: 6, 12..."
-                                        min="1"
-                                        max="120"
-                                        value="1"
-                                    />
-                                    <div class="standardized-help-text">
-                                        A poupança será replicada a cada mês até
-                                        o prazo especificado, no mesmo dia da
-                                        data informada.
-                                    </div>
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="Modal.close()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        💾 Salvar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Toast personalizado removido - usando sistema toast padronizado -->
-
-                <!-- =============================  Modal do Filtro (Padronizado) ============================-->
-                <div class="standardized-modal-overlay filter-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>🔍 Filtrar Poupança</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="FilterModal.close()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form
-                                id="filter-form"
-                                onsubmit="filterPoupanca(event)"
-                            >
-                                <div class="standardized-input-group">
-                                    <label for="filter-descricao"
-                                        >Descrição</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="filter-descricao"
-                                        name="descricao"
-                                        placeholder="Ex: Depósito, Rendimento... (busca parcial)"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-valor">Valor (R$)</label>
-                                    <input
-                                        type="number"
-                                        id="filter-valor"
-                                        name="valor"
-                                        placeholder="Ex: 500.00 (valor exato)"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-data">Data</label>
-                                    <input
-                                        type="date"
-                                        id="filter-data"
-                                        name="data"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-tipo">Tipo</label>
-                                    <input
-                                        type="text"
-                                        id="filter-tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Depósito, Saque, Rendimento..."
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-recorrente"
-                                        >Filtrar por Recorrência</label
-                                    >
-                                    <select
-                                        id="filter-recorrente"
-                                        name="recorrente"
-                                    >
-                                        <option value="">Todas</option>
-                                        <option value="sim">
-                                            Apenas Recorrentes
-                                        </option>
-                                        <option value="nao">
-                                            Apenas Únicas
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="FilterModal.close()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        🔍 Filtrar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- =========================== Modal de Editar (Padronizado) ============================-->
-                <div class="standardized-modal-overlay edit-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>✏️ Editar Poupança</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="closeEditModal()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form
-                                id="edit-form"
-                                onsubmit="submitEditForm(event)"
-                            >
-                                <div class="standardized-input-group">
-                                    <label for="edit-description"
-                                        >Descrição</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="edit-description"
-                                        name="description"
-                                        placeholder="Descrição da movimentação"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-amount">Valor (R$)</label>
-                                    <input
-                                        type="number"
-                                        id="edit-amount"
-                                        name="amount"
-                                        placeholder="0,00"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-help-text">
-                                    Use o sinal (-) para saques.
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-date">Data</label>
-                                    <input
-                                        type="date"
-                                        id="edit-date"
-                                        name="date"
-                                    />
-                                </div>
-
-                                <div
-                                    class="standardized-input-group categoria-group"
-                                >
-                                    <label for="edit-tipo">Tipo</label>
-                                    <div class="categoria-input-wrapper">
-                                        <input
-                                            type="text"
-                                            id="edit-tipo"
-                                            name="tipo"
-                                            placeholder="Ex: Depósito, Saque, Rendimento..."
-                                        />
-                                        <button
-                                            type="button"
-                                            class="ia-suggest-btn"
-                                            onclick="suggestSavingsEditTypeSimple()"
-                                            title="Sugestão com IA"
-                                        >
-                                            🤖 IA
-                                        </button>
-                                    </div>
-                                    <div class="predefined-categories">
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipo('Depósito')"
-                                            >💵 Depósito</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipo('Saque')"
-                                            >💸 Saque</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipo('Rendimento')"
-                                            >📈 Rendimento</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipo('Transferência')"
-                                            >🔄 Transferência</span
-                                        >
-                                        <!-- PIX removido -->
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipo('Aplicação')"
-                                            >💼 Aplicação</span
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-plano"
-                                        >Plano Vinculado (Opcional)</label
-                                    >
-                                    <select id="edit-plano" name="plano">
-                                        <option value="">
-                                            Nenhum plano vinculado
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group recorrencia-group"
-                                >
-                                    <div class="recorrencia-label">
-                                        <span
-                                            class="recorrencia-text"
-                                            id="edit-poupanca-recorrencia-text"
-                                            >Poupança Recorrente?</span
-                                        >
-                                        <label
-                                            class="switch-toggle"
-                                            aria-label="Alternar poupança recorrente"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                id="edit-is-recorrente"
-                                                name="is_recorrente"
-                                                onchange="toggleEditRecorrenciaFields()"
-                                                aria-labelledby="edit-poupanca-recorrencia-text"
-                                            />
-                                            <span class="slider"></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group"
-                                    id="edit-recorrencia-meses-group"
-                                    style="display: none"
-                                >
-                                    <label for="edit-recorrencia-meses"
-                                        >Duração (meses)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="edit-recorrencia-meses"
-                                        name="recorrencia_meses"
-                                        placeholder="Ex: 6, 12..."
-                                        min="1"
-                                        max="120"
-                                        value="1"
-                                    />
-                                    <div class="standardized-help-text">
-                                        A poupança será replicada a cada mês até
-                                        o prazo especificado.
-                                    </div>
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="closeEditModal()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        💾 Salvar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <!-- Botão AI Insights -->
+          <div class="ai-insights-button" onclick="openAIInsights()">
+            <ion-icon name="bulb-outline"></ion-icon>
+            <span>AI Insights</span>
+          </div>
         </div>
 
-        <!-- Modal de Confirmação de Exclusão -->
-        <div class="delete-confirm-modal-overlay" id="deleteConfirmModal">
-            <div class="delete-confirm-modal">
-                <h3>
-                    <ion-icon name="warning-outline"></ion-icon>
-                    Confirmar Exclusão
-                </h3>
-                <p>
-                    Tem certeza que deseja excluir este item? Esta ação não pode
-                    ser desfeita.
-                </p>
-                <div class="delete-confirm-actions">
+        <!-- ======================= Cartões ================== -->
+        <div class="cardBox">
+          <div class="card">
+            <div>
+              <div class="numbers">
+                <p id="totalPoupancaDisplay">R$ 0,00</p>
+              </div>
+              <div class="cardName">Total Poupado</div>
+            </div>
+            <div class="iconBx">
+              <ion-icon name="wallet-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="numbers">
+                <p id="filteredPoupancaDisplay">R$ 0,00</p>
+              </div>
+              <div class="cardName">Poupança Filtrada</div>
+            </div>
+            <div class="iconBx">
+              <ion-icon name="filter-outline"></ion-icon>
+            </div>
+          </div>
+
+          <a
+            href="Painel.html"
+            class="btn1"
+            style="margin-left: auto; align-self: flex-start; margin-top: 10px"
+            >Voltar</a
+          >
+        </div>
+
+        <!-- ================ Dashboard ================= -->
+        <section id="transaction">
+          <div class="details" style="grid-template-columns: 1fr">
+            <div class="recentOrders">
+              <div class="cardHeader">
+                <a onclick="Modal.open()" class="add-transaction-button"
+                  >+ Adicionar Poupança</a
+                >
+                <a href="#" onclick="FilterModal.open()" class="btn1"
+                  ><ion-icon name="filter-outline"></ion-icon> Filtrar</a
+                >
+              </div>
+
+              <div class="table-container">
+                <table id="data-table">
+                  <thead>
+                    <tr>
+                      <th>Descrição</th>
+                      <th>Valor</th>
+                      <th>Data</th>
+                      <th>Tipo</th>
+                      <th>Plano</th>
+                      <th>Editar</th>
+                      <th>Excluir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="footOptions">
+                <a href="#" onclick="filterClear()" class="btn1"
+                  >Limpar Filtro</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========== Modal Adicionar (Padronizado) =========  -->
+        <div class="standardized-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>💰 Adicionar à Poupança</h2>
+              <button class="standardized-modal-close" onclick="Modal.close()">
+                ×
+              </button>
+            </div>
+
+            <div class="standardized-modal-body">
+              <form onsubmit="Form.submit(event)" id="form">
+                <div class="standardized-input-group">
+                  <label for="descricao">Descrição</label>
+                  <input
+                    type="text"
+                    id="descricao"
+                    name="descricao"
+                    placeholder="Ex: Depósito mensal, Rendimento..."
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="valor">Valor (R$)</label>
+                  <input
+                    type="number"
+                    id="valor"
+                    name="valor"
+                    placeholder="0,00"
+                    step="0.01"
+                  />
+                </div>
+
+                <div class="standardized-help-text">
+                  Use o sinal (-) para saques.
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="data">Data</label>
+                  <input type="date" id="data" name="data" />
+                </div>
+
+                <div class="standardized-input-group categoria-group">
+                  <label for="tipo">Tipo de Movimentação</label>
+                  <div class="categoria-input-wrapper">
+                    <input
+                      type="text"
+                      id="tipo"
+                      name="tipo"
+                      placeholder="Ex: Depósito, Saque, Rendimento..."
+                    />
                     <button
-                        class="delete-cancel-btn"
-                        onclick="closeDeleteConfirm()"
+                      type="button"
+                      class="ia-suggest-btn"
+                      onclick="suggestSavingsTypeSimple()"
+                      title="Sugestão com IA"
                     >
-                        Cancelar
+                      🤖 IA
                     </button>
-                    <button
-                        class="delete-confirm-btn"
-                        onclick="confirmDelete()"
+                  </div>
+                  <div class="predefined-categories">
+                    <span class="category-tag" onclick="setTipo('Depósito')"
+                      >💵 Depósito</span
                     >
-                        Excluir
-                    </button>
+                    <span class="category-tag" onclick="setTipo('Saque')"
+                      >💸 Saque</span
+                    >
+                    <span class="category-tag" onclick="setTipo('Rendimento')"
+                      >📈 Rendimento</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setTipo('Transferência')"
+                      >🔄 Transferência</span
+                    >
+                    <!-- PIX removido -->
+                    <span class="category-tag" onclick="setTipo('Aplicação')"
+                      >💼 Aplicação</span
+                    >
+                  </div>
                 </div>
+
+                <div class="standardized-input-group">
+                  <label for="plano">Plano Vinculado</label>
+                  <select id="plano" name="plano">
+                    <option value="">Nenhum plano específico</option>
+                    <!-- Opções carregadas dinamicamente do banco de dados -->
+                  </select>
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                  <div class="recorrencia-label">
+                    <span
+                      class="recorrencia-text"
+                      id="poupanca-recorrencia-text"
+                      >Poupança Recorrente?</span
+                    >
+                    <label
+                      class="switch-toggle"
+                      aria-label="Alternar poupança recorrente"
+                    >
+                      <input
+                        type="checkbox"
+                        id="is_recorrente"
+                        name="is_recorrente"
+                        onchange="toggleRecorrenciaFields()"
+                        aria-labelledby="poupanca-recorrencia-text"
+                      />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div
+                  class="standardized-input-group"
+                  id="recorrencia_meses_group"
+                  style="display: none"
+                >
+                  <label for="recorrencia_meses">Duração (meses)</label>
+                  <input
+                    type="number"
+                    id="recorrencia_meses"
+                    name="recorrencia_meses"
+                    placeholder="Ex: 6, 12..."
+                    min="1"
+                    max="120"
+                    value="1"
+                  />
+                  <div class="standardized-help-text">
+                    A poupança será replicada a cada mês até o prazo
+                    especificado, no mesmo dia da data informada.
+                  </div>
+                </div>
+
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="Modal.close()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    💾 Salvar
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
 
-        <!-- ====== Scripts ======= -->
-        <script
-            type="module"
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-        ></script>
-        <script
-            nomodule
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-        ></script>
+        <!-- Toast personalizado removido - usando sistema toast padronizado -->
 
-        <!-- Supabase SDK (UMD) -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-        <!-- Supabase Initialization -->
-        <script src="../controllers/supabase-init.env"></script>
-
-        <script src="../controllers/main.js"></script>
-        <script src="../controllers/toast-system.js"></script>
-
-        <!-- Supabase Guard -->
-        <script src="../controllers/supabase-guard.env"></script>
-
-        <script src="../models/poupanca.js"></script>
-
-        <script>
-            // Logout functionality
-            document
-                .getElementById("logoutBtn")
-                ?.addEventListener("click", function () {
-                    if (typeof window.logout === "function") {
-                        window.logout();
-                    }
-                });
-
-            // Funções para toggle de campos de recorrência
-            function toggleRecorrenciaFields() {
-                const isRecorrente =
-                    document.getElementById("is_recorrente").checked;
-                const mesesGroup = document.getElementById(
-                    "recorrencia_meses_group"
-                );
-
-                if (isRecorrente) {
-                    mesesGroup.style.display = "block";
-                    // Define valor padrão se não houver
-                    const mesesInput =
-                        document.getElementById("recorrencia_meses");
-                    if (!mesesInput.value || mesesInput.value === "1") {
-                        mesesInput.value = "1";
-                    }
-                } else {
-                    mesesGroup.style.display = "none";
-                    document.getElementById("recorrencia_meses").value = "1";
-                }
-            }
-
-            function toggleEditRecorrenciaFields() {
-                const isRecorrente =
-                    document.getElementById("edit-is-recorrente").checked;
-                const mesesGroup = document.getElementById(
-                    "edit-recorrencia-meses-group"
-                );
-
-                if (isRecorrente) {
-                    mesesGroup.style.display = "block";
-                    const mesesInput = document.getElementById(
-                        "edit-recorrencia-meses"
-                    );
-                    if (!mesesInput.value || mesesInput.value === "1") {
-                        mesesInput.value = "1";
-                    }
-                } else {
-                    mesesGroup.style.display = "none";
-                    document.getElementById("edit-recorrencia-meses").value =
-                        "1";
-                }
-            }
-
-            function getSuggestedSavingsType(description) {
-                const desc = description.toLowerCase();
-                let tipo = "Depósito";
-
-                if (
-                    desc.includes("saque") ||
-                    desc.includes("retirada") ||
-                    desc.includes("retirei") ||
-                    desc.includes("levantei")
-                ) {
-                    tipo = "Saque";
-                } else if (
-                    desc.includes("rendimento") ||
-                    desc.includes("juros") ||
-                    desc.includes("rentabil") ||
-                    desc.includes("dividendo")
-                ) {
-                    tipo = "Rendimento";
-                } else if (
-                    desc.includes("transfer") ||
-                    desc.includes("pix") ||
-                    desc.includes("envio") ||
-                    desc.includes("recebi")
-                ) {
-                    tipo = "Transferência";
-                } else if (
-                    desc.includes("aplica") ||
-                    desc.includes("investi") ||
-                    desc.includes("aporte")
-                ) {
-                    tipo = "Aplicação";
-                }
-
-                return tipo;
-            }
-
-            function applySavingsTypeSuggestion(tipo, isEdit = false) {
-                if (isEdit) {
-                    if (typeof setEditTipo === "function") {
-                        setEditTipo(tipo);
-                    } else {
-                        const input = document.getElementById("edit-tipo");
-                        if (input) input.value = tipo;
-                    }
-                } else if (typeof setTipo === "function") {
-                    setTipo(tipo);
-                } else {
-                    const input = document.getElementById("tipo");
-                    if (input) input.value = tipo;
-                }
-            }
-
-            function suggestSavingsTypeSimple() {
-                const descricaoInput = document.getElementById("descricao");
-                if (!descricaoInput || !descricaoInput.value.trim()) {
-                    notifyToast(
-                        "Sugestão com IA",
-                        "Digite uma descrição primeiro para que a IA sugira o tipo de movimentação.",
-                        "warning"
-                    );
-                    descricaoInput?.focus();
-                    return;
-                }
-
-                const tipo = getSuggestedSavingsType(descricaoInput.value);
-                applySavingsTypeSuggestion(tipo, false);
-                notifyToast(
-                    "Sugestão com IA",
-                    `Sugerimos o tipo "${tipo}" para esta movimentação.`,
-                    "success",
-                    3500
-                );
-            }
-
-            function suggestSavingsEditTypeSimple() {
-                const descricaoInput = document.getElementById(
-                    "edit-description"
-                );
-                if (!descricaoInput || !descricaoInput.value.trim()) {
-                    notifyToast(
-                        "Sugestão com IA",
-                        "Informe a descrição antes de solicitar a sugestão da IA.",
-                        "warning"
-                    );
-                    descricaoInput?.focus();
-                    return;
-                }
-
-                const tipo = getSuggestedSavingsType(descricaoInput.value);
-                applySavingsTypeSuggestion(tipo, true);
-                notifyToast(
-                    "Sugestão com IA",
-                    `Sugerimos o tipo "${tipo}" para esta movimentação.",
-                    "success",
-                    3500
-                );
-            }
-
-            // Garante que as funções estão disponíveis globalmente
-            window.toggleRecorrenciaFields = toggleRecorrenciaFields;
-            window.toggleEditRecorrenciaFields = toggleEditRecorrenciaFields;
-            window.suggestSavingsTypeSimple = suggestSavingsTypeSimple;
-            window.suggestSavingsEditTypeSimple = suggestSavingsEditTypeSimple;
-
-            // Debug: Verifica se as funções foram definidas corretamente
-            console.log("🔍 Debug - Verificando funções:");
-            console.log(
-                "toggleRecorrenciaFields:",
-                typeof window.toggleRecorrenciaFields
-            );
-            console.log(
-                "toggleEditRecorrenciaFields:",
-                typeof window.toggleEditRecorrenciaFields
-            );
-        </script>
-
-        <!-- Barra de Acessibilidade -->
-        <div class="accessibility-bar">
-            <div class="accessibility-controls">
-                <button
-                    class="accessibility-btn"
-                    id="decrease-font-btn"
-                    title="Diminuir fonte (Ctrl + -)"
-                >
-                    <ion-icon name="remove-outline"></ion-icon>
-                </button>
-                <span class="font-size-display" id="font-size-display"
-                    >16px</span
-                >
-                <button
-                    class="accessibility-btn"
-                    id="increase-font-btn"
-                    title="Aumentar fonte (Ctrl + +)"
-                >
-                    <ion-icon name="add-outline"></ion-icon>
-                </button>
-                <button
-                    class="accessibility-btn"
-                    id="reset-font-btn"
-                    title="Resetar fonte (Ctrl + 0)"
-                >
-                    <ion-icon name="refresh-outline"></ion-icon>
-                </button>
-                <div class="accessibility-divider"></div>
-                <button
-                    class="accessibility-btn"
-                    id="theme-toggle-btn"
-                    title="Alternar tema (Ctrl + Shift + T)"
-                >
-                    <ion-icon name="sunny-outline"></ion-icon>
-                </button>
+        <!-- =============================  Modal do Filtro (Padronizado) ============================-->
+        <div class="standardized-modal-overlay filter-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>🔍 Filtrar Poupança</h2>
+              <button
+                class="standardized-modal-close"
+                onclick="FilterModal.close()"
+              >
+                ×
+              </button>
             </div>
+
+            <div class="standardized-modal-body">
+              <form id="filter-form" onsubmit="filterPoupanca(event)">
+                <div class="standardized-input-group">
+                  <label for="filter-descricao">Descrição</label>
+                  <input
+                    type="text"
+                    id="filter-descricao"
+                    name="descricao"
+                    placeholder="Ex: Depósito, Rendimento... (busca parcial)"
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="filter-valor">Valor (R$)</label>
+                  <input
+                    type="number"
+                    id="filter-valor"
+                    name="valor"
+                    placeholder="Ex: 500.00 (valor exato)"
+                    step="0.01"
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="filter-data">Data</label>
+                  <input type="date" id="filter-data" name="data" />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="filter-tipo">Tipo</label>
+                  <input
+                    type="text"
+                    id="filter-tipo"
+                    name="tipo"
+                    placeholder="Ex: Depósito, Saque, Rendimento..."
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="filter-recorrente">Filtrar por Recorrência</label>
+                  <select id="filter-recorrente" name="recorrente">
+                    <option value="">Todas</option>
+                    <option value="sim">Apenas Recorrentes</option>
+                    <option value="nao">Apenas Únicas</option>
+                  </select>
+                </div>
+
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="FilterModal.close()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    🔍 Filtrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
-        <!-- Injetor de Acessibilidade -->
-        <script src="../controllers/accessibility-injector.js"></script>
+        <!-- =========================== Modal de Editar (Padronizado) ============================-->
+        <div class="standardized-modal-overlay edit-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>✏️ Editar Poupança</h2>
+              <button
+                class="standardized-modal-close"
+                onclick="closeEditModal()"
+              >
+                ×
+              </button>
+            </div>
 
-        <!-- Script de Acessibilidade -->
-        <script src="../controllers/accessibility.js"></script>
-    </body>
+            <div class="standardized-modal-body">
+              <form id="edit-form" onsubmit="submitEditForm(event)">
+                <div class="standardized-input-group">
+                  <label for="edit-description">Descrição</label>
+                  <input
+                    type="text"
+                    id="edit-description"
+                    name="description"
+                    placeholder="Descrição da movimentação"
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="edit-amount">Valor (R$)</label>
+                  <input
+                    type="number"
+                    id="edit-amount"
+                    name="amount"
+                    placeholder="0,00"
+                    step="0.01"
+                  />
+                </div>
+
+                <div class="standardized-help-text">
+                  Use o sinal (-) para saques.
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="edit-date">Data</label>
+                  <input type="date" id="edit-date" name="date" />
+                </div>
+
+                <div class="standardized-input-group categoria-group">
+                  <label for="edit-tipo">Tipo</label>
+                  <div class="categoria-input-wrapper">
+                    <input
+                      type="text"
+                      id="edit-tipo"
+                      name="tipo"
+                      placeholder="Ex: Depósito, Saque, Rendimento..."
+                    />
+                    <button
+                      type="button"
+                      class="ia-suggest-btn"
+                      onclick="suggestSavingsEditTypeSimple()"
+                      title="Sugestão com IA"
+                    >
+                      🤖 IA
+                    </button>
+                  </div>
+                  <div class="predefined-categories">
+                    <span class="category-tag" onclick="setEditTipo('Depósito')"
+                      >💵 Depósito</span
+                    >
+                    <span class="category-tag" onclick="setEditTipo('Saque')"
+                      >💸 Saque</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipo('Rendimento')"
+                      >📈 Rendimento</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipo('Transferência')"
+                      >🔄 Transferência</span
+                    >
+                    <!-- PIX removido -->
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipo('Aplicação')"
+                      >💼 Aplicação</span
+                    >
+                  </div>
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="edit-plano">Plano Vinculado (Opcional)</label>
+                  <select id="edit-plano" name="plano">
+                    <option value="">Nenhum plano vinculado</option>
+                  </select>
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                  <div class="recorrencia-label">
+                    <span
+                      class="recorrencia-text"
+                      id="edit-poupanca-recorrencia-text"
+                      >Poupança Recorrente?</span
+                    >
+                    <label
+                      class="switch-toggle"
+                      aria-label="Alternar poupança recorrente"
+                    >
+                      <input
+                        type="checkbox"
+                        id="edit-is-recorrente"
+                        name="is_recorrente"
+                        onchange="toggleEditRecorrenciaFields()"
+                        aria-labelledby="edit-poupanca-recorrencia-text"
+                      />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div
+                  class="standardized-input-group"
+                  id="edit-recorrencia-meses-group"
+                  style="display: none"
+                >
+                  <label for="edit-recorrencia-meses">Duração (meses)</label>
+                  <input
+                    type="number"
+                    id="edit-recorrencia-meses"
+                    name="recorrencia_meses"
+                    placeholder="Ex: 6, 12..."
+                    min="1"
+                    max="120"
+                    value="1"
+                  />
+                  <div class="standardized-help-text">
+                    A poupança será replicada a cada mês até o prazo
+                    especificado.
+                  </div>
+                </div>
+
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="closeEditModal()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    💾 Salvar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="delete-confirm-modal-overlay" id="deleteConfirmModal">
+      <div class="delete-confirm-modal">
+        <h3>
+          <ion-icon name="warning-outline"></ion-icon>
+          Confirmar Exclusão
+        </h3>
+        <p>
+          Tem certeza que deseja excluir este item? Esta ação não pode ser
+          desfeita.
+        </p>
+        <div class="delete-confirm-actions">
+          <button class="delete-cancel-btn" onclick="closeDeleteConfirm()">
+            Cancelar
+          </button>
+          <button class="delete-confirm-btn" onclick="confirmDelete()">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Scripts ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Supabase Initialization -->
+    <script src="../controllers/supabase-init.env"></script>
+
+    <script src="../controllers/main.js"></script>
+    <script src="../controllers/toast-system.js"></script>
+
+    <!-- Supabase Guard -->
+    <script src="../controllers/supabase-guard.env"></script>
+
+    <script src="../models/poupanca.js"></script>
+
+    <script>
+      // Logout functionality
+      document
+          .getElementById("logoutBtn")
+          ?.addEventListener("click", function () {
+              if (typeof window.logout === "function") {
+                  window.logout();
+              }
+          });
+
+      // Funções para toggle de campos de recorrência
+      function toggleRecorrenciaFields() {
+          const isRecorrente =
+              document.getElementById("is_recorrente").checked;
+          const mesesGroup = document.getElementById(
+              "recorrencia_meses_group"
+          );
+
+          if (isRecorrente) {
+              mesesGroup.style.display = "block";
+              // Define valor padrão se não houver
+              const mesesInput =
+                  document.getElementById("recorrencia_meses");
+              if (!mesesInput.value || mesesInput.value === "1") {
+                  mesesInput.value = "1";
+              }
+          } else {
+              mesesGroup.style.display = "none";
+              document.getElementById("recorrencia_meses").value = "1";
+          }
+      }
+
+      function toggleEditRecorrenciaFields() {
+          const isRecorrente =
+              document.getElementById("edit-is-recorrente").checked;
+          const mesesGroup = document.getElementById(
+              "edit-recorrencia-meses-group"
+          );
+
+          if (isRecorrente) {
+              mesesGroup.style.display = "block";
+              const mesesInput = document.getElementById(
+                  "edit-recorrencia-meses"
+              );
+              if (!mesesInput.value || mesesInput.value === "1") {
+                  mesesInput.value = "1";
+              }
+          } else {
+              mesesGroup.style.display = "none";
+              document.getElementById("edit-recorrencia-meses").value =
+                  "1";
+          }
+      }
+
+      function getSuggestedSavingsType(description) {
+          const desc = description.toLowerCase();
+          let tipo = "Depósito";
+
+          if (
+              desc.includes("saque") ||
+              desc.includes("retirada") ||
+              desc.includes("retirei") ||
+              desc.includes("levantei")
+          ) {
+              tipo = "Saque";
+          } else if (
+              desc.includes("rendimento") ||
+              desc.includes("juros") ||
+              desc.includes("rentabil") ||
+              desc.includes("dividendo")
+          ) {
+              tipo = "Rendimento";
+          } else if (
+              desc.includes("transfer") ||
+              desc.includes("pix") ||
+              desc.includes("envio") ||
+              desc.includes("recebi")
+          ) {
+              tipo = "Transferência";
+          } else if (
+              desc.includes("aplica") ||
+              desc.includes("investi") ||
+              desc.includes("aporte")
+          ) {
+              tipo = "Aplicação";
+          }
+
+          return tipo;
+      }
+
+      function applySavingsTypeSuggestion(tipo, isEdit = false) {
+          if (isEdit) {
+              if (typeof setEditTipo === "function") {
+                  setEditTipo(tipo);
+              } else {
+                  const input = document.getElementById("edit-tipo");
+                  if (input) input.value = tipo;
+              }
+          } else if (typeof setTipo === "function") {
+              setTipo(tipo);
+          } else {
+              const input = document.getElementById("tipo");
+              if (input) input.value = tipo;
+          }
+      }
+
+      function suggestSavingsTypeSimple() {
+          const descricaoInput = document.getElementById("descricao");
+          if (!descricaoInput || !descricaoInput.value.trim()) {
+              notifyToast(
+                  "Sugestão com IA",
+                  "Digite uma descrição primeiro para que a IA sugira o tipo de movimentação.",
+                  "warning"
+              );
+              descricaoInput?.focus();
+              return;
+          }
+
+          const tipo = getSuggestedSavingsType(descricaoInput.value);
+          applySavingsTypeSuggestion(tipo, false);
+          notifyToast(
+              "Sugestão com IA",
+              `Sugerimos o tipo "${tipo}" para esta movimentação.`,
+              "success",
+              3500
+          );
+      }
+
+      function suggestSavingsEditTypeSimple() {
+          const descricaoInput = document.getElementById(
+              "edit-description"
+          );
+          if (!descricaoInput || !descricaoInput.value.trim()) {
+              notifyToast(
+                  "Sugestão com IA",
+                  "Informe a descrição antes de solicitar a sugestão da IA.",
+                  "warning"
+              );
+              descricaoInput?.focus();
+              return;
+          }
+
+          const tipo = getSuggestedSavingsType(descricaoInput.value);
+          applySavingsTypeSuggestion(tipo, true);
+          notifyToast(
+              "Sugestão com IA",
+              `Sugerimos o tipo "${tipo}" para esta movimentação.",
+              "success",
+              3500
+          );
+      }
+
+      // Garante que as funções estão disponíveis globalmente
+      window.toggleRecorrenciaFields = toggleRecorrenciaFields;
+      window.toggleEditRecorrenciaFields = toggleEditRecorrenciaFields;
+      window.suggestSavingsTypeSimple = suggestSavingsTypeSimple;
+      window.suggestSavingsEditTypeSimple = suggestSavingsEditTypeSimple;
+
+      // Debug: Verifica se as funções foram definidas corretamente
+      console.log("🔍 Debug - Verificando funções:");
+      console.log(
+          "toggleRecorrenciaFields:",
+          typeof window.toggleRecorrenciaFields
+      );
+      console.log(
+          "toggleEditRecorrenciaFields:",
+          typeof window.toggleEditRecorrenciaFields
+      );
+    </script>
+
+    <!-- Barra de Acessibilidade -->
+    <div class="accessibility-bar">
+      <div class="accessibility-controls">
+        <button
+          class="accessibility-btn"
+          id="decrease-font-btn"
+          title="Diminuir fonte (Ctrl + -)"
+        >
+          <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <span class="font-size-display" id="font-size-display">16px</span>
+        <button
+          class="accessibility-btn"
+          id="increase-font-btn"
+          title="Aumentar fonte (Ctrl + +)"
+        >
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+        <button
+          class="accessibility-btn"
+          id="reset-font-btn"
+          title="Resetar fonte (Ctrl + 0)"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+        <div class="accessibility-divider"></div>
+        <button
+          class="accessibility-btn"
+          id="theme-toggle-btn"
+          title="Alternar tema (Ctrl + Shift + T)"
+        >
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Injetor de Acessibilidade -->
+    <script src="../controllers/accessibility-injector.js"></script>
+
+    <!-- Script de Acessibilidade -->
+    <script src="../controllers/accessibility.js"></script>
+  </body>
 </html>

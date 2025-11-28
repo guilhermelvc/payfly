@@ -428,7 +428,7 @@ class AppController {
   async logout() {
     try {
       await window.supabase.auth.signOut();
-      window.location.href = "../views/Login.html";
+      window.location.href = "../index.html";
     } catch (error) {
       console.error("❌ Erro no logout:", error);
     }

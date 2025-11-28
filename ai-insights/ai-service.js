@@ -19,6 +19,7 @@ class GeminiAIService {
     // Quota tracking
     this.quotaExceeded = false;
     this.quotaResetTime = null;
+    s;
 
     // Contador de requisições para detecção de rate limit
     this.requestCount = 0;
