@@ -4,7 +4,7 @@
 
 class GeminiAIService {
   constructor() {
-    this.apiKey = "AIzaSyDzIzS9QiDNTAl9fSSYPLXPh5UgM2QKRrQ";
+    this.apiKey = "AIzaSyAngOdHXtk0NCH6EfnTZlOnF7_mcuil8Rg";
     // Usar gemini-2.5-flash (confirmado disponível e testado)
     this.baseUrl =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
