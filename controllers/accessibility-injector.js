@@ -19,6 +19,11 @@
       }
     }
 
+    // Verifica se estamos nas páginas de login ou cadastro
+    const path = window.location.pathname.toLowerCase();
+    const isAuthPage =
+      path.endsWith("/login.html") || path.endsWith("/cadastro.html");
+
     // HTML da barra de acessibilidade
     const accessibilityBarHTML = `
         <div class="accessibility-bar" id="accessibility-bar-injected">
@@ -54,14 +59,18 @@
                 >
                     <ion-icon name="refresh-outline"></ion-icon>
                 </button>
-                <div class="accessibility-divider"></div>
+                ${
+                  isAuthPage
+                    ? ""
+                    : `<div class="accessibility-divider"></div>
                 <button
-                    class="accessibility-btn"
-                    id="theme-toggle-btn"
-                    title="Alternar tema (Ctrl + Shift + T)"
+                  class="accessibility-btn"
+                  id="theme-toggle-btn"
+                  title="Alternar tema (Ctrl + Shift + T)"
                 >
-                    <ion-icon name="moon-outline"></ion-icon>
-                </button>
+                  <ion-icon name="moon-outline"></ion-icon>
+                </button>`
+                }
             </div>
         </div>
     `;

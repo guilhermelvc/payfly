@@ -69,6 +69,12 @@
             background: #ffffff !important;
             background-color: #ffffff !important;
         }
+
+        /* Apenas na página de Despesas: valores em vermelho */
+        #data-table tbody td.despesa-valor-cell {
+            color: #ff4d4f !important;
+            font-weight: 600 !important;
+        }
     </style>
     
     <!-- Sistema de estilos de tabela com MutationObserver -->
@@ -93,7 +99,15 @@
         }
         
         function cleanTableStyles() {
-            document.querySelectorAll('tbody tr').forEach(applyRowStyles);
+            document.querySelectorAll('tbody tr').forEach(row => {
+                applyRowStyles(row);
+                // Garante que a coluna de valor permaneça vermelha
+                const valorCell = row.querySelector('td.despesa-valor-cell');
+                if (valorCell) {
+                    valorCell.style.setProperty('color', '#ff4d4f', 'important');
+                    valorCell.style.setProperty('font-weight', '600', 'important');
+                }
+            });
         }
         
         // Observa mudanças na tabela para aplicar estilos em novas linhas

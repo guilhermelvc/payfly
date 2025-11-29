@@ -203,6 +203,7 @@ function addDespesaToTable(despesa, despesaId) {
   descricaoCell.textContent = despesa.descricao || "";
   const valorCell = newRow.insertCell(1);
   valorCell.textContent = formatCurrency(despesa.valor || 0);
+  valorCell.classList.add("despesa-valor-cell");
   const dataCell = newRow.insertCell(2);
   dataCell.textContent = formatarData(despesa.data);
   const categoriaCell = newRow.insertCell(3);
