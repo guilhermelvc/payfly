@@ -16,7 +16,6 @@ function getBrandColor(key, fallback) {
   return selected;
 }
 // ================ PDF Generator ================
-console.log("📄 PDF Generator carregado");
 
 // Brand palette aligned with the web experience
 var BRAND_COLORS = (function () {
@@ -143,12 +142,6 @@ window.getSemesterRange = window.getSemesterRange || buildSemesterRange;
 
 async function generateDashboardPDF() {
   try {
-    console.log("📄 Iniciando geração de PDF do dashboard...");
-    console.log("🔍 Verificando bibliotecas:");
-    console.log("- window.jspdf:", typeof window.jspdf);
-    console.log("- html2canvas:", typeof html2canvas);
-    console.log("- dashboardData:", typeof dashboardData);
-
     // Verifica se as bibliotecas estão carregadas
     if (typeof window.jspdf === "undefined") {
       const errorMsg = "jsPDF não carregado. Verifique a conexão com internet.";
@@ -178,7 +171,6 @@ async function generateDashboardPDF() {
 
     // Obtém informações do usuário
     const userInfo = await getCurrentUserInfo();
-    console.log("👤 Informações do usuário:", userInfo);
 
     // Cria nova instância do jsPDF
     const { jsPDF } = window.jspdf;
@@ -237,7 +229,6 @@ async function generateDashboardPDF() {
     }.pdf`;
     pdf.save(fileName);
 
-    console.log("✅ PDF gerado com sucesso!");
     if (typeof showSuccessToast === "function") {
       showSuccessToast("Sucesso!", "Relatório PDF gerado com sucesso!", 3000);
     }
@@ -464,7 +455,6 @@ async function drawPayFlyLogo(pdf, centerX, centerY) {
       undefined,
       "FAST"
     );
-    console.log("✅ Logo PayFly adicionada ao PDF");
     return drawHeight;
   } catch (error) {
     console.warn(
@@ -500,7 +490,6 @@ async function getPayFlyLogoDataUrl({ grayscale = false } = {}) {
       throw new Error("Logo asset nao disponivel");
     }
     const { blob, sourceUrl } = asset;
-    console.log("📁 Caminho da logo resolvido:", sourceUrl);
 
     // Se for SVG, rasteriza em alta resolucao via canvas antes de gerar o PNG
     const isSvg =
@@ -673,8 +662,6 @@ function loadImage(src) {
 }
 
 function drawFallbackLogo(pdf, centerX, centerY) {
-  console.log("🔄 Usando logo fallback geométrica em verde");
-
   try {
     const brandPrimary = getBrandColor("primary");
     const brandDark = getBrandColor("dark", { r: 24, g: 61, b: 61 });
@@ -704,8 +691,6 @@ function drawFallbackLogo(pdf, centerX, centerY) {
     pdf.setTextColor(255, 255, 255);
     pdf.setFontSize(16);
     pdf.text("$", centerX, centerY + 2, { align: "center" });
-
-    console.log("✅ Logo fallback verde desenhada com sucesso");
 
     // Restaurar estado anterior
     pdf.setDrawColor(currentDrawColor);
@@ -770,21 +755,21 @@ async function generatePeriodPage(
 
   pdf.setTextColor(40, 167, 69); // Verde
   pdf.text(
-    "Entradas: " + formatCurrency(periodData.receitas),
+    "Entradas: " + formatCurrencyPDF(periodData.receitas),
     margin + 10,
     currentY
   );
 
   pdf.setTextColor(220, 53, 69); // Vermelho
   pdf.text(
-    "Saidas: " + formatCurrency(periodData.despesas),
+    "Saidas: " + formatCurrencyPDF(periodData.despesas),
     margin + 70,
     currentY
   );
 
   pdf.setTextColor(brandPrimary.r, brandPrimary.g, brandPrimary.b);
   pdf.text(
-    "Saldo: " + formatCurrency(periodData.receitas - periodData.despesas),
+    "Saldo: " + formatCurrencyPDF(periodData.receitas - periodData.despesas),
     margin + 120,
     currentY
   );
@@ -843,7 +828,7 @@ async function generatePeriodPage(
 
         pdf.setTextColor(0, 0, 0);
         pdf.text(categoria, margin + 5, currentY);
-        pdf.text(formatCurrency(valor), pageWidth - margin - 30, currentY, {
+        pdf.text(formatCurrencyPDF(valor), pageWidth - margin - 30, currentY, {
           align: "right",
         });
         currentY += 8;
@@ -1044,27 +1029,18 @@ async function addFooterToAllPages(pdf) {
   }
 }
 
-// Formata valor monetário
-function formatCurrency(value) {
+// Formata valor monetário usando helper global quando disponível
+// Usa nome diferente para evitar conflito com outras definições globais
+const formatCurrencyPDF = (value) => {
   const numericValue = Number(value || 0);
-  if (window?.formatCurrencyBRL) {
+  if (window.formatCurrencyBRL) {
     return window.formatCurrencyBRL(numericValue);
   }
-
-  if (!Number.isFinite(numericValue)) {
-    return window?.formatCurrencyBRL
-      ? window.formatCurrencyBRL(0)
-      : new Intl.NumberFormat("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        }).format(0);
-  }
-
-  return numericValue.toLocaleString("pt-BR", {
+  return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  });
-}
+  }).format(Number.isFinite(numericValue) ? numericValue : 0);
+};
 
 // ================ Sistema de Loading do PDF ================
 
@@ -1147,5 +1123,3 @@ function showPDFLoading(show) {
 
 // Torna a função global
 window.generateDashboardPDF = generateDashboardPDF;
-
-console.log("✅ PDF Generator inicializado com sucesso!");

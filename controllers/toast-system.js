@@ -457,5 +457,3 @@ if (document.readyState === "loading") {
 } else {
   ensureToastContainer();
 }
-
-console.log("🎯 Sistema de Toast Global carregado!");

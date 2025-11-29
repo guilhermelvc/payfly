@@ -18,7 +18,6 @@ let currentDespesaFilterCriteria = null;
 // Função auxiliar para reaplicar filtros após operações CRUD
 async function reloadDespesaDataRespectingFilter() {
   if (isDespesaFilterActive && currentDespesaFilterCriteria) {
-    console.log("🔄 Reaplicando filtro de despesas após operação CRUD");
     await applyStoredDespesaFilter();
   } else {
     await loadDespesasFromSupabase();
@@ -66,10 +65,6 @@ async function applyStoredDespesaFilter() {
 
     const el = document.getElementById("filteredDespesaDisplay");
     if (el) el.textContent = formatCurrency(totalFiltered);
-
-    console.log(
-      `🔍 Filtro de despesas reaplicado: ${rows ? rows.length : 0} resultados`
-    );
   } catch (err) {
     console.error("Erro ao reaplicar filtro de despesas:", err);
   }
@@ -109,13 +104,8 @@ async function loadDespesasFromSupabase() {
   try {
     // Se há um filtro ativo, não recarrega os dados para não sobrescrever os resultados filtrados
     if (isDespesaFilterActive) {
-      console.log("⚠️ FILTRO ATIVO - Bloqueando recarregamento automático");
-      console.trace("📍 Chamada bloqueada de loadDespesasFromSupabase():");
       return;
     }
-
-    console.log("📊 Carregando todas as despesas (sem filtro)");
-    console.trace("📍 Origem da chamada loadDespesasFromSupabase():");
 
     if (!window.supabase) throw new Error("Supabase não inicializado");
     const { data: userData } = await window.supabase.auth.getUser();
@@ -137,7 +127,6 @@ async function loadDespesasFromSupabase() {
       if (tbody) {
         // Remove todas as linhas do tbody
         tbody.innerHTML = "";
-        console.log("🧹 Tbody limpo completamente");
       } else {
         // Se não existe tbody, remove todas as linhas exceto thead
         const thead = table.querySelector("thead");
@@ -148,7 +137,6 @@ async function loadDespesasFromSupabase() {
             row.remove();
           }
         });
-        console.log("🧹 Linhas da tabela limpas (preservando thead)");
       }
     }
 
@@ -159,7 +147,6 @@ async function loadDespesasFromSupabase() {
       totalDespesa += Number(despesa.valor || 0);
     });
     updateDespesaDisplay();
-    console.log("📊 Todas as despesas carregadas");
   } catch (err) {
     console.error("Erro carregando despesas do Supabase", err);
   }
@@ -205,7 +192,6 @@ function addDespesaToTable(despesa, despesaId) {
   // Verifica se já existe uma linha com este ID para evitar duplicação
   const existingRow = document.getElementById(`row-${despesaId}`);
   if (existingRow) {
-    console.log(`⚠️ Linha row-${despesaId} já existe, removendo duplicata`);
     existingRow.remove();
   }
 
@@ -433,10 +419,6 @@ async function saveDespesa(descricao, valor, data, categoria = null) {
         .from("despesas")
         .insert(despesasParaCriar);
       if (error) throw error;
-
-      console.log(
-        `✅ ${recorrenciaMeses} despesas recorrentes criadas com sucesso!`
-      );
     } else {
       // Cria despesa única (sem recorrência)
       const despesaData = {
@@ -454,8 +436,6 @@ async function saveDespesa(descricao, valor, data, categoria = null) {
         .from("despesas")
         .insert([despesaData]);
       if (error) throw error;
-
-      console.log("✅ Despesa única criada com sucesso!");
     }
 
     await loadDespesasFromSupabase();
@@ -503,7 +483,6 @@ if (formEl) formEl.addEventListener("submit", submitForm);
 // Chama a função centralizada do main.js
 (function waitForUpdateUserInfo() {
   if (window.updateUserInfo) {
-    console.debug("despesa.js: Inicializando dados do usuário");
     window.updateUserInfo();
 
     // Refresh único após inicialização completa
@@ -511,13 +490,11 @@ if (formEl) formEl.addEventListener("submit", submitForm);
       window.despesaRefreshExecuted = true;
       setTimeout(() => {
         if (window.updateUserInfo && document.readyState === "complete") {
-          console.debug("despesa.js: Sincronização final de dados");
           window.updateUserInfo();
         }
       }, 1800);
     }
   } else {
-    console.debug("despesa.js: Aguardando inicialização...");
     setTimeout(waitForUpdateUserInfo, 120);
   }
 })();
@@ -533,7 +510,6 @@ const FilterModal = {
 
 async function filterDespesas(event) {
   event.preventDefault();
-  console.log("🔍 INICIANDO FILTRO DE DESPESAS");
 
   try {
     if (!window.supabase) throw new Error("Supabase não inicializado");
@@ -550,14 +526,6 @@ async function filterDespesas(event) {
     const recorrenteInput = document
       .getElementById("filter-recorrente")
       .value.trim();
-
-    console.log("📋 Valores capturados:", {
-      descricaoInput,
-      valorInput,
-      dataInput,
-      categoriaInput,
-      recorrenteInput,
-    });
 
     const { data: userData } = await window.supabase.auth.getUser();
     const user = userData?.user;
@@ -641,13 +609,6 @@ async function filterDespesas(event) {
     isDespesaFilterActive = true;
 
     FilterModal.close();
-
-    // Log para debug
-    console.log("🔍 Filtro aplicado com sucesso!");
-    console.log(
-      `📋 Critérios: Descrição="${descricaoInput}", Valor="${valorInput}", Data="${dataInput}"`
-    );
-    console.log(`📊 Resultados encontrados: ${rows ? rows.length : 0}`);
   } catch (err) {
     console.error("❌ Erro ao filtrar despesas:", err);
     showErrorToast(
@@ -658,8 +619,6 @@ async function filterDespesas(event) {
 }
 
 function filterClear() {
-  console.log("🧹 INICIANDO LIMPEZA DE FILTROS");
-
   // Limpa os campos do formulário
   const d = document.getElementById("filter-descricao");
   if (d) d.value = "";
@@ -679,14 +638,12 @@ function filterClear() {
     const tbody = table.querySelector("tbody");
     if (tbody) {
       tbody.innerHTML = "";
-      console.log("🧹 Tbody limpo via innerHTML");
     } else {
       // Remove TODAS as linhas exceto a primeira (header)
       const allRows = Array.from(table.rows);
       for (let i = allRows.length - 1; i > 0; i--) {
         allRows[i].remove();
       }
-      console.log("🧹 Todas as linhas de dados removidas");
     }
   }
 
@@ -701,8 +658,6 @@ function filterClear() {
   // Reseta o display do total filtrado
   const el = document.getElementById("filteredDespesaDisplay");
   if (el) el.textContent = formatCurrency(0);
-
-  console.log("🔄 Filtros limpos - tabela completamente resetada");
 }
 
 // Funcionalidades de Boleto removidas

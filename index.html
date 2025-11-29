@@ -1,740 +1,698 @@
 <!DOCTYPE html>
 <html lang="pt-br" style="scroll-behavior: smooth">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PayFly</title>
-        <!-- ======= Estilos ====== -->
-        <link rel="icon" type="image/png" href="views/imgs/Favicon.png" />
-        <link rel="stylesheet" href="views/css/index.css" />
-        <link rel="stylesheet" href="assets/css/accessibility.css" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
-            rel="stylesheet"
-        />
-    </head>
-    <body class="light-theme">
-        <!-- =============== Barra de Acessibilidade Flutuante =============== -->
-        <div class="accessibility-bar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PayFly</title>
+    <!-- ======= Estilos ====== -->
+    <link rel="icon" type="image/png" href="views/imgs/Favicon.png" />
+    <link rel="stylesheet" href="views/css/index.css" />
+    <link rel="stylesheet" href="assets/css/accessibility.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="light-theme">
+    <!-- =============== Barra de Acessibilidade Flutuante =============== -->
+    <div class="accessibility-bar">
+      <button
+        class="accessibility-toggle-btn"
+        id="accessibility-toggle"
+        title="Acessibilidade"
+      >
+        <ion-icon name="accessibility-outline"></ion-icon>
+      </button>
+      <div class="accessibility-controls" id="accessibility-controls">
+        <button
+          class="accessibility-btn"
+          id="decrease-font-btn"
+          title="Diminuir fonte (Ctrl + -)"
+        >
+          <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <span class="font-size-display" id="font-size-display">16px</span>
+        <button
+          class="accessibility-btn"
+          id="increase-font-btn"
+          title="Aumentar fonte (Ctrl + +)"
+        >
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+        <button
+          class="accessibility-btn"
+          id="reset-font-btn"
+          title="Resetar fonte (Ctrl + 0)"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <div class="container">
+      <!-- Garante que todos os itens da barra do cabeçalho fiquem contidos dentro dele -->
+      <div class="fixed-header" id="fixed-header">
+        <!-- Define os itens compondo o cabeçalho -->
+
+        <!-- Icone do menu, importado com ion-icon -->
+        <button
+          class="menu-icon"
+          onclick="toggleMenu()"
+          aria-label="Abrir menu de navegação"
+          aria-controls="nav-links"
+          aria-expanded="false"
+          type="button"
+        >
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+        <!-- Textos do Menu -->
+        <nav class="nav-links" id="nav-links">
+          <a href="#" class="nav-link">Início</a>
+          <a href="#quem-somos" class="nav-link">Quem somos</a>
+          <a href="#contato" class="nav-link">Contato</a>
+          <!-- Avatar do usuário ou botão de login -->
+          <div class="user-menu" id="userMenu">
             <button
-                class="accessibility-toggle-btn"
-                id="accessibility-toggle"
-                title="Acessibilidade"
+              class="user-avatar"
+              id="userAvatar"
+              title="Clique para acessar a conta"
             >
-                <ion-icon name="accessibility-outline"></ion-icon>
+              EN
             </button>
-            <div class="accessibility-controls" id="accessibility-controls">
-                <button
-                    class="accessibility-btn"
-                    id="decrease-font-btn"
-                    title="Diminuir fonte (Ctrl + -)"
-                >
-                    <ion-icon name="remove-outline"></ion-icon>
-                </button>
-                <span class="font-size-display" id="font-size-display"
-                    >16px</span
-                >
-                <button
-                    class="accessibility-btn"
-                    id="increase-font-btn"
-                    title="Aumentar fonte (Ctrl + +)"
-                >
-                    <ion-icon name="add-outline"></ion-icon>
-                </button>
-                <button
-                    class="accessibility-btn"
-                    id="reset-font-btn"
-                    title="Resetar fonte (Ctrl + 0)"
-                >
-                    <ion-icon name="refresh-outline"></ion-icon>
-                </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <!-- Scripts relacionados ao cabeçalho -->
+    <script>
+      const navLinks = document.getElementById("nav-links");
+      const fixedHeader = document.getElementById("fixed-header");
+      const menuToggleButton = document.querySelector(".menu-icon");
+
+      function toggleMenu() {
+        if (!navLinks || !fixedHeader || !menuToggleButton) {
+          return;
+        }
+
+        const isOpen = navLinks.classList.toggle("open");
+        fixedHeader.classList.toggle("menu-open", isOpen);
+        menuToggleButton.setAttribute(
+          "aria-expanded",
+          isOpen ? "true" : "false"
+        );
+        menuToggleButton.classList.toggle("is-open", isOpen);
+      }
+
+      function syncHeaderHeight() {
+        if (!fixedHeader) {
+          return 0;
+        }
+        const headerHeight = fixedHeader.offsetHeight;
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${headerHeight}px`
+        );
+        return headerHeight;
+      }
+
+      function scrollToSection(targetSelector, pushHistory = true) {
+        if (!targetSelector || targetSelector === "#") {
+          return;
+        }
+
+        const targetElement = document.querySelector(targetSelector);
+        if (!targetElement) {
+          return;
+        }
+
+        const headerHeight = syncHeaderHeight();
+        const offsetGap = window.innerWidth > 1024 ? -12 : -6;
+        const targetTop =
+          targetElement.getBoundingClientRect().top +
+          window.scrollY -
+          headerHeight -
+          offsetGap;
+
+        window.scrollTo({
+          top: Math.max(targetTop, 0),
+          behavior: "smooth",
+        });
+
+        if (pushHistory) {
+          history.replaceState(null, "", targetSelector);
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        if (navLinks && fixedHeader && menuToggleButton) {
+          if (window.innerWidth > 900) {
+            navLinks.classList.remove("open");
+            fixedHeader.classList.remove("menu-open");
+            menuToggleButton.setAttribute("aria-expanded", "false");
+            menuToggleButton.classList.remove("is-open");
+          }
+        }
+
+        syncHeaderHeight();
+      });
+
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const targetSelector = link.getAttribute("href");
+          if (
+            targetSelector &&
+            targetSelector.startsWith("#") &&
+            targetSelector.length > 1
+          ) {
+            event.preventDefault();
+            scrollToSection(targetSelector);
+          }
+
+          if (!navLinks || window.innerWidth > 900) {
+            return;
+          }
+
+          if (navLinks.classList.contains("open")) {
+            toggleMenu();
+          }
+        });
+      });
+
+      syncHeaderHeight();
+
+      window.addEventListener("load", () => {
+        syncHeaderHeight();
+
+        if (window.location.hash) {
+          setTimeout(() => {
+            scrollToSection(window.location.hash, false);
+          }, 180);
+        }
+      });
+
+      window.addEventListener("hashchange", () => {
+        scrollToSection(window.location.hash, false);
+      });
+
+      // Avatar dinâmico - mostra inicial do usuário ou botão entrar/cadastrar
+      const userAvatar = document.getElementById("userAvatar");
+
+      async function updateUserAvatar() {
+        const isMobileViewport = window.innerWidth <= 768;
+        try {
+          // Verificar sessão atual no Supabase
+          if (window.supabase && window.supabase.auth) {
+            const {
+              data: { session },
+            } = await window.supabase.auth.getSession();
+
+            if (session && session.user) {
+              // Usuário logado - mostrar inicial
+              const email = session.user.email || "";
+              const userName =
+                session.user.user_metadata?.full_name ||
+                session.user.user_metadata?.name ||
+                email.split("@")[0];
+              const initial = userName.charAt(0).toUpperCase();
+
+              userAvatar.textContent = initial;
+              userAvatar.classList.add("logged-in");
+              userAvatar.classList.remove("login-button");
+              userAvatar.style.fontSize = isMobileViewport ? "14px" : "18px";
+              userAvatar.style.padding = "0";
+              const avatarSize = isMobileViewport ? 40 : 45;
+              userAvatar.style.width = `${avatarSize}px`;
+              userAvatar.style.height = `${avatarSize}px`;
+              userAvatar.style.borderRadius = "50%";
+              userAvatar.title = `Olá, ${userName}! Clique para acessar sua conta`;
+              userAvatar.onclick = () =>
+                (window.location.href = "views/Painel.html");
+              return;
+            }
+          } else {
+          }
+        } catch (error) {
+          console.error("❌ Erro ao verificar sessão:", error.message);
+        }
+
+        // Usuário não logado - mostrar botão "Entrar / Cadastrar"
+        userAvatar.textContent = "Entrar / Cadastrar";
+        userAvatar.classList.remove("logged-in");
+        userAvatar.classList.add("login-button");
+        userAvatar.style.fontSize = isMobileViewport ? "12px" : "14px";
+        userAvatar.style.padding = isMobileViewport ? "8px 16px" : "10px 20px";
+        userAvatar.style.width = "auto";
+        userAvatar.style.height = "auto";
+        userAvatar.style.borderRadius = "5px";
+        userAvatar.title = "Clique para fazer login ou cadastro";
+        userAvatar.onclick = () => (window.location.href = "views/Login.html");
+      }
+
+      // Executar ao carregar a página com pequeno delay para garantir que Supabase carregou
+      setTimeout(() => {
+        updateUserAvatar();
+      }, 500);
+
+      // Atualizar avatar quando houver mudanças na autenticação
+      if (window.supabase && window.supabase.auth) {
+        window.supabase.auth.onAuthStateChange((event, session) => {
+          updateUserAvatar();
+        });
+      }
+
+      // Também verificar periodicamente (a cada 3 segundos)
+      setInterval(() => {
+        updateUserAvatar();
+      }, 3000);
+
+      window.addEventListener("resize", () => {
+        updateUserAvatar();
+      });
+    </script>
+
+    <!-- Primeira seção da pagina -->
+    <div class="central-div">
+      <div class="ellipse"></div>
+      <div class="payfly-section">
+        <h1 class="payfly-title">PayFly</h1>
+        <p class="payfly-subtitle">
+          Sistema de Gestão Financeira Pessoal com IA
+        </p>
+        <img
+          class="central-image"
+          src="views/imgs/pages/libelula.svg"
+          alt="Imagem Central"
+        />
+        <p class="payfly-tagline">
+          Transforme sua relação com dinheiro através de inteligência
+          artificial, arquitetura moderna e experiência intuitiva
+        </p>
+      </div>
+      <div class="links-and-logo"></div>
+    </div>
+
+    <!-- Seção "Quem Somos?" da pagina -->
+    <div id="quem-somos" class="quem-somos-section">
+      <div class="quem-somos-content">
+        <div class="quem-somos-text">
+          <h2>Quem Somos</h2>
+          <p>
+            O PayFly é o sistema de gestão financeira que usa inteligência
+            artificial para traduzir números confusos em planos simples.
+            Enquanto você cuida do dia a dia, nossa IA monitora entradas e
+            saídas, identifica riscos antecipadamente e sugere oportunidades
+            para turbinar suas metas.
+          </p>
+          <ul class="quem-somos-highlights">
+            <li>
+              <strong>Insights de IA em segundos:</strong>
+              perguntas em linguagem natural geram análises e recomendações
+              automáticas.
+            </li>
+            <li>
+              <strong>Previsões que evitam surpresas:</strong>
+              compare cenários, entenda tendências e ajuste o caixa antes de
+              qualquer aperto.
+            </li>
+            <li>
+              <strong>Assistente financeiro 24/7:</strong>
+              recebe insights personalizados, metas guiadas e relatórios prontos
+              para compartilhar.
+            </li>
+          </ul>
+          <div class="quem-somos-metrics">
+            <div class="metric-card">
+              <span class="metric-value">+89%</span>
+              <span class="metric-label"
+                >dos usuários relatam clareza imediata sobre o orçamento</span
+              >
             </div>
-        </div>
-
-        <!-- Cabeçalho -->
-        <div class="container">
-            <!-- Garante que todos os itens da barra do cabeçalho fiquem contidos dentro dele -->
-            <div class="fixed-header" id="fixed-header">
-                <!-- Define os itens compondo o cabeçalho -->
-
-                <!-- Icone do menu, importado com ion-icon -->
-                <button
-                    class="menu-icon"
-                    onclick="toggleMenu()"
-                    aria-label="Abrir menu de navegação"
-                    aria-controls="nav-links"
-                    aria-expanded="false"
-                    type="button"
-                >
-                    <ion-icon name="menu-outline"></ion-icon>
-                </button>
-                <!-- Textos do Menu -->
-                <nav class="nav-links" id="nav-links">
-                    <a href="#" class="nav-link">Início</a>
-                    <a href="#quem-somos" class="nav-link">Quem somos</a>
-                    <a href="#contato" class="nav-link">Contato</a>
-                    <!-- Avatar do usuário ou botão de login -->
-                    <div class="user-menu" id="userMenu">
-                        <button
-                            class="user-avatar"
-                            id="userAvatar"
-                            title="Clique para acessar a conta"
-                        >
-                            EN
-                        </button>
-                    </div>
-                </nav>
+            <div class="metric-card">
+              <span class="metric-value">+90%</span>
+              <span class="metric-label"
+                >de precisão nas sugestões automáticas</span
+              >
             </div>
+            <div class="metric-card">
+              <span class="metric-value">30 min</span>
+              <span class="metric-label"
+                >bastam para ter metas e alertas ajustados à sua rotina</span
+              >
+            </div>
+          </div>
         </div>
-        <!-- Scripts relacionados ao cabeçalho -->
-        <script>
-            const navLinks = document.getElementById("nav-links");
-            const fixedHeader = document.getElementById("fixed-header");
-            const menuToggleButton = document.querySelector(".menu-icon");
+        <div class="dashboard-slider">
+          <figure class="dashboard-shot light active">
+            <img
+              src="views/imgs/pages/dashboard_light.png"
+              alt="Dashboard PayFly com visual claro mostrando cards financeiros e gráficos"
+              loading="lazy"
+            />
+            <figcaption>
+              Tema claro evidencia resultados por trimestre e os próximos passos
+              sugeridos pela IA.
+            </figcaption>
+          </figure>
+          <figure class="dashboard-shot dark">
+            <img
+              src="views/imgs/pages/dashboard_dark.png"
+              alt="Dashboard PayFly em tema escuro destacando insights e gráficos preditivos"
+              loading="lazy"
+            />
+            <figcaption>
+              Tema escuro ideal para turnos noturnos com alertas inteligentes
+              sempre visíveis.
+            </figcaption>
+          </figure>
+          <div
+            class="dashboard-controls"
+            role="tablist"
+            aria-label="Visualizações do dashboard PayFly"
+          >
+            <button
+              type="button"
+              class="dashboard-control-btn active"
+              data-shot-index="0"
+              role="tab"
+              aria-selected="true"
+            >
+              Tema claro
+            </button>
+            <button
+              type="button"
+              class="dashboard-control-btn"
+              data-shot-index="1"
+              role="tab"
+              aria-selected="false"
+            >
+              Tema escuro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            function toggleMenu() {
-                if (!navLinks || !fixedHeader || !menuToggleButton) {
-                    return;
-                }
+    <!-- Seção do botão de cadastro -->
+    <div class="call-to-action-section">
+      <div class="call-to-action-content">
+        <h2>Se interessou? Não perca mais tempo!</h2>
+        <p>
+          Registre-se agora no aplicativo da PayFly e comece a dominar suas
+          despesas com facilidade e eficiência.
+        </p>
+        <a href="views/Cadastro.html" class="cta-button"
+          ><ion-icon name="arrow-redo-outline"></ion-icon> Cadastre-se já</a
+        >
+      </div>
+    </div>
 
-                const isOpen = navLinks.classList.toggle("open");
-                fixedHeader.classList.toggle("menu-open", isOpen);
-                menuToggleButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
-                menuToggleButton.classList.toggle("is-open", isOpen);
+    <!-- Seção de dados de contato da pagina -->
+    <div id="contato" class="contato-section">
+      <div class="testimonial-wrapper">
+        <div class="testimonial-carousel" aria-live="polite">
+          <h2>O que a comunidade diz</h2>
+          <p class="testimonial-quote">
+            "Em 30 minutos eu tinha dashboards claros e metas inteligentes para
+            minha família."
+          </p>
+          <p class="testimonial-author">- Ana Ribeiro, Analista de Marketing</p>
+          <div
+            class="testimonial-dots"
+            role="tablist"
+            aria-label="Depoimentos sobre o PayFly"
+          ></div>
+        </div>
+      </div>
+      <div class="contato-grid">
+        <h3 class="contato-title">Fale com o time PayFly</h3>
+        <div class="contato-card">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <div>
+            <p>Comunidade & Issues</p>
+            <a
+              href="https://github.com/guilhermelvc/payfly/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              >GitHub Issues</a
+            >
+          </div>
+        </div>
+        <div class="contato-card">
+          <ion-icon name="people-outline"></ion-icon>
+          <div>
+            <p>Ideias de features</p>
+            <a
+              href="https://github.com/guilhermelvc/payfly/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Discussions</a
+            >
+          </div>
+        </div>
+        <div class="contato-card">
+          <ion-icon name="mail-outline"></ion-icon>
+          <div>
+            <p>Contato direto</p>
+            <a href="mailto:contato@payfly.app">contato@payfly.app</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer-container">
+      <footer class="footer">
+        <div class="footer-column footer-brand">
+          <img
+            src="views/imgs/pages/logo2.svg"
+            alt="Logo PayFly"
+            width="180"
+            height="180"
+          />
+          <a
+            href="https://github.com/guilhermelvc/payfly"
+            class="footer-link primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ion-icon name="logo-github"></ion-icon>
+            <span>Acompanhe no GitHub</span>
+          </a>
+        </div>
+        <div class="footer-column footer-about">
+          <p>
+            PayFly une inteligência artificial e uma arquitetura moderna web
+            para transformar dados financeiros em decisões simples, seguras e
+            acessíveis.
+          </p>
+          <p>Projeto open source licenciado sob MIT.</p>
+        </div>
+        <div class="footer-column footer-developers">
+          <h3>Desenvolvedores</h3>
+          <a
+            href="https://github.com/guilhermelvc"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Guilherme Carvalho</a
+          >
+          <a
+            href="https://github.com/aMoraesBeatriz"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Beatriz Moraes</a
+          >
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      (function initDashboardShots() {
+        const shots = document.querySelectorAll(".dashboard-shot");
+        const controlsContainer = document.querySelector(".dashboard-controls");
+        const controlButtons = controlsContainer
+          ? controlsContainer.querySelectorAll(".dashboard-control-btn")
+          : [];
+
+        if (!shots.length || !controlsContainer) {
+          return;
+        }
+
+        let current = 0;
+        shots[current].classList.add("active");
+        showShot(current);
+        updateControls(current);
+
+        function showShot(index) {
+          shots.forEach((shot, idx) => {
+            shot.classList.toggle("active", idx === index);
+          });
+          const caption = shots[index].querySelector("figcaption");
+          if (caption) {
+            caption.parentNode.insertBefore(controlsContainer, caption);
+          }
+          updateControls(index);
+        }
+
+        function nextShot() {
+          current = (current + 1) % shots.length;
+          showShot(current);
+        }
+
+        const rotationDelay = 5000;
+        let rotationTimer = null;
+
+        function scheduleNext() {
+          clearTimeout(rotationTimer);
+          rotationTimer = setTimeout(() => {
+            nextShot();
+            scheduleNext();
+          }, rotationDelay);
+        }
+
+        scheduleNext();
+
+        shots.forEach((shot, index) => {
+          shot.addEventListener("mouseenter", () => {
+            clearTimeout(rotationTimer);
+            showShot(index);
+            current = index;
+          });
+          shot.addEventListener("mouseleave", () => {
+            scheduleNext();
+          });
+        });
+
+        controlButtons.forEach((button) => {
+          const targetIndex = Number(button.getAttribute("data-shot-index"));
+          button.addEventListener("click", () => {
+            if (Number.isNaN(targetIndex)) {
+              return;
             }
 
-            function syncHeaderHeight() {
-                if (!fixedHeader) {
-                    return 0;
-                }
-                const headerHeight = fixedHeader.offsetHeight;
-                document.documentElement.style.setProperty(
-                    "--header-height",
-                    `${headerHeight}px`
-                );
-                return headerHeight;
+            clearTimeout(rotationTimer);
+            current = targetIndex % shots.length;
+            if (current < 0) {
+              current += shots.length;
             }
+            showShot(current);
+            scheduleNext();
+          });
+        });
 
-            function scrollToSection(targetSelector, pushHistory = true) {
-                if (!targetSelector || targetSelector === "#") {
-                    return;
-                }
+        function updateControls(activeIndex) {
+          controlButtons.forEach((button) => {
+            const buttonIndex = Number(button.dataset.shotIndex);
+            const isActive = buttonIndex === activeIndex;
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", isActive ? "true" : "false");
+            button.setAttribute("tabindex", isActive ? "0" : "-1");
+          });
+        }
+      })();
 
-                const targetElement = document.querySelector(targetSelector);
-                if (!targetElement) {
-                    return;
-                }
+      (function initTestimonials() {
+        const testimonials = [
+          {
+            quote:
+              "Em 30 minutos eu tinha dashboards claros e metas inteligentes para minha família.",
+            author: "- Ana Ribeiro, Analista de Marketing",
+          },
+          {
+            quote:
+              "O PayFly virou meu copiloto financeiro: categorização automática e alertas em tempo real.",
+            author: "- Marcos Lima, Empreendedor",
+          },
+          {
+            quote:
+              "As projeções de investimento com IA me ajudaram a organizar a aposentadoria.",
+            author: "- Carla Souza, Planejadora Financeira",
+          },
+          {
+            quote: "Finalmente um sistema que funciona com insights precisos.",
+            author: "- João Fernandes, Product Manager",
+          },
+          {
+            quote:
+              "A arquitetura modular simplificou a integração com meu time e reduziu bugs.",
+            author: "- Beatriz Moraes, UX/UI Designer",
+          },
+          {
+            quote:
+              "Recomendo para qualquer pessoa que precise de clareza financeira rápida e sem burocracia.",
+            author: "- Guilherme Carvalho, Lead Dev",
+          },
+        ];
 
-                const headerHeight = syncHeaderHeight();
-                const offsetGap = window.innerWidth > 1024 ? -12 : -6;
-                const targetTop =
-                    targetElement.getBoundingClientRect().top +
-                    window.scrollY -
-                    headerHeight -
-                    offsetGap;
+        const quoteEl = document.querySelector(".testimonial-quote");
+        const authorEl = document.querySelector(".testimonial-author");
+        const dotsContainer = document.querySelector(".testimonial-dots");
 
-                window.scrollTo({
-                    top: Math.max(targetTop, 0),
-                    behavior: "smooth",
-                });
+        if (!quoteEl || !authorEl || !dotsContainer) {
+          return;
+        }
 
-                if (pushHistory) {
-                    history.replaceState(null, "", targetSelector);
-                }
-            }
+        let current = 0;
 
-            window.addEventListener("resize", () => {
-                if (navLinks && fixedHeader && menuToggleButton) {
-                    if (window.innerWidth > 900) {
-                        navLinks.classList.remove("open");
-                        fixedHeader.classList.remove("menu-open");
-                        menuToggleButton.setAttribute("aria-expanded", "false");
-                        menuToggleButton.classList.remove("is-open");
-                    }
-                }
+        const dots = testimonials.map((_, index) => {
+          const button = document.createElement("button");
+          button.className = "testimonial-dot";
+          button.type = "button";
+          button.setAttribute("aria-pressed", "false");
+          button.setAttribute("aria-label", `Ver depoimento ${index + 1}`);
+          button.addEventListener("click", () => {
+            current = index;
+            updateTestimonial();
+            restartInterval();
+          });
+          dotsContainer.appendChild(button);
+          return button;
+        });
 
-                syncHeaderHeight();
-            });
+        function updateTestimonial() {
+          const { quote, author } = testimonials[current];
+          quoteEl.textContent = '"' + quote + '"';
+          authorEl.textContent = author;
+          dots.forEach((dot, index) => {
+            dot.classList.toggle("active", index === current);
+            dot.setAttribute(
+              "aria-pressed",
+              index === current ? "true" : "false"
+            );
+          });
+        }
 
-            document.querySelectorAll(".nav-links a").forEach((link) => {
-                link.addEventListener("click", (event) => {
-                    const targetSelector = link.getAttribute("href");
-                    if (
-                        targetSelector &&
-                        targetSelector.startsWith("#") &&
-                        targetSelector.length > 1
-                    ) {
-                        event.preventDefault();
-                        scrollToSection(targetSelector);
-                    }
+        let intervalId = setInterval(nextTestimonial, 6000);
 
-                    if (!navLinks || window.innerWidth > 900) {
-                        return;
-                    }
+        function nextTestimonial() {
+          current = (current + 1) % testimonials.length;
+          updateTestimonial();
+        }
 
-                    if (navLinks.classList.contains("open")) {
-                        toggleMenu();
-                    }
-                });
-            });
+        function restartInterval() {
+          clearInterval(intervalId);
+          intervalId = setInterval(nextTestimonial, 6000);
+        }
 
-            syncHeaderHeight();
+        updateTestimonial();
+      })();
+    </script>
 
-            window.addEventListener("load", () => {
-                syncHeaderHeight();
+    <!-- ====== ionicons ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
 
-                if (window.location.hash) {
-                    setTimeout(() => {
-                        scrollToSection(window.location.hash, false);
-                    }, 180);
-                }
-            });
+    <!-- ====== Injetor de Acessibilidade ======= -->
+    <script src="controllers/accessibility-injector.js"></script>
 
-            window.addEventListener("hashchange", () => {
-                scrollToSection(window.location.hash, false);
-            });
-
-            // Avatar dinâmico - mostra inicial do usuário ou botão entrar/cadastrar
-            const userAvatar = document.getElementById("userAvatar");
-
-            async function updateUserAvatar() {
-                const isMobileViewport = window.innerWidth <= 768;
-                try {
-                    // Verificar sessão atual no Supabase
-                    if (window.supabase && window.supabase.auth) {
-                        const {
-                            data: { session },
-                        } = await window.supabase.auth.getSession();
-
-                        console.log(
-                            "🔍 Sessão Supabase:",
-                            session ? "ATIVO" : "INATIVO"
-                        );
-
-                        if (session && session.user) {
-                            // Usuário logado - mostrar inicial
-                            const email = session.user.email || "";
-                            const userName =
-                                session.user.user_metadata?.full_name ||
-                                session.user.user_metadata?.name ||
-                                email.split("@")[0];
-                            const initial = userName.charAt(0).toUpperCase();
-
-                            console.log("👤 Usuário encontrado:", userName);
-
-                            userAvatar.textContent = initial;
-                            userAvatar.classList.add("logged-in");
-                            userAvatar.classList.remove("login-button");
-                            userAvatar.style.fontSize = isMobileViewport
-                                ? "14px"
-                                : "18px";
-                            userAvatar.style.padding = "0";
-                            const avatarSize = isMobileViewport ? 40 : 45;
-                            userAvatar.style.width = `${avatarSize}px`;
-                            userAvatar.style.height = `${avatarSize}px`;
-                            userAvatar.style.borderRadius = "50%";
-                            userAvatar.title = `Olá, ${userName}! Clique para acessar sua conta`;
-                            userAvatar.onclick = () =>
-                                (window.location.href = "views/Painel.html");
-                            console.log("✅ Avatar atualizado para LOGADO");
-                            return;
-                        }
-                    } else {
-                        console.log("⚠️ Supabase não está disponível");
-                    }
-                } catch (error) {
-                    console.error(
-                        "❌ Erro ao verificar sessão:",
-                        error.message
-                    );
-                }
-
-                // Usuário não logado - mostrar botão "Entrar / Cadastrar"
-                console.log("🔓 Nenhuma sessão encontrada, mostrando botão");
-                userAvatar.textContent = "Entrar / Cadastrar";
-                userAvatar.classList.remove("logged-in");
-                userAvatar.classList.add("login-button");
-                userAvatar.style.fontSize = isMobileViewport ? "12px" : "14px";
-                userAvatar.style.padding = isMobileViewport
-                    ? "8px 16px"
-                    : "10px 20px";
-                userAvatar.style.width = "auto";
-                userAvatar.style.height = "auto";
-                userAvatar.style.borderRadius = "5px";
-                userAvatar.title = "Clique para fazer login ou cadastro";
-                userAvatar.onclick = () =>
-                    (window.location.href = "views/Login.html");
-                console.log("✅ Avatar atualizado para DESLOGADO");
-            }
-
-            // Executar ao carregar a página com pequeno delay para garantir que Supabase carregou
-            setTimeout(() => {
-                console.log("🚀 Iniciando verificação de avatar...");
-                updateUserAvatar();
-            }, 500);
-
-            // Atualizar avatar quando houver mudanças na autenticação
-            if (window.supabase && window.supabase.auth) {
-                window.supabase.auth.onAuthStateChange((event, session) => {
-                    console.log("🔄 Auth state changed:", event);
-                    updateUserAvatar();
-                });
-            }
-
-            // Também verificar periodicamente (a cada 3 segundos)
-            setInterval(() => {
-                updateUserAvatar();
-            }, 3000);
-
-            window.addEventListener("resize", () => {
-                updateUserAvatar();
-            });
-        </script>
-
-        <!-- Primeira seção da pagina -->
-        <div class="central-div">
-            <div class="ellipse"></div>
-            <div class="payfly-section">
-                <h1 class="payfly-title">PayFly</h1>
-                <p class="payfly-subtitle">
-                    Sistema de Gestão Financeira Pessoal com IA
-                </p>
-                <img
-                    class="central-image"
-                    src="views/imgs/pages/libelula.svg"
-                    alt="Imagem Central"
-                />
-                <p class="payfly-tagline">
-                    Transforme sua relação com dinheiro através de inteligência
-                    artificial, arquitetura moderna e experiência intuitiva
-                </p>
-            </div>
-            <div class="links-and-logo"></div>
-        </div>
-
-        <!-- Seção "Quem Somos?" da pagina -->
-        <div id="quem-somos" class="quem-somos-section">
-            <div class="quem-somos-content">
-                <div class="quem-somos-text">
-                    <h2>Quem Somos</h2>
-                    <p>
-                        O PayFly é o sistema de gestão financeira que usa
-                        inteligência artificial para traduzir números confusos
-                        em planos simples. Enquanto você cuida do dia a dia,
-                        nossa IA monitora entradas e saídas, identifica riscos
-                        antecipadamente e sugere oportunidades para turbinar
-                        suas metas.
-                    </p>
-                    <ul class="quem-somos-highlights">
-                        <li>
-                            <strong>Insights de IA em segundos:</strong>
-                            perguntas em linguagem natural geram análises e
-                            recomendações automáticas.
-                        </li>
-                        <li>
-                            <strong>Previsões que evitam surpresas:</strong>
-                            compare cenários, entenda tendências e ajuste o
-                            caixa antes de qualquer aperto.
-                        </li>
-                        <li>
-                            <strong>Assistente financeiro 24/7:</strong>
-                            recebe insights personalizados, metas guiadas e
-                            relatórios prontos para compartilhar.
-                        </li>
-                    </ul>
-                    <div class="quem-somos-metrics">
-                        <div class="metric-card">
-                            <span class="metric-value">+89%</span>
-                            <span class="metric-label"
-                                >dos usuários relatam clareza imediata sobre o
-                                orçamento</span
-                            >
-                        </div>
-                        <div class="metric-card">
-                            <span class="metric-value">+90%</span>
-                            <span class="metric-label"
-                                >de precisão nas sugestões automáticas</span
-                            >
-                        </div>
-                        <div class="metric-card">
-                            <span class="metric-value">30 min</span>
-                            <span class="metric-label"
-                                >bastam para ter metas e alertas ajustados à sua
-                                rotina</span
-                            >
-                        </div>
-                    </div>
-                </div>
-                <div class="dashboard-slider">
-                    <figure class="dashboard-shot light active">
-                        <img
-                            src="views/imgs/pages/dashboard_light.png"
-                            alt="Dashboard PayFly com visual claro mostrando cards financeiros e gráficos"
-                            loading="lazy"
-                        />
-                        <figcaption>
-                            Tema claro evidencia resultados por trimestre e os
-                            próximos passos sugeridos pela IA.
-                        </figcaption>
-                    </figure>
-                    <figure class="dashboard-shot dark">
-                        <img
-                            src="views/imgs/pages/dashboard_dark.png"
-                            alt="Dashboard PayFly em tema escuro destacando insights e gráficos preditivos"
-                            loading="lazy"
-                        />
-                        <figcaption>
-                            Tema escuro ideal para turnos noturnos com alertas
-                            inteligentes sempre visíveis.
-                        </figcaption>
-                    </figure>
-                    <div
-                        class="dashboard-controls"
-                        role="tablist"
-                        aria-label="Visualizações do dashboard PayFly"
-                    >
-                        <button
-                            type="button"
-                            class="dashboard-control-btn active"
-                            data-shot-index="0"
-                            role="tab"
-                            aria-selected="true"
-                        >
-                            Tema claro
-                        </button>
-                        <button
-                            type="button"
-                            class="dashboard-control-btn"
-                            data-shot-index="1"
-                            role="tab"
-                            aria-selected="false"
-                        >
-                            Tema escuro
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Seção do botão de cadastro -->
-        <div class="call-to-action-section">
-            <div class="call-to-action-content">
-                <h2>Se interessou? Não perca mais tempo!</h2>
-                <p>
-                    Registre-se agora no aplicativo da PayFly e comece a dominar
-                    suas despesas com facilidade e eficiência.
-                </p>
-                <a href="views/Cadastro.html" class="cta-button"
-                    ><ion-icon name="arrow-redo-outline"></ion-icon> Cadastre-se
-                    já</a
-                >
-            </div>
-        </div>
-
-        <!-- Seção de dados de contato da pagina -->
-        <div id="contato" class="contato-section">
-            <div class="testimonial-wrapper">
-                <div class="testimonial-carousel" aria-live="polite">
-                    <h2>O que a comunidade diz</h2>
-                    <p class="testimonial-quote">
-                        "Em 30 minutos eu tinha dashboards claros e metas
-                        inteligentes para minha família."
-                    </p>
-                    <p class="testimonial-author">
-                        - Ana Ribeiro, Analista de Marketing
-                    </p>
-                    <div
-                        class="testimonial-dots"
-                        role="tablist"
-                        aria-label="Depoimentos sobre o PayFly"
-                    ></div>
-                </div>
-            </div>
-            <div class="contato-grid">
-                <h3 class="contato-title">Fale com o time PayFly</h3>
-                <div class="contato-card">
-                    <ion-icon name="chatbubbles-outline"></ion-icon>
-                    <div>
-                        <p>Comunidade & Issues</p>
-                        <a
-                            href="https://github.com/guilhermelvc/payfly/issues"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            >GitHub Issues</a
-                        >
-                    </div>
-                </div>
-                <div class="contato-card">
-                    <ion-icon name="people-outline"></ion-icon>
-                    <div>
-                        <p>Ideias de features</p>
-                        <a
-                            href="https://github.com/guilhermelvc/payfly/discussions"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            >Discussions</a
-                        >
-                    </div>
-                </div>
-                <div class="contato-card">
-                    <ion-icon name="mail-outline"></ion-icon>
-                    <div>
-                        <p>Contato direto</p>
-                        <a href="mailto:contato@payfly.app"
-                            >contato@payfly.app</a
-                        >
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rodapé -->
-        <div class="footer-container">
-            <footer class="footer">
-                <div class="footer-column footer-brand">
-                    <img
-                        src="views/imgs/pages/logo2.svg"
-                        alt="Logo PayFly"
-                        width="180"
-                        height="180"
-                    />
-                    <a
-                        href="https://github.com/guilhermelvc/payfly"
-                        class="footer-link primary"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <ion-icon name="logo-github"></ion-icon>
-                        <span>Acompanhe no GitHub</span>
-                    </a>
-                </div>
-                <div class="footer-column footer-about">
-                    <p>
-                        PayFly une inteligência artificial e uma arquitetura
-                        moderna web para transformar dados financeiros em
-                        decisões simples, seguras e acessíveis.
-                    </p>
-                    <p>Projeto open source licenciado sob MIT.</p>
-                </div>
-                <div class="footer-column footer-developers">
-                    <h3>Desenvolvedores</h3>
-                    <a
-                        href="https://github.com/guilhermelvc"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >Guilherme Carvalho</a
-                    >
-                    <a
-                        href="https://github.com/aMoraesBeatriz"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >Beatriz Moraes</a
-                    >
-                </div>
-            </footer>
-        </div>
-
-        <script>
-            (function initDashboardShots() {
-                const shots = document.querySelectorAll(".dashboard-shot");
-                const controlsContainer = document.querySelector(
-                    ".dashboard-controls"
-                );
-                const controlButtons = controlsContainer
-                    ? controlsContainer.querySelectorAll(
-                          ".dashboard-control-btn"
-                      )
-                    : [];
-
-                if (!shots.length || !controlsContainer) {
-                    return;
-                }
-
-                let current = 0;
-                shots[current].classList.add("active");
-                showShot(current);
-                updateControls(current);
-
-                function showShot(index) {
-                    shots.forEach((shot, idx) => {
-                        shot.classList.toggle("active", idx === index);
-                    });
-                    const caption = shots[index].querySelector("figcaption");
-                    if (caption) {
-                        caption.parentNode.insertBefore(
-                            controlsContainer,
-                            caption
-                        );
-                    }
-                    updateControls(index);
-                }
-
-                function nextShot() {
-                    current = (current + 1) % shots.length;
-                    showShot(current);
-                }
-
-                const rotationDelay = 5000;
-                let rotationTimer = null;
-
-                function scheduleNext() {
-                    clearTimeout(rotationTimer);
-                    rotationTimer = setTimeout(() => {
-                        nextShot();
-                        scheduleNext();
-                    }, rotationDelay);
-                }
-
-                scheduleNext();
-
-                shots.forEach((shot, index) => {
-                    shot.addEventListener("mouseenter", () => {
-                        clearTimeout(rotationTimer);
-                        showShot(index);
-                        current = index;
-                    });
-                    shot.addEventListener("mouseleave", () => {
-                        scheduleNext();
-                    });
-                });
-
-                controlButtons.forEach((button) => {
-                    const targetIndex = Number(
-                        button.getAttribute("data-shot-index")
-                    );
-                    button.addEventListener("click", () => {
-                        if (Number.isNaN(targetIndex)) {
-                            return;
-                        }
-
-                        clearTimeout(rotationTimer);
-                        current = targetIndex % shots.length;
-                        if (current < 0) {
-                            current += shots.length;
-                        }
-                        showShot(current);
-                        scheduleNext();
-                    });
-                });
-
-                function updateControls(activeIndex) {
-                    controlButtons.forEach((button) => {
-                        const buttonIndex = Number(button.dataset.shotIndex);
-                        const isActive = buttonIndex === activeIndex;
-                        button.classList.toggle("active", isActive);
-                        button.setAttribute(
-                            "aria-selected",
-                            isActive ? "true" : "false"
-                        );
-                        button.setAttribute("tabindex", isActive ? "0" : "-1");
-                    });
-                }
-            })();
-
-            (function initTestimonials() {
-                const testimonials = [
-                    {
-                        quote: "Em 30 minutos eu tinha dashboards claros e metas inteligentes para minha família.",
-                        author: "- Ana Ribeiro, Analista de Marketing",
-                    },
-                    {
-                        quote: "O PayFly virou meu copiloto financeiro: categorização automática e alertas em tempo real.",
-                        author: "- Marcos Lima, Empreendedor",
-                    },
-                    {
-                        quote: "As projeções de investimento com IA me ajudaram a organizar a aposentadoria.",
-                        author: "- Carla Souza, Planejadora Financeira",
-                    },
-                    {
-                        quote: "Finalmente um sistema que funciona com insights precisos.",
-                        author: "- João Fernandes, Product Manager",
-                    },
-                    {
-                        quote: "A arquitetura modular simplificou a integração com meu time e reduziu bugs.",
-                        author: "- Beatriz Moraes, UX/UI Designer",
-                    },
-                    {
-                        quote: "Recomendo para qualquer pessoa que precise de clareza financeira rápida e sem burocracia.",
-                        author: "- Guilherme Carvalho, Lead Dev",
-                    },
-                ];
-
-                const quoteEl = document.querySelector(".testimonial-quote");
-                const authorEl = document.querySelector(".testimonial-author");
-                const dotsContainer =
-                    document.querySelector(".testimonial-dots");
-
-                if (!quoteEl || !authorEl || !dotsContainer) {
-                    return;
-                }
-
-                let current = 0;
-
-                const dots = testimonials.map((_, index) => {
-                    const button = document.createElement("button");
-                    button.className = "testimonial-dot";
-                    button.type = "button";
-                    button.setAttribute("aria-pressed", "false");
-                    button.setAttribute(
-                        "aria-label",
-                        `Ver depoimento ${index + 1}`
-                    );
-                    button.addEventListener("click", () => {
-                        current = index;
-                        updateTestimonial();
-                        restartInterval();
-                    });
-                    dotsContainer.appendChild(button);
-                    return button;
-                });
-
-                function updateTestimonial() {
-                    const { quote, author } = testimonials[current];
-                    quoteEl.textContent = '"' + quote + '"';
-                    authorEl.textContent = author;
-                    dots.forEach((dot, index) => {
-                        dot.classList.toggle("active", index === current);
-                        dot.setAttribute(
-                            "aria-pressed",
-                            index === current ? "true" : "false"
-                        );
-                    });
-                }
-
-                let intervalId = setInterval(nextTestimonial, 6000);
-
-                function nextTestimonial() {
-                    current = (current + 1) % testimonials.length;
-                    updateTestimonial();
-                }
-
-                function restartInterval() {
-                    clearInterval(intervalId);
-                    intervalId = setInterval(nextTestimonial, 6000);
-                }
-
-                updateTestimonial();
-            })();
-        </script>
-
-        <!-- ====== ionicons ======= -->
-        <script
-            type="module"
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-        ></script>
-        <script
-            nomodule
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-        ></script>
-
-        <!-- ====== Injetor de Acessibilidade ======= -->
-        <script src="controllers/accessibility-injector.js"></script>
-
-        <!-- ====== Sistema de Acessibilidade ======= -->
-        <script src="controllers/accessibility.js"></script>
-    </body>
+    <!-- ====== Sistema de Acessibilidade ======= -->
+    <script src="controllers/accessibility.js"></script>
+  </body>
 </html>

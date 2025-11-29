@@ -19,7 +19,6 @@ class GeminiAIService {
     // Quota tracking
     this.quotaExceeded = false;
     this.quotaResetTime = null;
-    s;
 
     // Contador de requisições para detecção de rate limit
     this.requestCount = 0;
@@ -663,5 +662,3 @@ RESPOSTA:`;
 
 // Instância global do serviço
 window.GeminiAI = new GeminiAIService();
-
-console.log("🤖 GeminiAI Service initialized successfully");

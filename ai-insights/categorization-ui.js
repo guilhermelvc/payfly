@@ -22,13 +22,10 @@ class CategorizationUI {
       // Carrega o sistema de categorização inteligente
       if (typeof SmartCategorizationSystem !== "undefined") {
         this.smartCategorization = new SmartCategorizationSystem();
-        await this.smartCategorization.init();
       }
 
       // Configura eventos de input
       this.setupEventListeners();
-
-      console.log("✅ Sistema de Categorização UI inicializado");
     } catch (error) {
       console.error("❌ Erro ao inicializar Categorização UI:", error);
     }
@@ -483,5 +480,3 @@ window.CategorizationUI.suggestCategory =
   window.CategorizationUI.suggestCategory.bind(window.CategorizationUI);
 window.CategorizationUI.selectCategory =
   window.CategorizationUI.selectCategory.bind(window.CategorizationUI);
-
-console.log("🎯 Categorization UI carregado e pronto para uso");

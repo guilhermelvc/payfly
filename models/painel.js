@@ -144,9 +144,6 @@ function renderTable() {
 
   // Se não encontrar a tabela, pode ser que esteja no painel principal
   if (!table) {
-    console.log(
-      "📋 Tabela data-table-body não encontrada - provavelmente estamos no painel principal"
-    );
     return; // Sai da função se não encontrar a tabela
   }
 

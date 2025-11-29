@@ -83,8 +83,6 @@
 
     <!-- Script de funções críticas - carrega PRIMEIRO -->
     <script>
-        console.log('🚀 Carregando funções críticas...');
-        
         // Funções de QR Code removidas
     </script>
 
@@ -413,12 +411,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-   <script>
-    // Debug: Verificar carregamento das bibliotecas
-    console.log('🔍 Verificando bibliotecas...');
-    console.log('Chart:', typeof Chart);
-    console.log('jsPDF:', typeof window.jspdf);
-    console.log('html2canvas:', typeof html2canvas);
+    <script>
+     // Verificar carregamento das bibliotecas
 
     // Fallback para Chart.js se não carregou
     if (typeof Chart === 'undefined') {
@@ -428,14 +422,11 @@
         const chartScript = document.createElement('script');
         chartScript.src = 'https://unpkg.com/chart.js@3.9.1/dist/chart.min.js';
         chartScript.onload = function() {
-            console.log('✅ Chart.js carregado via fallback');
         };
         chartScript.onerror = function() {
             console.error('❌ Falha ao carregar Chart.js - Dashboard não funcionará');
         };
         document.head.appendChild(chartScript);
-    } else {
-        console.log('✅ Chart.js carregado com sucesso');
     }
 
     // Fallback para jsPDF se não carregou
@@ -445,22 +436,17 @@
         const jspdfScript = document.createElement('script');
         jspdfScript.src = 'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js';
         jspdfScript.onload = function() {
-            console.log('✅ jsPDF carregado via fallback');
         };
         jspdfScript.onerror = function() {
             console.error('❌ Falha ao carregar jsPDF - Geração de PDF não funcionará');
         };
         document.head.appendChild(jspdfScript);
-    } else {
-        console.log('✅ jsPDF carregado com sucesso');
     }
 
     // Modais de pagamento removidos
     </script>
     
     <script>
-    console.log('Script do painel carregando...');
-    
     // Tratamento global de erros - Ultra Silencioso
     window.addEventListener('error', function(e) {
         // Filtra erros conhecidos e não críticos (incluindo ionicons)
@@ -504,7 +490,6 @@
     
     // Tratar callback do OAuth do Google
     window.addEventListener('DOMContentLoaded', function() {
-        console.log('🔍 Verificando callback OAuth...');
         
         // Verifica se há hash ou search params que indicam callback do OAuth
         const urlParams = new URLSearchParams(window.location.search);
@@ -512,16 +497,14 @@
         
         if (urlParams.get('access_token') || hashParams.get('access_token') || 
             urlParams.get('code') || hashParams.get('code')) {
-            console.log('🎉 Callback OAuth detectado!');
             
             // Aguarda o Supabase processar o callback
             setTimeout(() => {
                 if (window.supabase) {
                     window.supabase.auth.getSession().then(({ data, error }) => {
                         if (error) {
-                            console.error('❌ Erro no callback:', error);
+                            console.error('Erro no callback OAuth:', error);
                         } else if (data?.session) {
-                            console.log('✅ Sessão ativa após callback:', data.session.user.email);
                             showSuccessToast('Login realizado!', 'Bem-vindo ao PayFly!');
                         }
                     });
@@ -661,7 +644,6 @@
         
         // Inicializar sistema de cards clicáveis
         function initInteractiveChart() {
-            console.log('🎯 Inicializando gráfico interativo...');
             
             // Detectar período atual dos botões
             const activePeriodbtn = document.querySelector('.period-btn.active');
@@ -673,7 +655,6 @@
             document.querySelectorAll('.period-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     currentPeriod = this.dataset.period;
-                    console.log(`📅 Período alterado para: ${currentPeriod}`);
                     // Atualizar gráfico para o novo período
                     setTimeout(() => updateChartData(currentChartType), 100);
                 });
@@ -684,7 +665,6 @@
                 card.addEventListener('click', function() {
                     const chartType = this.dataset.chartType;
                     if (chartType) {
-                        console.log(`🎯 Card clicado: ${chartType} (período: ${currentPeriod})`);
                         switchChart(chartType);
                     }
                 });
@@ -692,7 +672,6 @@
             
             // Inicializar com saldo total ativo
             switchChart('balance');
-            console.log('✅ Gráfico interativo inicializado - mostrando saldo total');
         }
         
         // Alternar tipo de gráfico
@@ -711,8 +690,6 @@
             };
             
             const periodName = periodNames[currentPeriod] || 'Período Atual';
-            
-            console.log(`📊 Alternando gráfico para: ${newType} (${periodName})`);
             
             // Atualizar variável atual
             currentChartType = newType;
@@ -747,7 +724,6 @@
         
         // Atualizar dados do gráfico conforme tipo selecionado
         function updateChartData(type) {
-            console.log(`🔄 Atualizando dados do gráfico: ${type} (${currentPeriod})`);
             
             // Preparar dados para o dashboard.js
             const chartContext = {
@@ -764,7 +740,6 @@
                 window.updateInteractiveChart(chartContext);
             } else {
                 // Se ainda não carregou, agenda para quando carregar
-                console.log('⏳ Dashboard.js ainda não carregou, agendando atualização...');
                 document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         if (window.updateCategoryChart) {
@@ -796,8 +771,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(initInteractiveChart, 500); // Aguarda um pouco para garantir que tudo carregou
         });
-        
-        console.log('🎨 Sistema de gráfico interativo carregado');
     </script>
     
     <!-- ====== Injetor de Acessibilidade ======= -->

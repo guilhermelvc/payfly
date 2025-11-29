@@ -1,5 +1,4 @@
 // ================ Poupança Controller com Supabase ================
-console.log("💰 Poupanca.js carregado");
 
 // Variáveis globais
 let transactions = [];
@@ -17,7 +16,6 @@ let currentEditingPoupanca = null;
 // Função auxiliar para reaplicar filtros após operações CRUD
 async function reloadPoupancaDataRespectingFilter() {
     if (isPoupancaFilterActive && currentFilterCriteria) {
-        console.log("🔄 Reaplicando filtro após operação CRUD");
         await applyStoredPoupancaFilter();
     } else {
         await loadPoupancaFromSupabase();
@@ -88,11 +86,8 @@ async function applyStoredPoupancaFilter() {
 async function loadPoupancaFromSupabase() {
     try {
         if (isPoupancaFilterActive) {
-            console.log("⏸️ Carregamento bloqueado - filtro ativo");
             return;
         }
-
-        console.log("📊 Carregando todas as poupanças (sem filtro)");
 
         if (!window.supabase) throw new Error("Supabase não inicializado");
         const { data: userData } = await window.supabase.auth.getUser();
@@ -143,8 +138,6 @@ async function loadPoupancaFromSupabase() {
         isPoupancaFilterActive = false;
         transactions.forEach((item) => addPoupancaRowToTable(item));
         updatePoupancaDisplay();
-
-        console.log("📊 Todas as poupanças carregadas");
     } catch (err) {
         console.error("Erro carregando poupança do Supabase", err);
         loadDemoDataFallback();
@@ -212,7 +205,6 @@ function loadDemoDataFallback() {
     filteredTransactions = [...transactions];
     filteredPoupancaTotal = 0;
     isPoupancaFilterActive = false;
-    console.log("✅ Dados de poupança carregados:", transactions);
 }
 
 // ================ Carregamento de Planos do Banco ================
@@ -259,7 +251,7 @@ async function populatePlanoSelect() {
         }
 
         // Adiciona planos reais do banco
-        if (planos.length === 0) {
+            if (planos.length === 0) {
             // Se não há planos, adiciona opção indicativa
             const option = document.createElement("option");
             option.value = "";
@@ -267,7 +259,6 @@ async function populatePlanoSelect() {
                 "📋 Nenhum plano cadastrado - Vá para 'Planos' para criar";
             option.disabled = true;
             planoSelect.appendChild(option);
-            console.log("ℹ️ Nenhum plano encontrado no banco de dados");
         } else {
             planos.forEach((plano) => {
                 const option = document.createElement("option");
@@ -276,10 +267,9 @@ async function populatePlanoSelect() {
                     plano.valor
                 )}`;
                 planoSelect.appendChild(option);
+                );
+                planoSelect.appendChild(option);
             });
-            console.log(`📋 ${planos.length} planos carregados no select`);
-        }
-    } catch (err) {
         console.error("Erro ao popular select de planos:", err);
     }
 }
@@ -363,10 +353,6 @@ async function savePoupanca(
                 .from("poupanca")
                 .insert(poupancasParaCriar);
             if (error) throw error;
-
-            console.log(
-                `✅ ${recorrenciaMeses} poupanças recorrentes criadas com sucesso!`
-            );
         } else {
             // Cria poupança única (sem recorrência)
             // Se tem plano selecionado, busca o ID do plano
@@ -406,8 +392,6 @@ async function savePoupanca(
                 .from("poupanca")
                 .insert([poupancaData]);
             if (error) throw error;
-
-            console.log("✅ Poupança única criada com sucesso!");
         }
 
         await reloadPoupancaDataRespectingFilter();
@@ -509,7 +493,6 @@ async function removePoupancaFromSupabase(poupancaId) {
 
 // ================ Inicialização ================
 document.addEventListener("DOMContentLoaded", async function () {
-    console.log("🚀 Inicializando página de poupança...");
 
     // Verifica se o usuário está autenticado e carrega dados
     if (window.supabase) {
@@ -547,21 +530,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     const hoje = new Date().toISOString().split("T")[0];
     document.getElementById("data").value = hoje;
 
-    console.log("✅ Poupança inicializada");
 });
 
 // ================ Atualização Automática de Planos ================
 
 // Atualiza planos quando a página ganha foco (usuário volta da página de planos)
 window.addEventListener("focus", async function () {
-    console.log("👁️ Página ganhou foco - atualizando planos...");
     await populatePlanoSelect();
 });
 
 // Atualiza planos quando storage local muda (sincronização entre abas)
 window.addEventListener("storage", async function (e) {
     if (e.key === "planos_updated") {
-        console.log("🔄 Detectada atualização de planos - sincronizando...");
         await populatePlanoSelect();
     }
 });
@@ -638,11 +618,6 @@ function updateTotalDisplay() {
         filteredDisplayEl.textContent = formatCurrency(filteredTotal);
     }
 
-    console.log(
-        `💰 Total atualizado: ${formatCurrency(
-            total
-        )} | Filtrado: ${formatCurrency(filteredTotal)}`
-    );
 }
 
 function updatePoupancaDisplay() {
@@ -698,16 +673,11 @@ function updateTable() {
             previousConfirmDelete();
         }
     };
-
-    console.log(
-        `📋 Tabela atualizada com ${filteredTransactions.length} registros`
-    );
 }
 
 // ================ Modal Management ================
 const Modal = {
     open: async function () {
-        console.log("📝 Abrindo modal de adicionar poupança...");
 
         // Recarrega os planos antes de abrir o modal
         await populatePlanoSelect();
@@ -716,7 +686,6 @@ const Modal = {
             "flex";
     },
     close: function () {
-        console.log("❌ Fechando modal de adicionar poupança...");
         document.querySelector(".standardized-modal-overlay").style.display =
             "none";
         document.getElementById("form").reset();
@@ -727,11 +696,9 @@ const Modal = {
 
 const FilterModal = {
     open: function () {
-        console.log("🔍 Abrindo modal de filtro...");
         document.querySelector(".filter-modal-overlay").style.display = "flex";
     },
     close: function () {
-        console.log("❌ Fechando modal de filtro...");
         document.querySelector(".filter-modal-overlay").style.display = "none";
         document.getElementById("filter-form").reset();
     },
@@ -741,7 +708,6 @@ const FilterModal = {
 const Form = {
     submit: async function (event) {
         event.preventDefault();
-        console.log("💾 Salvando nova movimentação...");
 
         const formData = new FormData(event.target);
         const descricao = formData.get("descricao");
@@ -786,7 +752,6 @@ const Form = {
                 "Sucesso!",
                 "Movimentação adicionada com sucesso!"
             );
-            console.log("✅ Nova movimentação salva localmente");
         }
     },
 };
@@ -796,7 +761,6 @@ const Form = {
 // Function to load plans into edit modal select
 async function loadPlansIntoEditSelect(selectedPlan = null) {
     try {
-        console.log("🔄 Carregando planos no modal de edição...");
 
         const { data: plans, error } = await supabase
             .from("planos")
@@ -824,10 +788,6 @@ async function loadPlansIntoEditSelect(selectedPlan = null) {
                 }
                 editPlanoSelect.appendChild(option);
             });
-
-            console.log(
-                `✅ ${plans.length} planos carregados no modal de edição`
-            );
         }
     } catch (error) {
         console.error("❌ Erro ao carregar planos no modal:", error);
@@ -836,7 +796,6 @@ async function loadPlansIntoEditSelect(selectedPlan = null) {
 }
 
 async function editTransaction(index) {
-    console.log(`✏️ Editando transação ${index}`);
     const transaction = filteredTransactions[index];
 
     // Preenche o modal de edição
@@ -873,7 +832,6 @@ async function editTransaction(index) {
 
 async function submitEditForm(event) {
     event.preventDefault();
-    console.log("💾 Salvando edição...");
 
     const index = parseInt(event.target.dataset.editIndex);
     const formData = new FormData(event.target);
@@ -939,7 +897,6 @@ async function submitEditForm(event) {
         closeEditModal();
 
         showSuccessToast("Sucesso!", "Movimentação atualizada com sucesso!");
-        console.log("✅ Movimentação atualizada no Supabase");
     } catch (error) {
         console.error("❌ Erro ao atualizar movimentação:", error);
         showErrorToast("Erro!", "Erro ao atualizar movimentação");
@@ -947,14 +904,11 @@ async function submitEditForm(event) {
 }
 
 async function deletePoupancaTransaction(poupancaId) {
-    console.log(`🗑️ Excluindo transação ${poupancaId}`);
-
     await removePoupancaFromSupabase(poupancaId);
 }
 
 // Função de compatibilidade para código existente
 function deleteTransaction(index) {
-    console.log(`🗑️ Excluindo transação ${index} (modo compatibilidade)`);
 
     const transaction = filteredTransactions[index];
 
@@ -985,7 +939,6 @@ function deleteTransaction(index) {
         updateTotalDisplay();
         updateTable();
         showSuccessToast("Sucesso!", "Movimentação excluída com sucesso!");
-        console.log("✅ Movimentação excluída");
     }
 }
 
@@ -1033,7 +986,6 @@ function toggleEditRecorrenciaFields() {
 // ================ Filter Functions ================
 function filterPoupanca(event) {
     event.preventDefault();
-    console.log("🔍 Aplicando filtros...");
 
     const formData = new FormData(event.target);
     const filters = {
@@ -1067,13 +1019,9 @@ function filterPoupanca(event) {
         "Filtro aplicado",
         `${filteredTransactions.length} registros encontrados`
     );
-    console.log(
-        `🔍 Filtros aplicados: ${filteredTransactions.length} resultados`
-    );
 }
 
 function filterClear() {
-    console.log("🧹 Limpando filtros...");
     isPoupancaFilterActive = false;
     filteredPoupancaTotal = 0;
     filteredTransactions = [...transactions];
@@ -1084,8 +1032,6 @@ function filterClear() {
 
 // ================ AI Insights ================
 function openAIInsights() {
-    console.log("🤖 Abrindo AI Insights para poupança...");
-
     const totalPoupado = transactions.reduce(
         (sum, t) => sum + (t.amount > 0 ? t.amount : 0),
         0
@@ -1310,22 +1256,15 @@ window.obterResumoCompletoPoupancaPlanos = obterResumoCompletoPoupancaPlanos;
 // Chama a função centralizada do main.js
 (function waitForUpdateUserInfo() {
     if (window.updateUserInfo) {
-        console.log("poupanca.js: Chamando window.updateUserInfo()");
         window.updateUserInfo();
 
         // Força refresh adicional após 2 segundos
         setTimeout(() => {
-            console.log("poupanca.js: Refresh adicional após 2 segundos");
             if (window.updateUserInfo) {
                 window.updateUserInfo();
             }
         }, 2000);
     } else {
-        console.log(
-            "poupanca.js: window.updateUserInfo não disponível, tentando novamente..."
-        );
         setTimeout(waitForUpdateUserInfo, 100);
     }
 })();
-
-console.log("✅ Poupanca.js carregado completamente");

@@ -743,7 +743,6 @@
                 categoryInput.dispatchEvent(new Event('change'));
                 categoryInput.dispatchEvent(new Event('input'));
                 
-                console.log('Categoria selecionada:', categoryName);
             }
         }
 
@@ -771,10 +770,9 @@
         // Função SIMPLES para selecionar categoria - SEMPRE FUNCIONA
         function selectCategory(categoryName) {
             try {
-                console.log('🏷️ Selecionando categoria:', categoryName);
                 
                 if (!categoryName || categoryName.trim() === '') {
-                    console.warn('⚠️ Nome da categoria vazio');
+                    console.warn('Nome da categoria vazio');
                     return false;
                 }
                 
@@ -785,7 +783,6 @@
                 
                 if (targetInput) {
                     targetInput.value = categoryName.trim();
-                    console.log('✅ Categoria definida:', categoryName);
                     
                     // Remove seleção de outras tags
                     const allTags = document.querySelectorAll('.predefined-categories .category-tag');
@@ -814,24 +811,22 @@
                         targetInput.dispatchEvent(new Event('change', { bubbles: true }));
                         targetInput.dispatchEvent(new Event('input', { bubbles: true }));
                     } catch (eventError) {
-                        console.warn('⚠️ Erro ao disparar eventos:', eventError);
+                        console.warn('Erro ao disparar eventos:', eventError);
                     }
                     
-                    console.log('✅ Categoria selecionada com sucesso!');
                     return true;
                 } else {
-                    console.error('❌ Campo de categoria não encontrado!');
+                    console.error('Campo de categoria não encontrado!');
                     return false;
                 }
             } catch (error) {
-                console.error('❌ Erro ao selecionar categoria:', error);
+                console.error('Erro ao selecionar categoria:', error);
                 return false;
             }
         }
 
         // Função SIMPLES para sugestão de IA - SEM RETORNO PARA EVITAR UNDEFINED
         async function suggestCategoryAI(type) {
-            console.log('🤖 Solicitando sugestão de IA para:', type);
             
             // Busca descrição
             const descInput = document.querySelector('#descricao');
@@ -857,13 +852,11 @@
                 // Tenta usar CategorizationUI se disponível
                 if (window.CategorizationUI && typeof window.CategorizationUI.suggestCategory === 'function') {
                     await window.CategorizationUI.suggestCategory(type);
-                    console.log('🤖 CategorizationUI executada com sucesso');
                 } else {
                     // Sugestões simples baseadas em palavras-chave
                     const descricao = descricaoField.value.toLowerCase().trim();
                     let suggestedCategory = 'Outros';
                     
-                    console.log('🔍 Analisando descrição:', descricao);
                     
                     if (descricao.includes('comida') || descricao.includes('restaurante') || descricao.includes('almoço') || descricao.includes('jantar') || descricao.includes('lanche') || descricao.includes('pizza') || descricao.includes('hamburguer')) {
                         suggestedCategory = 'Alimentação';
@@ -879,7 +872,6 @@
                         suggestedCategory = 'Lazer';
                     }
                     
-                    console.log('🤖 IA analisou e sugeriu categoria:', suggestedCategory);
                     
                     // Aplica a categoria diretamente
                     const categoryInput = document.querySelector('#categoria');
@@ -1002,36 +994,10 @@
         window.toggleRecorrenciaFields = toggleRecorrenciaFields;
         window.toggleEditRecorrenciaFields = toggleEditRecorrenciaFields;
         
-        // Debug: Verifica se as funções foram definidas corretamente
-        console.log('🔍 Debug - Verificando funções:');
-        console.log('selectCategory:', typeof window.selectCategory);
-        console.log('suggestCategoryAI:', typeof window.suggestCategoryAI);
-        console.log('suggestCategorySimple:', typeof window.suggestCategorySimple);
-        console.log('toggleRecorrenciaFields:', typeof window.toggleRecorrenciaFields);
-        console.log('toggleEditRecorrenciaFields:', typeof window.toggleEditRecorrenciaFields);
-        
-        // Função de teste para debug
-        window.testCategoryFunction = function() {
-            console.log('🧪 Testando selectCategory...');
-            const result = selectCategory('Teste');
-            console.log('🧪 Resultado do teste:', result);
-            return result;
-        };
-        
-        // Teste da função simples
-        window.testSimpleIA = function() {
-            console.log('🧪 Testando IA simples...');
-            // Simula ter uma descrição
-            const desc = document.querySelector('#descricao');
-            if (desc) {
-                desc.value = 'gasolina';
-                suggestCategorySimple();
-            }
-        };
+        // Removidos utilitários de debug e logs para ambiente de produção
 
         // Aguarda o carregamento e configura fallbacks se necessário
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 DOM carregado - configurando categorias...');
             
             // Aguarda um pouco para CategorizationUI carregar
             setTimeout(() => {
@@ -1044,7 +1010,6 @@
                     };
                 }
                 
-                console.log('✅ Sistema de categorias configurado!');
             }, 1000);
         });
         </script>

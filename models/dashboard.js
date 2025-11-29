@@ -1,5 +1,4 @@
 // ================ Dashboard Controller ================
-console.log("📊 Dashboard.js carregado");
 
 // Variáveis globais do dashboard
 let dashboardData = {
@@ -40,7 +39,6 @@ function parseDashboardValue(text) {
 async function loadDashboardData() {
   try {
     showDashboardLoading(true);
-    console.log("📊 Carregando dados do dashboard...");
 
     if (!window.supabase) throw new Error("Supabase não inicializado");
 
@@ -83,28 +81,7 @@ async function loadDashboardData() {
     dashboardData.poupanca = poupancaResult.data || [];
     dashboardData.investimentos = investimentosResult.data || [];
 
-    console.log("📊 Dados carregados do Supabase:", {
-      despesas: dashboardData.despesas.length,
-      receitas: dashboardData.receitas.length,
-      planos: dashboardData.planos.length,
-      poupanca: dashboardData.poupanca.length,
-      investimentos: dashboardData.investimentos.length,
-    });
-
-    // Log detalhado das receitas para debug
-    if (dashboardData.receitas.length > 0) {
-      console.log(
-        "💰 RECEITAS CARREGADAS DO BANCO:",
-        dashboardData.receitas.map((r) => ({
-          descricao: r.descricao,
-          valor: r.valor,
-          data: r.data,
-          categoria: r.categoria,
-        }))
-      );
-    } else {
-      console.log("✅ Nenhuma receita encontrada no banco");
-    }
+    // Dados carregados com sucesso; logs de debug removidos
 
     // Atualiza dashboard
     updateDashboard();
@@ -180,30 +157,15 @@ function getDateRange(period) {
 function filterDataByPeriod(data, period) {
   const { startDate, endDate } = getDateRange(period);
 
-  console.log(`🔍 filterDataByPeriod (${period}):`, {
-    range: {
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    },
-    totalItems: data?.length || 0,
-  });
-
   const filtered = data.filter((item) => {
     const itemDate = new Date(item.data || item.criado_em);
     return itemDate >= startDate && itemDate <= endDate;
   });
-
-  console.log(`🔍 Filtrados: ${filtered.length} itens`);
   return filtered;
 }
 
 function processExpensesByCategory(period) {
   const filteredDespesas = filterDataByPeriod(dashboardData.despesas, period);
-  console.log(`💸 processExpensesByCategory (${period}):`, {
-    totalDespesas: dashboardData.despesas?.length || 0,
-    filtradas: filteredDespesas.length,
-    amostra: filteredDespesas.slice(0, 3),
-  });
 
   const categoryTotals = {};
 
@@ -214,7 +176,6 @@ function processExpensesByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
-  console.log(`💸 Resultado processExpensesByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
@@ -516,8 +477,6 @@ function processFutureTimelineData() {
 // Função de atualização do dashboard removida (duplicata)
 
 function updateSummaryCards(period) {
-  console.log("💰 Atualizando cards de resumo para período:", period);
-
   let totalDespesas, totalReceitas, totalPlanos, saldoLiquido;
 
   if (period === "futuros") {
@@ -548,15 +507,6 @@ function updateSummaryCards(period) {
       0
     );
     saldoLiquido = totalReceitas - totalDespesas;
-
-    console.log("🔮 Lançamentos futuros calculados:", {
-      despesasFuturas: despesasFuturas.length,
-      receitasFuturas: receitasFuturas.length,
-      planosFuturos: planosFuturos.length,
-      totalDespesas,
-      totalReceitas,
-      totalPlanos,
-    });
   } else {
     // Filtros normais (semanal, mensal, 6 meses)
     const filteredDespesas = filterDataByPeriod(
@@ -571,17 +521,6 @@ function updateSummaryCards(period) {
       dashboardData.planos || [],
       period
     );
-
-    // Log detalhado para debug
-    console.log(`📊 Dados filtrados para ${period}:`, {
-      totalReceitasDB: dashboardData.receitas?.length || 0,
-      receitasFiltradas: filteredReceitas.length,
-      receitasDetalhadas: filteredReceitas.map((r) => ({
-        descricao: r.descricao,
-        valor: r.valor,
-        data: r.data,
-      })),
-    });
 
     // Calcular sempre com base nos dados filtrados
     totalDespesas = filteredDespesas.reduce(
@@ -599,14 +538,6 @@ function updateSummaryCards(period) {
     saldoLiquido = totalReceitas - totalDespesas;
   }
 
-  console.log("💰 Totais calculados:", {
-    totalDespesas,
-    totalReceitas,
-    saldoLiquido,
-    totalPlanos,
-    period,
-  });
-
   // Atualiza elementos
   const incomeEl = document.getElementById("summary-income");
   const expenseEl = document.getElementById("summary-expense");
@@ -615,28 +546,24 @@ function updateSummaryCards(period) {
 
   if (incomeEl) {
     incomeEl.textContent = formatDashboardValue(totalReceitas);
-    console.log("💰 Receitas atualizadas:", totalReceitas);
   } else {
     console.error("❌ Elemento summary-income não encontrado!");
   }
 
   if (expenseEl) {
     expenseEl.textContent = formatDashboardValue(totalDespesas);
-    console.log("💰 Despesas atualizadas:", totalDespesas);
   } else {
     console.error("❌ Elemento summary-expense não encontrado!");
   }
 
   if (balanceEl) {
     balanceEl.textContent = formatDashboardValue(saldoLiquido);
-    console.log("💰 Saldo atualizado:", saldoLiquido);
   } else {
     console.error("❌ Elemento summary-balance não encontrado!");
   }
 
   if (plansEl) {
     plansEl.textContent = formatDashboardValue(totalPlanos);
-    console.log("📅 Planos atualizados:", totalPlanos);
   } else {
     console.error("❌ Elemento summary-plans não encontrado!");
   }
@@ -671,14 +598,12 @@ function updateSummaryCards(period) {
 
   if (savingsEl) {
     savingsEl.textContent = formatDashboardValue(totalPoupanca);
-    console.log("💰 Poupança atualizada:", totalPoupanca);
   } else {
     console.error("❌ Elemento summary-savings não encontrado!");
   }
 
   if (investmentsEl) {
     investmentsEl.textContent = formatDashboardValue(totalInvestimentos);
-    console.log("📈 Investimentos atualizados:", totalInvestimentos);
   } else {
     console.error("❌ Elemento summary-investments não encontrado!");
   }
@@ -1026,15 +951,11 @@ function changePeriod(period) {
 
   // Atualiza dashboard
   updateDashboard();
-
-  console.log("📊 Período alterado para:", period);
 }
 
 // ================ Inicialização ================
 
 function initializeDashboard() {
-  console.log("🚀 Inicializando dashboard...");
-
   // Verifica se os elementos existem
   const dashboardContainer = document.querySelector(".dashboard-container");
   if (!dashboardContainer) {
@@ -1055,17 +976,14 @@ function initializeDashboard() {
     }
     // Continua a inicialização sem gráficos
   } else {
-    console.log("✅ Chart.js carregado com sucesso");
   }
 
   // Event listeners para botões de período
   const periodBtns = document.querySelectorAll(".period-btn");
-  console.log("🔘 Encontrados", periodBtns.length, "botões de período");
 
   periodBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const period = btn.dataset.period;
-      console.log("🔘 Período selecionado:", period);
       changePeriod(period);
     });
 
@@ -1089,14 +1007,11 @@ function initializeDashboard() {
   setupCardTooltips();
 
   // Carrega dados iniciais
-  console.log("📊 Iniciando carregamento de dados...");
   loadDashboardDataWithToast();
 
   if (typeof showInfoToast === "function") {
     showInfoToast("Dashboard", "Dashboard inicializado com sucesso!", 2000);
   }
-
-  console.log("✅ Dashboard inicializado com sucesso!");
 }
 
 // Configuração de tooltips para melhor UX
@@ -1133,7 +1048,6 @@ const debouncedRefresh = debounce(refreshDashboard, 1000);
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     // Preparado para PWA no futuro
-    console.log("Service Worker support detected");
   }
 }
 
@@ -1141,7 +1055,6 @@ function registerServiceWorker() {
 
 // Função para atualizar dados em tempo real
 function refreshDashboard() {
-  console.log("🔄 Atualizando dashboard...");
   loadDashboardData();
 }
 
@@ -1149,7 +1062,6 @@ function refreshDashboard() {
 function setupAutoRefresh() {
   setInterval(() => {
     if (document.visibilityState === "visible") {
-      console.log("🔄 Auto-refresh do dashboard");
       loadDashboardData();
     }
   }, 5 * 60 * 1000); // 5 minutos
@@ -1289,12 +1201,10 @@ function showChartLoading(chartId, show) {
 
 // Versão melhorada da atualização do dashboard
 function updateDashboard() {
-  console.log("🔄 Iniciando atualização do dashboard...");
   const period = dashboardData.currentPeriod || "week";
 
   try {
     // Atualiza cards primeiro (mais rápido)
-    console.log("💰 Atualizando cards...");
     updateSummaryCards(period);
 
     // Loading states para gráficos
@@ -1303,18 +1213,14 @@ function updateDashboard() {
 
     // Pequeno delay para melhor UX
     setTimeout(() => {
-      console.log("📊 Atualizando gráfico de categorias...");
       updateCategoryChart(period);
       showChartLoading("categoryChart", false);
     }, 300);
 
     setTimeout(() => {
-      console.log("📈 Atualizando gráfico temporal...");
       updateTimelineChart(period);
       showChartLoading("timelineChart", false);
     }, 600);
-
-    console.log("✅ Dashboard atualizado para período:", period);
   } catch (error) {
     console.error("❌ Erro ao atualizar dashboard:", error);
     // Toast removido para melhor UX
@@ -1349,8 +1255,6 @@ function changePeriod(period) {
     updateDashboard();
     showDashboardLoading(false);
   }, 200);
-
-  console.log("📊 Período alterado para:", period);
 }
 
 // Detecta mudanças na visibilidade da página
@@ -1359,7 +1263,6 @@ document.addEventListener("visibilitychange", function () {
     document.visibilityState === "visible" &&
     dashboardData.despesas.length > 0
   ) {
-    console.log("👁️ Página visível - verificando atualizações");
     // Refresh suave quando a página volta ao foco
     setTimeout(refreshDashboard, 1000);
   }
@@ -1372,7 +1275,6 @@ window.addEventListener("resize", function () {
   resizeTimeout = setTimeout(() => {
     if (categoryChart) categoryChart.resize();
     if (timelineChart) timelineChart.resize();
-    console.log("📏 Gráficos redimensionados");
   }, 250);
 });
 
@@ -1382,17 +1284,13 @@ function waitForChart(callback, maxAttempts = 20) {
 
   function checkChart() {
     attempts++;
-    console.log(`🔍 Tentativa ${attempts}: Verificando Chart.js...`);
 
     if (typeof Chart !== "undefined") {
-      console.log("✅ Chart.js encontrado!");
       callback();
     } else if (attempts < maxAttempts) {
-      console.log("⏳ Chart.js não encontrado, aguardando...");
       setTimeout(checkChart, 500);
     } else {
       console.error("❌ Chart.js não carregou após", maxAttempts, "tentativas");
-      console.log("🔄 Tentando inicializar sem gráficos...");
       callback(); // Tenta inicializar sem gráficos
     }
   }
@@ -1402,24 +1300,15 @@ function waitForChart(callback, maxAttempts = 20) {
 
 // Inicializa quando o DOM estiver pronto
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("🚀 DOM carregado, iniciando dashboard...");
-
   // Verifica se estamos na página do painel
   if (!document.querySelector(".dashboard-container")) {
-    console.log(
-      "⚠️ Dashboard container não encontrado - não é a página do painel"
-    );
     return;
   }
 
-  console.log("✅ Dashboard container encontrado!");
-
   // Aguarda Chart.js carregar antes de inicializar
   waitForChart(() => {
-    console.log("📊 Iniciando dashboard após Chart.js...");
     try {
       initializeDashboard();
-      console.log("✅ Dashboard inicializado com sucesso!");
     } catch (error) {
       console.error("❌ Erro ao inicializar dashboard:", error);
     }
@@ -1434,21 +1323,17 @@ document.addEventListener("DOMContentLoaded", function () {
 // Modifica a função loadDashboardData para usar toast
 async function loadDashboardDataWithToast() {
   try {
-    console.log("📊 INICIANDO carregamento do dashboard...");
     showDashboardLoading(true);
 
     // Toast de carregamento removido para melhor UX
 
-    console.log("📊 Verificando Supabase...");
     if (!window.supabase) {
       console.error("❌ Supabase não encontrado!");
       throw new Error("Supabase não inicializado");
     }
 
-    console.log("👤 Verificando usuário...");
     const { data: userData } = await window.supabase.auth.getUser();
     const user = userData?.user;
-    console.log("👤 Usuário:", user ? "Autenticado" : "Não autenticado");
 
     if (!user) {
       console.warn("⚠️ Usuário não autenticado");
@@ -1497,14 +1382,6 @@ async function loadDashboardDataWithToast() {
       dashboardData.poupanca.length +
       dashboardData.investimentos.length;
 
-    console.log("📊 Dados carregados:", {
-      despesas: dashboardData.despesas.length,
-      receitas: dashboardData.receitas.length,
-      planos: dashboardData.planos.length,
-      poupanca: dashboardData.poupanca.length,
-      investimentos: dashboardData.investimentos.length,
-    });
-
     // Atualiza dashboard
     updateDashboard();
 
@@ -1518,11 +1395,6 @@ async function loadDashboardDataWithToast() {
     );
 
     // Toast de sucesso removido para melhor UX
-    console.log("✅ Dashboard carregado com sucesso:", {
-      totalItems,
-      planos: dashboardData.planos.length,
-      futuro: despesasFuturas.length + receitasFuturas.length,
-    });
   } catch (error) {
     console.error("❌ Erro ao carregar dados do dashboard:", error);
     // Toast de erro removido para melhor UX
@@ -1536,11 +1408,6 @@ async function loadDashboardDataWithToast() {
 // Função para processar dados de receitas por categoria
 function processIncomeByCategory(period) {
   const filteredReceitas = filterDataByPeriod(dashboardData.receitas, period);
-  console.log(`💰 processIncomeByCategory (${period}):`, {
-    totalReceitas: dashboardData.receitas?.length || 0,
-    filtradas: filteredReceitas.length,
-    amostra: filteredReceitas.slice(0, 3),
-  });
 
   const categoryTotals = {};
 
@@ -1550,18 +1417,12 @@ function processIncomeByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
-  console.log(`💰 Resultado processIncomeByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
 // Função para processar dados de poupança por categoria
 function processSavingsByCategory(period) {
   const filteredPoupanca = filterDataByPeriod(dashboardData.poupanca, period);
-  console.log(`🏦 processSavingsByCategory (${period}):`, {
-    totalPoupanca: dashboardData.poupanca?.length || 0,
-    filtradas: filteredPoupanca.length,
-    amostra: filteredPoupanca.slice(0, 3),
-  });
 
   const categoryTotals = {};
 
@@ -1572,7 +1433,6 @@ function processSavingsByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
-  console.log(`🏦 Resultado processSavingsByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
@@ -1582,11 +1442,6 @@ function processInvestmentsByCategory(period) {
     dashboardData.investimentos,
     period
   );
-  console.log(`📈 processInvestmentsByCategory (${period}):`, {
-    totalInvestimentos: dashboardData.investimentos?.length || 0,
-    filtrados: filteredInvestimentos.length,
-    amostra: filteredInvestimentos.slice(0, 3),
-  });
 
   const categoryTotals = {};
 
@@ -1602,18 +1457,12 @@ function processInvestmentsByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
-  console.log(`📈 Resultado processInvestmentsByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
 // Função para processar dados de planos por categoria
 function processPlansByCategory(period) {
   const filteredPlanos = filterDataByPeriod(dashboardData.planos, period);
-  console.log(`📋 processPlansByCategory (${period}):`, {
-    totalPlanos: dashboardData.planos?.length || 0,
-    filtrados: filteredPlanos.length,
-    amostra: filteredPlanos.slice(0, 3),
-  });
 
   const categoryTotals = {};
 
@@ -1623,7 +1472,6 @@ function processPlansByCategory(period) {
     categoryTotals[categoria] = (categoryTotals[categoria] || 0) + valor;
   });
 
-  console.log(`📋 Resultado processPlansByCategory:`, categoryTotals);
   return categoryTotals;
 }
 
@@ -1646,8 +1494,6 @@ function updateCategoryChart(chartContext) {
       ],
     };
   }
-
-  console.log(`🎯 Atualizando gráfico interativo:`, chartContext);
 
   // Verifica se Chart.js está disponível
   if (typeof Chart === "undefined") {
@@ -1709,15 +1555,8 @@ function updateCategoryChart(chartContext) {
   const categories = Object.keys(categoryData);
   const values = Object.values(categoryData);
 
-  console.log(`📊 Dados do gráfico para ${type} (${period}):`, {
-    categorias: categories.length,
-    valores: values,
-    categoryData,
-  });
-
   // Se não há dados, mostra mensagem
   if (categories.length === 0 || values.every((v) => v === 0)) {
-    console.log(`⚠️ Nenhum dado para exibir no gráfico ${type} (${period})`);
     const canvas = document.getElementById("categoryChart");
     if (canvas) {
       const ctx = canvas.getContext("2d");
@@ -1814,10 +1653,6 @@ function updateCategoryChart(chartContext) {
       },
     },
   });
-
-  console.log(
-    `✅ Gráfico ${type} atualizado com ${categories.length} categorias`
-  );
 }
 
 // Exporta funções globalmente

@@ -1,16 +1,7 @@
 // Observe auth state and redirect to painel when logged in
 if (window.supabase) {
-  console.log("🔐 Auth listener configurado");
   window.supabase.auth.onAuthStateChange((event, session) => {
-    console.log(
-      "🔄 Auth state changed:",
-      event,
-      session?.user?.email || "sem usuário"
-    );
-
     if (session && session.user) {
-      console.log("✅ Usuário autenticado, redirecionando...");
-
       // Detectar ambiente para redirecionamento correto
       const isGitHubPages = window.location.hostname.includes("github.io");
       let targetUrl;
@@ -24,12 +15,11 @@ if (window.supabase) {
         targetUrl = "../views/Painel.html";
       }
 
-      console.log("🎯 Redirecionando para:", targetUrl);
       window.location.replace(targetUrl);
     }
   });
 } else {
-  console.error("❌ Supabase não está disponível para auth listener");
+  console.error("Supabase não está disponível para auth listener");
 }
 
 function onChangeEmail() {
@@ -170,10 +160,8 @@ function validateEmailFormat(email) {
 }
 
 async function googleLogin() {
-  console.log("🚀 Iniciando login com Google...");
-
   if (!window.supabase) {
-    console.error("❌ Supabase não está disponível");
+    console.error("Supabase não está disponível");
     showErrorToast(
       "Erro de configuração",
       "Sistema de autenticação não disponível"
@@ -182,7 +170,7 @@ async function googleLogin() {
   }
 
   if (!window.SUPABASE_CONFIGURED) {
-    console.error("❌ Supabase não está configurado corretamente");
+    console.error("Supabase não está configurado corretamente");
     showErrorToast("Erro de configuração", "Configure o Supabase corretamente");
     return;
   }
@@ -212,13 +200,6 @@ async function googleLogin() {
     }
   }
 
-  console.log("🔗 Redirect URL configurada:", redirectUrl);
-  console.log("🌍 Ambiente:", {
-    isGitHubPages,
-    protocol: window.location.protocol,
-    hostname: window.location.hostname,
-  });
-
   try {
     const { data, error } = await window.supabase.auth.signInWithOAuth({
       provider: "google",
@@ -228,17 +209,15 @@ async function googleLogin() {
     });
 
     if (error) {
-      console.error("❌ Erro no OAuth:", error);
+      console.error("Erro no OAuth:", error);
       showErrorToast(
         "Erro no login",
         "Falha ao iniciar login com Google: " + error.message
       );
       return;
     }
-
-    console.log("✅ OAuth iniciado com sucesso:", data);
   } catch (error) {
-    console.error("❌ Exceção no OAuth:", error);
+    console.error("Exceção no OAuth:", error);
     showErrorToast("Erro no login", "Falha inesperada no login com Google");
   }
 }

@@ -489,8 +489,6 @@ class SmartCategorizationSystem {
     const cleanDescription = this.cleanText(description);
     this.userPreferences[cleanDescription] = chosenCategory;
     this.saveUserPreferences();
-
-    console.log(`🤖 IA aprendeu: "${description}" → "${chosenCategory}"`);
   }
 
   // Obtém todas as categorias disponíveis por tipo
@@ -543,7 +541,6 @@ class SmartCategorizationSystem {
 
       if (error) throw error;
 
-      console.log(`✅ Categoria "${name}" criada com sucesso`);
       return data;
     } catch (error) {
       console.error("Erro ao criar categoria:", error);
@@ -576,7 +573,3 @@ window.createCategory = async (name, type, icon, color) => {
     color
   );
 };
-
-console.log(
-  "🤖 Sistema de Categorização Inteligente inicializado com sucesso!"
-);

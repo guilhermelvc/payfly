@@ -1,1035 +1,918 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PayFly - Investimentos</title>
-        <link rel="icon" type="image/png" href="../view/imgs/Favicon.png" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PayFly - Investimentos</title>
+    <link rel="icon" type="image/png" href="../view/imgs/Favicon.png" />
 
-        <!-- ======= Estilos ====== -->
-        <link rel="stylesheet" href="../views/css/style.css" />
-        <link rel="stylesheet" href="../views/css/data-tables.css" />
-        <link rel="stylesheet" href="../assets/css/accessibility.css" />
+    <!-- ======= Estilos ====== -->
+    <link rel="stylesheet" href="../views/css/style.css" />
+    <link rel="stylesheet" href="../views/css/data-tables.css" />
+    <link rel="stylesheet" href="../assets/css/accessibility.css" />
 
-        <!-- Forçar tema escuro nas tabelas -->
-        <style>
-            /* TEMA ESCURO - Container preto, tabela cinza */
-            body:not(.light-theme) .table-container {
-                background: #1a1a1a !important;
-                background-color: #1a1a1a !important;
-                border-radius: 10px !important;
-                padding: 15px !important;
-            }
+    <!-- Forçar tema escuro nas tabelas -->
+    <style>
+      /* TEMA ESCURO - Container preto, tabela cinza */
+      body:not(.light-theme) .table-container {
+        background: #1a1a1a !important;
+        background-color: #1a1a1a !important;
+        border-radius: 10px !important;
+        padding: 15px !important;
+      }
 
-            body:not(.light-theme) .table-container table,
-            body:not(.light-theme) #data-table {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                border-radius: 8px !important;
-            }
+      body:not(.light-theme) .table-container table,
+      body:not(.light-theme) #data-table {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        border-radius: 8px !important;
+      }
 
-            body:not(.light-theme) .table-container tbody,
-            body:not(.light-theme) #data-table tbody {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-            }
+      body:not(.light-theme) .table-container tbody,
+      body:not(.light-theme) #data-table tbody {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr,
-            body:not(.light-theme) #data-table tbody tr,
-            body:not(.light-theme) tbody tr[id^="row-"] {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                background-image: none !important;
-            }
+      body:not(.light-theme) .table-container tbody tr,
+      body:not(.light-theme) #data-table tbody tr,
+      body:not(.light-theme) tbody tr[id^="row-"] {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        background-image: none !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr:hover,
-            body:not(.light-theme) #data-table tbody tr:hover,
-            body:not(.light-theme) tbody tr[id^="row-"]:hover {
-                background: #3a3a3a !important;
-                background-color: #3a3a3a !important;
-            }
+      body:not(.light-theme) .table-container tbody tr:hover,
+      body:not(.light-theme) #data-table tbody tr:hover,
+      body:not(.light-theme) tbody tr[id^="row-"]:hover {
+        background: #3a3a3a !important;
+        background-color: #3a3a3a !important;
+      }
 
-            body:not(.light-theme) .table-container tbody tr td,
-            body:not(.light-theme) #data-table tbody tr td,
-            body:not(.light-theme) tbody tr[id^="row-"] td {
-                background: #2a2a2a !important;
-                background-color: #2a2a2a !important;
-                color: #e0e0e0 !important;
-            }
+      body:not(.light-theme) .table-container tbody tr td,
+      body:not(.light-theme) #data-table tbody tr td,
+      body:not(.light-theme) tbody tr[id^="row-"] td {
+        background: #2a2a2a !important;
+        background-color: #2a2a2a !important;
+        color: #e0e0e0 !important;
+      }
 
-            /* Tema claro */
-            body.light-theme .table-container,
-            body.light-theme .table-container table,
-            body.light-theme .table-container tbody,
-            body.light-theme .table-container tbody tr,
-            body.light-theme .table-container tbody tr td {
-                background: #ffffff !important;
-                background-color: #ffffff !important;
-            }
-        </style>
+      /* Tema claro */
+      body.light-theme .table-container,
+      body.light-theme .table-container table,
+      body.light-theme .table-container tbody,
+      body.light-theme .table-container tbody tr,
+      body.light-theme .table-container tbody tr td {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+      }
+    </style>
 
-        <!-- Sistema de estilos de tabela com MutationObserver -->
-        <script>
-            function applyRowStyles(row) {
-                const isDarkTheme =
-                    !document.body.classList.contains("light-theme");
-                if (isDarkTheme) {
-                    row.style.setProperty("background", "#2a2a2a", "important");
-                    row.style.setProperty(
-                        "background-color",
-                        "#2a2a2a",
-                        "important"
-                    );
-                    row.querySelectorAll("td").forEach((td) => {
-                        td.style.setProperty(
-                            "background",
-                            "#2a2a2a",
-                            "important"
-                        );
-                        td.style.setProperty(
-                            "background-color",
-                            "#2a2a2a",
-                            "important"
-                        );
-                    });
-                } else {
-                    row.style.setProperty("background", "#ffffff", "important");
-                    row.style.setProperty(
-                        "background-color",
-                        "#ffffff",
-                        "important"
-                    );
-                    row.querySelectorAll("td").forEach((td) => {
-                        td.style.setProperty(
-                            "background",
-                            "#ffffff",
-                            "important"
-                        );
-                        td.style.setProperty(
-                            "background-color",
-                            "#ffffff",
-                            "important"
-                        );
-                    });
+    <!-- Sistema de estilos de tabela com MutationObserver -->
+    <script>
+      function applyRowStyles(row) {
+        const isDarkTheme = !document.body.classList.contains("light-theme");
+        if (isDarkTheme) {
+          row.style.setProperty("background", "#2a2a2a", "important");
+          row.style.setProperty("background-color", "#2a2a2a", "important");
+          row.querySelectorAll("td").forEach((td) => {
+            td.style.setProperty("background", "#2a2a2a", "important");
+            td.style.setProperty("background-color", "#2a2a2a", "important");
+          });
+        } else {
+          row.style.setProperty("background", "#ffffff", "important");
+          row.style.setProperty("background-color", "#ffffff", "important");
+          row.querySelectorAll("td").forEach((td) => {
+            td.style.setProperty("background", "#ffffff", "important");
+            td.style.setProperty("background-color", "#ffffff", "important");
+          });
+        }
+      }
+
+      function cleanTableStyles() {
+        document.querySelectorAll("tbody tr").forEach(applyRowStyles);
+      }
+
+      // Observa mudanças na tabela para aplicar estilos em novas linhas
+      document.addEventListener("DOMContentLoaded", function () {
+        const tbody =
+          document.querySelector("#data-table tbody") ||
+          document.querySelector("tbody");
+        if (tbody) {
+          const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+              mutation.addedNodes.forEach(function (node) {
+                if (node.nodeName === "TR") {
+                  applyRowStyles(node);
                 }
-            }
-
-            function cleanTableStyles() {
-                document.querySelectorAll("tbody tr").forEach(applyRowStyles);
-            }
-
-            // Observa mudanças na tabela para aplicar estilos em novas linhas
-            document.addEventListener("DOMContentLoaded", function () {
-                const tbody =
-                    document.querySelector("#data-table tbody") ||
-                    document.querySelector("tbody");
-                if (tbody) {
-                    const observer = new MutationObserver(function (mutations) {
-                        mutations.forEach(function (mutation) {
-                            mutation.addedNodes.forEach(function (node) {
-                                if (node.nodeName === "TR") {
-                                    applyRowStyles(node);
-                                }
-                            });
-                        });
-                    });
-                    observer.observe(tbody, { childList: true });
-                }
-                // Aplica nos existentes também
-                setTimeout(cleanTableStyles, 100);
-                setTimeout(cleanTableStyles, 500);
-                setTimeout(cleanTableStyles, 1500);
+              });
             });
+          });
+          observer.observe(tbody, { childList: true });
+        }
+        // Aplica nos existentes também
+        setTimeout(cleanTableStyles, 100);
+        setTimeout(cleanTableStyles, 500);
+        setTimeout(cleanTableStyles, 1500);
+      });
 
-            document.addEventListener("themeChange", function () {
-                cleanTableStyles();
-                setTimeout(cleanTableStyles, 100);
-            });
-        </script>
-    </head>
+      document.addEventListener("themeChange", function () {
+        cleanTableStyles();
+        setTimeout(cleanTableStyles, 100);
+      });
+    </script>
+  </head>
 
-    <body class="light-theme">
-        <!-- =============== Barra de Acessibilidade =============== -->
-        <div class="accessibility-bar">
-            <div class="accessibility-controls">
-                <button
-                    class="accessibility-btn"
-                    id="decrease-font-btn"
-                    title="Diminuir fonte (Ctrl + -)"
-                >
-                    <ion-icon name="remove-outline"></ion-icon>
-                </button>
-                <span class="font-size-display" id="font-size-display"
-                    >16px</span
-                >
-                <button
-                    class="accessibility-btn"
-                    id="increase-font-btn"
-                    title="Aumentar fonte (Ctrl + +)"
-                >
-                    <ion-icon name="add-outline"></ion-icon>
-                </button>
-                <button
-                    class="accessibility-btn"
-                    id="reset-font-btn"
-                    title="Resetar fonte (Ctrl + 0)"
-                >
-                    <ion-icon name="refresh-outline"></ion-icon>
-                </button>
-                <div class="accessibility-divider"></div>
-                <button
-                    class="accessibility-btn"
-                    id="theme-toggle-btn"
-                    title="Alternar tema (Ctrl + Shift + T)"
-                >
-                    <ion-icon name="sunny-outline"></ion-icon>
-                </button>
-            </div>
+  <body class="light-theme">
+    <!-- =============== Barra de Acessibilidade =============== -->
+    <div class="accessibility-bar">
+      <div class="accessibility-controls">
+        <button
+          class="accessibility-btn"
+          id="decrease-font-btn"
+          title="Diminuir fonte (Ctrl + -)"
+        >
+          <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <span class="font-size-display" id="font-size-display">16px</span>
+        <button
+          class="accessibility-btn"
+          id="increase-font-btn"
+          title="Aumentar fonte (Ctrl + +)"
+        >
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+        <button
+          class="accessibility-btn"
+          id="reset-font-btn"
+          title="Resetar fonte (Ctrl + 0)"
+        >
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+        <div class="accessibility-divider"></div>
+        <button
+          class="accessibility-btn"
+          id="theme-toggle-btn"
+          title="Alternar tema (Ctrl + Shift + T)"
+        >
+          <ion-icon name="sunny-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- =============== Menu Navegação ================ -->
+    <div class="container">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon">
+                <img src="../views/imgs/logo.svg" alt="Logo" />
+              </span>
+              <span class="title">PayFly</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Painel.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Painel Principal</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Receitas.html">
+              <span class="icon">
+                <ion-icon name="card-outline"></ion-icon>
+              </span>
+              <span class="title">Receitas</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Despesas.html">
+              <span class="icon">
+                <ion-icon name="cart-outline"></ion-icon>
+              </span>
+              <span class="title">Despesas</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Planos.html">
+              <span class="icon">
+                <span class="target-icon" aria-hidden="true">
+                  <span class="target-arrow"></span>
+                </span>
+              </span>
+              <span class="title">Planos</span>
+            </a>
+          </li>
+          <li>
+            <a href="Poupanca.html">
+              <span class="icon">
+                <ion-icon name="wallet-outline"></ion-icon>
+              </span>
+              <span class="title">Poupança</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Investimentos.html">
+              <span class="icon">
+                <ion-icon name="trending-up-outline"></ion-icon>
+              </span>
+              <span class="title">Investimentos</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="Configurações.html">
+              <span class="icon">
+                <ion-icon name="settings-outline"></ion-icon>
+              </span>
+              <span class="title">Configurações</span>
+            </a>
+          </li>
+
+          <li>
+            <a onclick="logout()">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title">Sair</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Informação do usuário no rodapé do sidebar -->
+        <div class="user-sidebar-footer">
+          <div class="user-info-display">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <span id="user-sidebar-name">Usuário</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================= Principal ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+
+          <!-- Botão AI Insights -->
+          <div class="ai-insights-button" onclick="openAIInsights()">
+            <ion-icon name="bulb-outline"></ion-icon>
+            <span>AI Insights</span>
+          </div>
         </div>
 
-        <!-- =============== Menu Navegação ================ -->
-        <div class="container">
-            <div class="navigation">
-                <ul>
-                    <li>
-                        <a href="#">
-                            <span class="icon">
-                                <img src="../views/imgs/logo.svg" alt="Logo" />
-                            </span>
-                            <span class="title">PayFly</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Painel.html">
-                            <span class="icon">
-                                <ion-icon name="home-outline"></ion-icon>
-                            </span>
-                            <span class="title">Painel Principal</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Receitas.html">
-                            <span class="icon">
-                                <ion-icon name="card-outline"></ion-icon>
-                            </span>
-                            <span class="title">Receitas</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Despesas.html">
-                            <span class="icon">
-                                <ion-icon name="cart-outline"></ion-icon>
-                            </span>
-                            <span class="title">Despesas</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Planos.html">
-                            <span class="icon">
-                                <span class="target-icon" aria-hidden="true">
-                                    <span class="target-arrow"></span>
-                                </span>
-                            </span>
-                            <span class="title">Planos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="Poupanca.html">
-                            <span class="icon">
-                                <ion-icon name="wallet-outline"></ion-icon>
-                            </span>
-                            <span class="title">Poupança</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Investimentos.html">
-                            <span class="icon">
-                                <ion-icon name="trending-up-outline"></ion-icon>
-                            </span>
-                            <span class="title">Investimentos</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="Configurações.html">
-                            <span class="icon">
-                                <ion-icon name="settings-outline"></ion-icon>
-                            </span>
-                            <span class="title">Configurações</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a onclick="logout()">
-                            <span class="icon">
-                                <ion-icon name="log-out-outline"></ion-icon>
-                            </span>
-                            <span class="title">Sair</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Informação do usuário no rodapé do sidebar -->
-                <div class="user-sidebar-footer">
-                    <div class="user-info-display">
-                        <ion-icon name="person-circle-outline"></ion-icon>
-                        <span id="user-sidebar-name">Usuário</span>
-                    </div>
-                </div>
+        <!-- ======================= Cartões ================== -->
+        <div class="cardBox">
+          <div class="card">
+            <div>
+              <div class="numbers">
+                <p id="totalInvestimentosDisplay">R$ 0,00</p>
+              </div>
+              <div class="cardName">Total Investido</div>
             </div>
-
-            <!-- ========================= Principal ==================== -->
-            <div class="main">
-                <div class="topbar">
-                    <div class="toggle">
-                        <ion-icon name="menu-outline"></ion-icon>
-                    </div>
-
-                    <!-- Botão AI Insights -->
-                    <div class="ai-insights-button" onclick="openAIInsights()">
-                        <ion-icon name="bulb-outline"></ion-icon>
-                        <span>AI Insights</span>
-                    </div>
-                </div>
-
-                <!-- ======================= Cartões ================== -->
-                <div class="cardBox">
-                    <div class="card">
-                        <div>
-                            <div class="numbers">
-                                <p id="totalInvestimentosDisplay">R$ 0,00</p>
-                            </div>
-                            <div class="cardName">Total Investido</div>
-                        </div>
-                        <div class="iconBx">
-                            <ion-icon name="trending-up-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div>
-                            <div class="numbers">
-                                <p id="filteredInvestimentosDisplay">R$ 0,00</p>
-                            </div>
-                            <div class="cardName">Investimentos Filtrados</div>
-                        </div>
-                        <div class="iconBx">
-                            <ion-icon name="filter-outline"></ion-icon>
-                        </div>
-                    </div>
-
-                    <a href="Painel.html" class="btn1" style="margin-left:auto; align-self:flex-start; margin-top:10px;">Voltar</a>
-                </div>
-
-                <!-- ================ Dashboard ================= -->
-                <section id="transaction">
-                    <div class="details" style="grid-template-columns: 1fr">
-                        <div class="recentOrders">
-                            <div class="cardHeader">
-                                <a
-                                    onclick="Modal.open()"
-                                    class="add-transaction-button"
-                                    >+ Adicionar Investimento</a
-                                >
-                                <a
-                                    href="#"
-                                    onclick="FilterModal.open()"
-                                    class="btn1"
-                                    ><ion-icon name="filter-outline"></ion-icon>
-                                    Filtrar</a
-                                >
-                            </div>
-
-                            <div class="table-container">
-                                <table id="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Investimento</th>
-                                            <th>Tipo</th>
-                                            <th>Valor Investido</th>
-                                            <th>Valor Atual</th>
-                                            <th>Rentabilidade</th>
-                                            <th>Data</th>
-                                            <th>Editar</th>
-                                            <th>Excluir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Dados inseridos dinamicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="footOptions">
-                                <a href="#" onclick="filterClear()" class="btn1"
-                                    >Limpar Filtro</a
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- =========== Modal Adicionar (Padronizado) =========  -->
-                <div class="standardized-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>📈 Adicionar Investimento</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="Modal.close()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form onsubmit="Form.submit(event)" id="form">
-                                <div class="standardized-input-group">
-                                    <label for="nome"
-                                        >Nome do Investimento</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="nome"
-                                        name="nome"
-                                        placeholder="Ex: PETR4, Tesouro SELIC, CDB..."
-                                    />
-                                </div>
-
-                                <div
-                                    class="standardized-input-group categoria-group"
-                                >
-                                    <label for="tipo"
-                                        >Tipo de Investimento</label
-                                    >
-                                    <div class="categoria-input-wrapper">
-                                        <input
-                                            type="text"
-                                            id="tipo"
-                                            name="tipo"
-                                            placeholder="Ex: Ação, Tesouro Direto, CDB..."
-                                        />
-                                        <button
-                                            type="button"
-                                            class="ia-suggest-btn"
-                                            onclick="suggestInvestmentTypeSimple()"
-                                            title="Sugestão com IA"
-                                        >
-                                            🤖 IA
-                                        </button>
-                                    </div>
-                                    <div class="predefined-categories">
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('Ação')"
-                                            >📈 Ação</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('Fundo Imobiliário')"
-                                            >🏢 FII</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('CDB')"
-                                            >🏦 CDB</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('Tesouro Direto')"
-                                            >🇧🇷 Tesouro</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('LCI')"
-                                            >🏡 LCI</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setTipoInvest('Criptomoeda')"
-                                            >₿ Crypto</span
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="valor_investido"
-                                        >Valor Investido (R$)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="valor_investido"
-                                        name="valor_investido"
-                                        placeholder="0,00"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="valor_atual"
-                                        >Valor Atual (R$)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="valor_atual"
-                                        name="valor_atual"
-                                        placeholder="0,00 (opcional)"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="data">Data da Aplicação</label>
-                                    <input type="date" id="data" name="data" />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="corretora"
-                                        >Corretora/Instituição</label
-                                    >
-                                    <select id="corretora" name="corretora">
-                                        <option value="">
-                                            Selecione a corretora
-                                        </option>
-                                        <option value="xp">
-                                            XP Investimentos
-                                        </option>
-                                        <option value="btg">BTG Pactual</option>
-                                        <option value="inter">Inter</option>
-                                        <option value="rico">Rico</option>
-                                        <option value="clear">Clear</option>
-                                        <option value="nubank">Nubank</option>
-                                        <option value="itau">Itaú</option>
-                                        <option value="bradesco">
-                                            Bradesco
-                                        </option>
-                                        <option value="bb">
-                                            Banco do Brasil
-                                        </option>
-                                        <option value="outro">Outro</option>
-                                    </select>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group recorrencia-group"
-                                >
-                                    <div class="recorrencia-label">
-                                        <span
-                                            class="recorrencia-text"
-                                            id="investimento-recorrencia-text"
-                                            >Investimento Recorrente?</span
-                                        >
-                                        <label
-                                            class="switch-toggle"
-                                            aria-label="Alternar investimento recorrente"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                id="is_recorrente"
-                                                name="is_recorrente"
-                                                onchange="toggleRecorrenciaFields()"
-                                                aria-labelledby="investimento-recorrencia-text"
-                                            />
-                                            <span class="slider"></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group"
-                                    id="recorrencia_meses_group"
-                                    style="display: none"
-                                >
-                                    <label for="recorrencia_meses"
-                                        >Duração (meses)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="recorrencia_meses"
-                                        name="recorrencia_meses"
-                                        placeholder="Ex: 6, 12..."
-                                        <div
-                                            class="standardized-input-group recorrencia-group"
-                                        >
-                                            <div class="recorrencia-label">
-                                                <span
-                                                    class="recorrencia-text"
-                                                    id="edit-investimento-recorrencia-text"
-                                                    >Investimento Recorrente?</span
-                                                >
-                                                <label
-                                                    class="switch-toggle"
-                                                    aria-label="Alternar investimento recorrente"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        id="edit-is-recorrente"
-                                                        name="is_recorrente"
-                                                        onchange="toggleEditRecorrenciaFields()"
-                                                        aria-labelledby="edit-investimento-recorrencia-text"
-                                                    />
-                                                    <span class="slider"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Toast personalizado removido - usando sistema toast padronizado -->
-
-                <!-- =============================  Modal do Filtro (Padronizado) ============================-->
-                <div class="standardized-modal-overlay filter-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>🔍 Filtrar Investimentos</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="FilterModal.close()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form
-                                id="filter-form"
-                                onsubmit="filterInvestimentos(event)"
-                            >
-                                <div class="standardized-input-group">
-                                    <label for="filter-nome"
-                                        >Nome do Investimento</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="filter-nome"
-                                        name="nome"
-                                        placeholder="Ex: PETR4, Tesouro... (busca parcial)"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-tipo">Tipo</label>
-                                    <input
-                                        type="text"
-                                        id="filter-tipo"
-                                        name="tipo"
-                                        placeholder="Ex: Ação, Tesouro Direto, CDB..."
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-valor"
-                                        >Valor Investido (R$)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="filter-valor"
-                                        name="valor"
-                                        placeholder="Ex: 1000.00 (valor exato)"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-data"
-                                        >Data da Aplicação</label
-                                    >
-                                    <input
-                                        type="date"
-                                        id="filter-data"
-                                        name="data"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="filter-recorrente"
-                                        >Filtrar por Recorrência</label
-                                    >
-                                    <select
-                                        id="filter-recorrente"
-                                        name="recorrente"
-                                    >
-                                        <option value="">Todas</option>
-                                        <option value="sim">
-                                            Apenas Recorrentes
-                                        </option>
-                                        <option value="nao">
-                                            Apenas Únicas
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="FilterModal.close()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        🔍 Filtrar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- =========================== Modal de Editar (Padronizado) ============================-->
-                <div class="standardized-modal-overlay edit-modal-overlay">
-                    <div class="standardized-modal">
-                        <div class="standardized-modal-header">
-                            <h2>✏️ Editar Investimento</h2>
-                            <button
-                                class="standardized-modal-close"
-                                onclick="closeEditModal()"
-                            >
-                                ×
-                            </button>
-                        </div>
-
-                        <div class="standardized-modal-body">
-                            <form
-                                id="edit-form"
-                                onsubmit="submitEditForm(event)"
-                            >
-                                <div class="standardized-input-group">
-                                    <label for="edit-nome"
-                                        >Nome do Investimento</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="edit-nome"
-                                        name="nome"
-                                        placeholder="Nome do investimento"
-                                    />
-                                </div>
-
-                                <div
-                                    class="standardized-input-group categoria-group"
-                                >
-                                    <label for="edit-tipo">Tipo</label>
-                                    <div class="categoria-input-wrapper">
-                                        <input
-                                            type="text"
-                                            id="edit-tipo"
-                                            name="tipo"
-                                            placeholder="Ex: Ação, Tesouro Direto, CDB..."
-                                        />
-                                        <button
-                                            type="button"
-                                            class="ia-suggest-btn"
-                                            onclick="suggestInvestmentEditTypeSimple()"
-                                            title="Sugestão com IA"
-                                        >
-                                            🤖 IA
-                                        </button>
-                                    </div>
-                                    <div class="predefined-categories">
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('Ação')"
-                                            >� Ação</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('Fundo Imobiliário')"
-                                            >🏢 FII</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('CDB')"
-                                            >🏦 CDB</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('Tesouro Direto')"
-                                            >🇧🇷 Tesouro</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('LCI')"
-                                            >🏡 LCI</span
-                                        >
-                                        <span
-                                            class="category-tag"
-                                            onclick="setEditTipoInvest('Criptomoeda')"
-                                            >₿ Crypto</span
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-valor-investido"
-                                        >Valor Investido (R$)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="edit-valor-investido"
-                                        name="valor_investido"
-                                        placeholder="0,00"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-valor-atual"
-                                        >Valor Atual (R$)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="edit-valor-atual"
-                                        name="valor_atual"
-                                        placeholder="0,00"
-                                        step="0.01"
-                                    />
-                                </div>
-
-                                <div class="standardized-input-group">
-                                    <label for="edit-date"
-                                        >Data da Aplicação</label
-                                    >
-                                    <input
-                                        type="date"
-                                        id="edit-date"
-                                        name="date"
-                                    />
-                                </div>
-
-                                <div
-                                    class="standardized-input-group recorrencia-group"
-                                >
-                                    <label
-                                        for="edit-is-recorrente"
-                                        class="recorrencia-label"
-                                    >
-                                        <span class="recorrencia-text"
-                                            >Investimento Recorrente?</span
-                                        >
-                                        <div class="checkbox-wrapper">
-                                            <input
-                                                type="checkbox"
-                                                id="edit-is-recorrente"
-                                                name="is_recorrente"
-                                                onchange="toggleEditRecorrenciaFields()"
-                                            />
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <div
-                                    class="standardized-input-group"
-                                    id="edit-recorrencia-meses-group"
-                                    style="display: none"
-                                >
-                                    <label for="edit-recorrencia-meses"
-                                        >Duração (meses)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="edit-recorrencia-meses"
-                                        name="recorrencia_meses"
-                                        placeholder="Ex: 6, 12..."
-                                        min="1"
-                                        max="120"
-                                        value="1"
-                                    />
-                                </div>
-
-                                <div class="standardized-modal-actions">
-                                    <a
-                                        onclick="closeEditModal()"
-                                        class="standardized-button standardized-button-secondary"
-                                        >Cancelar</a
-                                    >
-                                    <button
-                                        type="submit"
-                                        class="standardized-button standardized-button-primary"
-                                    >
-                                        💾 Salvar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="iconBx">
+              <ion-icon name="trending-up-outline"></ion-icon>
             </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="numbers">
+                <p id="filteredInvestimentosDisplay">R$ 0,00</p>
+              </div>
+              <div class="cardName">Investimentos Filtrados</div>
+            </div>
+            <div class="iconBx">
+              <ion-icon name="filter-outline"></ion-icon>
+            </div>
+          </div>
+
+          <a
+            href="Painel.html"
+            class="btn1"
+            style="margin-left: auto; align-self: flex-start; margin-top: 10px"
+            >Voltar</a
+          >
         </div>
 
-        <!-- Modal de Confirmação de Exclusão -->
-        <div class="delete-confirm-modal-overlay" id="deleteConfirmModal">
-            <div class="delete-confirm-modal">
-                <h3>
-                    <ion-icon name="warning-outline"></ion-icon>
-                    Confirmar Exclusão
-                </h3>
-                <p>
-                    Tem certeza que deseja excluir este item? Esta ação não pode
-                    ser desfeita.
-                </p>
-                <div class="delete-confirm-actions">
+        <!-- ================ Dashboard ================= -->
+        <section id="transaction">
+          <div class="details" style="grid-template-columns: 1fr">
+            <div class="recentOrders">
+              <div class="cardHeader">
+                <a onclick="Modal.open()" class="add-transaction-button"
+                  >+ Adicionar Investimento</a
+                >
+                <a href="#" onclick="FilterModal.open()" class="btn1"
+                  ><ion-icon name="filter-outline"></ion-icon> Filtrar</a
+                >
+              </div>
+
+              <div class="table-container">
+                <table id="data-table">
+                  <thead>
+                    <tr>
+                      <th>Investimento</th>
+                      <th>Tipo</th>
+                      <th>Valor Investido</th>
+                      <th>Valor Atual</th>
+                      <th>Rentabilidade</th>
+                      <th>Data</th>
+                      <th>Editar</th>
+                      <th>Excluir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="footOptions">
+                <a href="#" onclick="filterClear()" class="btn1"
+                  >Limpar Filtro</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========== Modal Adicionar (Padronizado) =========  -->
+        <div class="standardized-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>📈 Adicionar Investimento</h2>
+              <button class="standardized-modal-close" onclick="Modal.close()">
+                ×
+              </button>
+            </div>
+
+            <div class="standardized-modal-body">
+              <form onsubmit="Form.submit(event)" id="form">
+                <div class="standardized-input-group">
+                  <label for="nome">Nome do Investimento</label>
+                  <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Ex: PETR4, Tesouro SELIC, CDB..."
+                  />
+                </div>
+
+                <div class="standardized-input-group categoria-group">
+                  <label for="tipo">Tipo de Investimento</label>
+                  <div class="categoria-input-wrapper">
+                    <input
+                      type="text"
+                      id="tipo"
+                      name="tipo"
+                      placeholder="Ex: Ação, Tesouro Direto, CDB..."
+                    />
                     <button
-                        class="delete-cancel-btn"
-                        onclick="closeDeleteConfirm()"
+                      type="button"
+                      class="ia-suggest-btn"
+                      onclick="suggestInvestmentTypeSimple()"
+                      title="Sugestão com IA"
                     >
-                        Cancelar
+                      🤖 IA
                     </button>
-                    <button
-                        class="delete-confirm-btn"
-                        onclick="confirmDelete()"
+                  </div>
+                  <div class="predefined-categories">
+                    <span class="category-tag" onclick="setTipoInvest('Ação')"
+                      >📈 Ação</span
                     >
-                        Excluir
-                    </button>
+                    <span
+                      class="category-tag"
+                      onclick="setTipoInvest('Fundo Imobiliário')"
+                      >🏢 FII</span
+                    >
+                    <span class="category-tag" onclick="setTipoInvest('CDB')"
+                      >🏦 CDB</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setTipoInvest('Tesouro Direto')"
+                      >🇧🇷 Tesouro</span
+                    >
+                    <span class="category-tag" onclick="setTipoInvest('LCI')"
+                      >🏡 LCI</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setTipoInvest('Criptomoeda')"
+                      >₿ Crypto</span
+                    >
+                  </div>
                 </div>
+
+                <div class="standardized-input-group">
+                  <label for="valor_investido">Valor Investido (R$)</label>
+                  <input
+                    type="number"
+                    id="valor_investido"
+                    name="valor_investido"
+                    placeholder="0,00"
+                    step="0.01"
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="valor_atual">Valor Atual (R$)</label>
+                  <input
+                    type="number"
+                    id="valor_atual"
+                    name="valor_atual"
+                    placeholder="0,00 (opcional)"
+                    step="0.01"
+                  />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="data">Data da Aplicação</label>
+                  <input type="date" id="data" name="data" />
+                </div>
+
+                <div class="standardized-input-group">
+                  <label for="corretora">Corretora/Instituição</label>
+                  <select id="corretora" name="corretora">
+                    <option value="">Selecione a corretora</option>
+                    <option value="xp">XP Investimentos</option>
+                    <option value="btg">BTG Pactual</option>
+                    <option value="inter">Inter</option>
+                    <option value="rico">Rico</option>
+                    <option value="clear">Clear</option>
+                    <option value="nubank">Nubank</option>
+                    <option value="itau">Itaú</option>
+                    <option value="bradesco">Bradesco</option>
+                    <option value="bb">Banco do Brasil</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+
+                <div class="standardized-input-group recorrencia-group">
+                  <div class="recorrencia-label">
+                    <span
+                      class="recorrencia-text"
+                      id="investimento-recorrencia-text"
+                      >Investimento Recorrente?</span
+                    >
+                    <label
+                      class="switch-toggle"
+                      aria-label="Alternar investimento recorrente"
+                    >
+                      <input
+                        type="checkbox"
+                        id="is_recorrente"
+                        name="is_recorrente"
+                        onchange="toggleRecorrenciaFields()"
+                        aria-labelledby="investimento-recorrencia-text"
+                      />
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div
+                  class="standardized-input-group"
+                  id="recorrencia_meses_group"
+                  style="display: none"
+                >
+                  <label for="recorrencia_meses">Duração (meses)</label>
+                  <input
+                    type="number"
+                    id="recorrencia_meses"
+                    name="recorrencia_meses"
+                    placeholder="Ex: 6, 12..."
+                    min="1"
+                    max="120"
+                    value="1"
+                  />
+                  <div class="standardized-help-text">
+                    O investimento será replicado a cada mês até o prazo
+                    especificado, no mesmo dia da data informada.
+                  </div>
+                </div>
+
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="Modal.close()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    💾 Salvar
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
 
-        <!-- ====== Scripts ======= -->
-        <script
-            type="module"
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-        ></script>
-        <script
-            nomodule
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-        ></script>
+        <!-- Toast personalizado removido - usando sistema toast padronizado -->
 
-        <!-- Supabase SDK (UMD) -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-        <!-- Supabase Initialization -->
-        <script src="../controllers/supabase-init.env"></script>
+        <!-- =============================  Modal do Filtro (Padronizado) ============================-->
+        <div class="standardized-modal-overlay filter-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>🔍 Filtrar Investimentos</h2>
+              <button
+                class="standardized-modal-close"
+                onclick="FilterModal.close()"
+              >
+                ×
+              </button>
+            </div>
 
-        <script src="../controllers/main.js"></script>
-        <script src="../controllers/toast-system.js"></script>
+            <div class="standardized-modal-body">
+              <form id="filter-form" onsubmit="filterInvestimentos(event)">
+                <div class="standardized-input-group">
+                  <label for="filter-nome">Nome do Investimento</label>
+                  <input
+                    type="text"
+                    id="filter-nome"
+                    name="nome"
+                    placeholder="Ex: PETR4, Tesouro... (busca parcial)"
+                  />
+                </div>
 
-        <!-- Supabase Guard -->
-        <script src="../controllers/supabase-guard.env"></script>
+                <div class="standardized-input-group">
+                  <label for="filter-tipo">Tipo</label>
+                  <input
+                    type="text"
+                    id="filter-tipo"
+                    name="tipo"
+                    placeholder="Ex: Ação, Tesouro Direto, CDB..."
+                  />
+                </div>
 
-        <script src="../models/investimentos.js"></script>
+                <div class="standardized-input-group">
+                  <label for="filter-valor">Valor Investido (R$)</label>
+                  <input
+                    type="number"
+                    id="filter-valor"
+                    name="valor"
+                    placeholder="Ex: 1000.00 (valor exato)"
+                    step="0.01"
+                  />
+                </div>
 
-        <script>
-            // Logout functionality
-            document
-                .getElementById("logoutBtn")
-                ?.addEventListener("click", function () {
-                    if (typeof window.logout === "function") {
-                        window.logout();
-                    }
-                });
+                <div class="standardized-input-group">
+                  <label for="filter-data">Data da Aplicação</label>
+                  <input type="date" id="filter-data" name="data" />
+                </div>
 
-            function getSuggestedInvestmentType(name) {
-                const value = name.toLowerCase();
-                let tipo = "Ação";
+                <div class="standardized-input-group">
+                  <label for="filter-recorrente">Filtrar por Recorrência</label>
+                  <select id="filter-recorrente" name="recorrente">
+                    <option value="">Todas</option>
+                    <option value="sim">Apenas Recorrentes</option>
+                    <option value="nao">Apenas Únicas</option>
+                  </select>
+                </div>
 
-                if (
-                    value.includes("tesouro") ||
-                    value.includes("selic") ||
-                    value.includes("ipca")
-                ) {
-                    tipo = "Tesouro Direto";
-                } else if (value.includes("cdb")) {
-                    tipo = "CDB";
-                } else if (value.includes("lci") || value.includes("lca")) {
-                    tipo = "LCI";
-                } else if (
-                    value.includes("fii") ||
-                    value.includes("fundo imobili") ||
-                    value.includes("reit")
-                ) {
-                    tipo = "Fundo Imobiliário";
-                } else if (
-                    value.includes("cripto") ||
-                    value.includes("bitcoin") ||
-                    value.includes("btc") ||
-                    value.includes("ethereum") ||
-                    value.includes("eth")
-                ) {
-                    tipo = "Criptomoeda";
-                }
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="FilterModal.close()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    🔍 Filtrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
-                return tipo;
-            }
+        <!-- =========================== Modal de Editar (Padronizado) ============================-->
+        <div class="standardized-modal-overlay edit-modal-overlay">
+          <div class="standardized-modal">
+            <div class="standardized-modal-header">
+              <h2>✏️ Editar Investimento</h2>
+              <button
+                class="standardized-modal-close"
+                onclick="closeEditModal()"
+              >
+                ×
+              </button>
+            </div>
 
-            function applyInvestmentTypeSuggestion(tipo, isEdit = false) {
-                if (isEdit) {
-                    if (typeof setEditTipoInvest === "function") {
-                        setEditTipoInvest(tipo);
-                    } else {
-                        const input = document.getElementById("edit-tipo");
-                        if (input) input.value = tipo;
-                    }
-                } else if (typeof setTipoInvest === "function") {
-                    setTipoInvest(tipo);
-                } else {
-                    const input = document.getElementById("tipo");
-                    if (input) input.value = tipo;
-                }
-            }
+            <div class="standardized-modal-body">
+              <form id="edit-form" onsubmit="submitEditForm(event)">
+                <div class="standardized-input-group">
+                  <label for="edit-nome">Nome do Investimento</label>
+                  <input
+                    type="text"
+                    id="edit-nome"
+                    name="nome"
+                    placeholder="Nome do investimento"
+                  />
+                </div>
 
-            function suggestInvestmentTypeSimple() {
-                const nameInput = document.getElementById("nome");
-                if (!nameInput || !nameInput.value.trim()) {
-                    notifyToast(
-                        "Sugestão com IA",
-                        "Informe o nome do investimento para sugerirmos o tipo.",
-                        "warning"
-                    );
-                    nameInput?.focus();
-                    return;
-                }
+                <div class="standardized-input-group categoria-group">
+                  <label for="edit-tipo">Tipo</label>
+                  <div class="categoria-input-wrapper">
+                    <input
+                      type="text"
+                      id="edit-tipo"
+                      name="tipo"
+                      placeholder="Ex: Ação, Tesouro Direto, CDB..."
+                    />
+                    <button
+                      type="button"
+                      class="ia-suggest-btn"
+                      onclick="suggestInvestmentEditTypeSimple()"
+                      title="Sugestão com IA"
+                    >
+                      🤖 IA
+                    </button>
+                  </div>
+                  <div class="predefined-categories">
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('Ação')"
+                      >� Ação</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('Fundo Imobiliário')"
+                      >🏢 FII</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('CDB')"
+                      >🏦 CDB</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('Tesouro Direto')"
+                      >🇧🇷 Tesouro</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('LCI')"
+                      >🏡 LCI</span
+                    >
+                    <span
+                      class="category-tag"
+                      onclick="setEditTipoInvest('Criptomoeda')"
+                      >₿ Crypto</span
+                    >
+                  </div>
+                </div>
 
-                const tipo = getSuggestedInvestmentType(nameInput.value);
-                applyInvestmentTypeSuggestion(tipo, false);
-                notifyToast(
-                    "Sugestão com IA",
-                    `Sugerimos o tipo "${tipo}" para este investimento.`,
-                    "success",
-                    3500
-                );
-            }
+                <div class="standardized-input-group">
+                  <label for="edit-valor-investido">Valor Investido (R$)</label>
+                  <input
+                    type="number"
+                    id="edit-valor-investido"
+                    name="valor_investido"
+                    placeholder="0,00"
+                    step="0.01"
+                  />
+                </div>
 
-            function suggestInvestmentEditTypeSimple() {
-                const nameInput = document.getElementById("edit-nome");
-                if (!nameInput || !nameInput.value.trim()) {
-                    notifyToast(
-                        "Sugestão com IA",
-                        "Informe o nome do investimento antes de solicitar a sugestão.",
-                        "warning"
-                    );
-                    nameInput?.focus();
-                    return;
-                }
+                <div class="standardized-input-group">
+                  <label for="edit-valor-atual">Valor Atual (R$)</label>
+                  <input
+                    type="number"
+                    id="edit-valor-atual"
+                    name="valor_atual"
+                    placeholder="0,00"
+                    step="0.01"
+                  />
+                </div>
 
-                const tipo = getSuggestedInvestmentType(nameInput.value);
-                applyInvestmentTypeSuggestion(tipo, true);
-                notifyToast(
-                    "Sugestão com IA",
-                    `Sugerimos o tipo "${tipo}" para este investimento.`,
-                    "success",
-                    3500
-                );
-            }
+                <div class="standardized-input-group">
+                  <label for="edit-date">Data da Aplicação</label>
+                  <input type="date" id="edit-date" name="date" />
+                </div>
 
-            window.suggestInvestmentTypeSimple = suggestInvestmentTypeSimple;
-            window.suggestInvestmentEditTypeSimple =
-                suggestInvestmentEditTypeSimple;
-        </script>
+                <div class="standardized-input-group recorrencia-group">
+                  <label for="edit-is-recorrente" class="recorrencia-label">
+                    <span class="recorrencia-text"
+                      >Investimento Recorrente?</span
+                    >
+                    <div class="checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        id="edit-is-recorrente"
+                        name="is_recorrente"
+                        onchange="toggleEditRecorrenciaFields()"
+                      />
+                    </div>
+                  </label>
+                </div>
 
-        <!-- ====== Injetor de Acessibilidade ======= -->
-        <script src="../controllers/accessibility-injector.js"></script>
+                <div
+                  class="standardized-input-group"
+                  id="edit-recorrencia-meses-group"
+                  style="display: none"
+                >
+                  <label for="edit-recorrencia-meses">Duração (meses)</label>
+                  <input
+                    type="number"
+                    id="edit-recorrencia-meses"
+                    name="recorrencia_meses"
+                    placeholder="Ex: 6, 12..."
+                    min="1"
+                    max="120"
+                    value="1"
+                  />
+                </div>
 
-        <!-- ====== Sistema de Acessibilidade ======= -->
-        <script src="../controllers/accessibility.js"></script>
-    </body>
+                <div class="standardized-modal-actions">
+                  <a
+                    onclick="closeEditModal()"
+                    class="standardized-button standardized-button-secondary"
+                    >Cancelar</a
+                  >
+                  <button
+                    type="submit"
+                    class="standardized-button standardized-button-primary"
+                  >
+                    💾 Salvar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="delete-confirm-modal-overlay" id="deleteConfirmModal">
+      <div class="delete-confirm-modal">
+        <h3>
+          <ion-icon name="warning-outline"></ion-icon>
+          Confirmar Exclusão
+        </h3>
+        <p>
+          Tem certeza que deseja excluir este item? Esta ação não pode ser
+          desfeita.
+        </p>
+        <div class="delete-confirm-actions">
+          <button class="delete-cancel-btn" onclick="closeDeleteConfirm()">
+            Cancelar
+          </button>
+          <button class="delete-confirm-btn" onclick="confirmDelete()">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Scripts ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Supabase Initialization -->
+    <script src="../controllers/supabase-init.env"></script>
+
+    <script src="../controllers/main.js"></script>
+    <script src="../controllers/toast-system.js"></script>
+
+    <!-- Supabase Guard -->
+    <script src="../controllers/supabase-guard.env"></script>
+
+    <script src="../models/investimentos.js"></script>
+
+    <script>
+      // Logout functionality
+      document
+        .getElementById("logoutBtn")
+        ?.addEventListener("click", function () {
+          if (typeof window.logout === "function") {
+            window.logout();
+          }
+        });
+
+      function getSuggestedInvestmentType(name) {
+        const value = name.toLowerCase();
+        let tipo = "Ação";
+
+        if (
+          value.includes("tesouro") ||
+          value.includes("selic") ||
+          value.includes("ipca")
+        ) {
+          tipo = "Tesouro Direto";
+        } else if (value.includes("cdb")) {
+          tipo = "CDB";
+        } else if (value.includes("lci") || value.includes("lca")) {
+          tipo = "LCI";
+        } else if (
+          value.includes("fii") ||
+          value.includes("fundo imobili") ||
+          value.includes("reit")
+        ) {
+          tipo = "Fundo Imobiliário";
+        } else if (
+          value.includes("cripto") ||
+          value.includes("bitcoin") ||
+          value.includes("btc") ||
+          value.includes("ethereum") ||
+          value.includes("eth")
+        ) {
+          tipo = "Criptomoeda";
+        }
+
+        return tipo;
+      }
+
+      function applyInvestmentTypeSuggestion(tipo, isEdit = false) {
+        if (isEdit) {
+          if (typeof setEditTipoInvest === "function") {
+            setEditTipoInvest(tipo);
+          } else {
+            const input = document.getElementById("edit-tipo");
+            if (input) input.value = tipo;
+          }
+        } else if (typeof setTipoInvest === "function") {
+          setTipoInvest(tipo);
+        } else {
+          const input = document.getElementById("tipo");
+          if (input) input.value = tipo;
+        }
+      }
+
+      function suggestInvestmentTypeSimple() {
+        const nameInput = document.getElementById("nome");
+        if (!nameInput || !nameInput.value.trim()) {
+          notifyToast(
+            "Sugestão com IA",
+            "Informe o nome do investimento para sugerirmos o tipo.",
+            "warning"
+          );
+          nameInput?.focus();
+          return;
+        }
+
+        const tipo = getSuggestedInvestmentType(nameInput.value);
+        applyInvestmentTypeSuggestion(tipo, false);
+        notifyToast(
+          "Sugestão com IA",
+          `Sugerimos o tipo "${tipo}" para este investimento.`,
+          "success",
+          3500
+        );
+      }
+
+      function suggestInvestmentEditTypeSimple() {
+        const nameInput = document.getElementById("edit-nome");
+        if (!nameInput || !nameInput.value.trim()) {
+          notifyToast(
+            "Sugestão com IA",
+            "Informe o nome do investimento antes de solicitar a sugestão.",
+            "warning"
+          );
+          nameInput?.focus();
+          return;
+        }
+
+        const tipo = getSuggestedInvestmentType(nameInput.value);
+        applyInvestmentTypeSuggestion(tipo, true);
+        notifyToast(
+          "Sugestão com IA",
+          `Sugerimos o tipo "${tipo}" para este investimento.`,
+          "success",
+          3500
+        );
+      }
+
+      window.suggestInvestmentTypeSimple = suggestInvestmentTypeSimple;
+      window.suggestInvestmentEditTypeSimple = suggestInvestmentEditTypeSimple;
+    </script>
+
+    <!-- ====== Injetor de Acessibilidade ======= -->
+    <script src="../controllers/accessibility-injector.js"></script>
+
+    <!-- ====== Sistema de Acessibilidade ======= -->
+    <script src="../controllers/accessibility.js"></script>
+  </body>
 </html>

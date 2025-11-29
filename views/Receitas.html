@@ -708,7 +708,6 @@
                 categoryInput.dispatchEvent(new Event('change'));
                 categoryInput.dispatchEvent(new Event('input'));
                 
-                console.log('Categoria selecionada:', categoryName);
             }
         }
 
@@ -736,10 +735,9 @@
         // Função SIMPLES para selecionar categoria - SEMPRE FUNCIONA
         function selectCategory(categoryName) {
             try {
-                console.log('🏷️ Selecionando categoria:', categoryName);
                 
                 if (!categoryName || categoryName.trim() === '') {
-                    console.warn('⚠️ Nome da categoria vazio');
+                    console.warn('Nome da categoria vazio');
                     return false;
                 }
                 
@@ -750,7 +748,6 @@
                 
                 if (targetInput) {
                     targetInput.value = categoryName.trim();
-                    console.log('✅ Categoria definida:', categoryName);
                     
                     // Remove seleção de outras tags
                     const allTags = document.querySelectorAll('.predefined-categories .category-tag');
@@ -779,24 +776,22 @@
                         targetInput.dispatchEvent(new Event('change', { bubbles: true }));
                         targetInput.dispatchEvent(new Event('input', { bubbles: true }));
                     } catch (eventError) {
-                        console.warn('⚠️ Erro ao disparar eventos:', eventError);
+                        console.warn('Erro ao disparar eventos:', eventError);
                     }
                     
-                    console.log('✅ Categoria selecionada com sucesso!');
                     return true;
                 } else {
                     console.error('❌ Campo de categoria não encontrado!');
                     return false;
                 }
             } catch (error) {
-                console.error('❌ Erro ao selecionar categoria:', error);
+                console.error('Erro ao selecionar categoria:', error);
                 return false;
             }
         }
 
         // Função SUPER SIMPLES para IA - GARANTIDA PARA FUNCIONAR
         function suggestCategorySimple() {
-            console.log('🤖 FUNÇÃO IA SIMPLES CHAMADA - RECEITAS');
             
             // Pega a descrição
             const descricaoInput = document.querySelector('#descricao');
@@ -806,7 +801,6 @@
             }
             
             const descricao = descricaoInput.value.toLowerCase();
-            console.log('📝 Descrição encontrada:', descricao);
             
             let categoria = 'Outros';
             
@@ -825,13 +819,11 @@
                 categoria = 'Pensão';
             }
             
-            console.log('🎯 Categoria sugerida:', categoria);
             
             // Aplica a categoria
             const categoriaInput = document.querySelector('#categoria');
             if (categoriaInput) {
                 categoriaInput.value = categoria;
-                console.log('✅ Categoria aplicada no campo:', categoria);
                 
                 // Destaca o botão visualmente
                 const botoes = document.querySelectorAll('.category-tag');
@@ -841,11 +833,10 @@
                     if (btn.textContent.trim() === categoria) {
                         btn.style.backgroundColor = '#2a2185';
                         btn.style.color = 'white';
-                        console.log('✅ Botão destacado:', categoria);
                     }
                 });
             } else {
-                console.error('❌ Campo categoria não encontrado');
+                console.error('Campo categoria não encontrado');
             }
         }
 
@@ -855,7 +846,6 @@
 
         // Aguarda o carregamento e configura fallbacks se necessário
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 DOM carregado - configurando categorias RECEITAS...');
             
             // Aguarda um pouco para CategorizationUI carregar
             setTimeout(() => {
@@ -868,7 +858,6 @@
                     };
                 }
                 
-                console.log('✅ Sistema de categorias RECEITAS configurado!');
             }, 1000);
         });
         </script>
