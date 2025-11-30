@@ -350,9 +350,14 @@
                     <ion-icon name="bulb"></ion-icon>
                     AI Insights Financeiros
                 </h2>
-                <button class="ai-modal-close" onclick="closeAIInsights()">
-                    <ion-icon name="close"></ion-icon>
-                </button>
+                <div class="ai-modal-header-actions">
+                    <button class="ai-modal-fullscreen-toggle" onclick="toggleAIInsightsFullscreen()" title="Alternar tela cheia">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </button>
+                    <button class="ai-modal-close" onclick="closeAIInsights()">
+                        <ion-icon name="close"></ion-icon>
+                    </button>
+                </div>
             </div>
             
             <div class="ai-chat-container">

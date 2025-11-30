@@ -8,6 +8,7 @@ class AIInsightsInterface {
     this.isLoading = false;
     this.chatHistory = [];
     this.maxMessages = 50;
+    this.isFullscreen = false;
   }
 
   /**
@@ -64,9 +65,36 @@ class AIInsightsInterface {
     const modal = document.getElementById("aiInsightsModal");
     if (modal) {
       modal.classList.remove("active");
+      modal.classList.remove("fullscreen");
+      this.isFullscreen = false;
       this.isOpen = false;
 
       console.log("🤖 AI Insights modal fechado");
+    }
+  }
+
+  /**
+   * Alternar modo tela cheia dentro da página
+   */
+  toggleFullscreen() {
+    const modalOverlay = document.getElementById("aiInsightsModal");
+    const modal = modalOverlay?.querySelector(".ai-modal");
+
+    if (!modalOverlay || !modal) {
+      console.error(
+        "❌ Elementos do modal de AI Insights não encontrados para tela cheia"
+      );
+      return;
+    }
+
+    this.isFullscreen = !this.isFullscreen;
+
+    if (this.isFullscreen) {
+      modalOverlay.classList.add("fullscreen");
+      modal.classList.add("fullscreen");
+    } else {
+      modalOverlay.classList.remove("fullscreen");
+      modal.classList.remove("fullscreen");
     }
   }
 
@@ -451,6 +479,7 @@ window.closeAIInsights = () => window.AIInsights.close();
 window.sendAIMessage = () => window.AIInsights.sendMessage();
 window.askQuickQuestion = (question) =>
   window.AIInsights.askQuickQuestion(question);
+window.toggleAIInsightsFullscreen = () => window.AIInsights.toggleFullscreen();
 
 // Configurar event listeners quando o DOM estiver pronto
 document.addEventListener("DOMContentLoaded", () => {
