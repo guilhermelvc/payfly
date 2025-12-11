@@ -286,11 +286,41 @@
                 <table id="data-table">
                   <thead>
                     <tr>
-                      <th>Descrição</th>
-                      <th>Valor</th>
-                      <th>Data</th>
-                      <th>Tipo</th>
-                      <th>Plano</th>
+                      <th
+                        class="sortable"
+                        data-column="descricao"
+                        onclick="sortTable('descricao')"
+                      >
+                        Descrição <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="valor"
+                        onclick="sortTable('valor')"
+                      >
+                        Valor <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="data"
+                        onclick="sortTable('data')"
+                      >
+                        Data <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="tipo"
+                        onclick="sortTable('tipo')"
+                      >
+                        Tipo <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="plano"
+                        onclick="sortTable('plano')"
+                      >
+                        Plano <span class="sort-icon">⇅</span>
+                      </th>
                       <th>Editar</th>
                       <th>Excluir</th>
                     </tr>
@@ -744,6 +774,7 @@
     <!-- Supabase Guard -->
     <script src="../controllers/supabase-guard.env"></script>
 
+    <script src="../core/TableSorter.js"></script>
     <script src="../models/poupanca.js"></script>
 
     <script>

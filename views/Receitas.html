@@ -310,10 +310,18 @@
                         <table id='data-table'>
                             <thead>
                                 <tr>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                    <th>Data</th>
-                                    <th>Categoria</th>
+                                    <th class="sortable" data-column="descricao" onclick="sortTable('descricao')">
+                                        Descrição <span class="sort-icon">⇅</span>
+                                    </th>
+                                    <th class="sortable" data-column="valor" onclick="sortTable('valor')">
+                                        Valor <span class="sort-icon">⇅</span>
+                                    </th>
+                                    <th class="sortable" data-column="data" onclick="sortTable('data')">
+                                        Data <span class="sort-icon">⇅</span>
+                                    </th>
+                                    <th class="sortable" data-column="categoria" onclick="sortTable('categoria')">
+                                        Categoria <span class="sort-icon">⇅</span>
+                                    </th>
                                     <th>Editar</th>
                                     <th>Excluir</th>
                                 </tr>
@@ -620,8 +628,8 @@
     <!-- Payment config removido -->
     
     <script src="../controllers/main.js"></script>
-    <script src="../models/receita.js" ></script>
-    <script src="../models/receita.js" ></script>
+    <script src="../core/TableSorter.js"></script>
+    <script src="../models/receita.js"></script>
 
     <!-- AI Insights Scripts -->
     <script src="../ai-insights/ai-service.js"></script>

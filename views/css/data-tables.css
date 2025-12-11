@@ -1,26 +1,71 @@
 /* ================ Estilos para Tabelas de Dados ================= */
 
+/* =====================================================
+   SISTEMA DE ORDENAÇÃO - Cabeçalhos Clicáveis
+   ===================================================== */
+.table-container table thead th.sortable,
+#data-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.table-container table thead th.sortable:hover,
+#data-table thead th.sortable:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.table-container table thead th.sortable .sort-icon,
+#data-table thead th.sortable .sort-icon {
+  margin-left: 6px;
+  font-size: 12px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.table-container table thead th.sortable:hover .sort-icon,
+#data-table thead th.sortable:hover .sort-icon {
+  opacity: 1;
+}
+
+.table-container table thead th.sortable .sort-icon.active,
+#data-table thead th.sortable .sort-icon.active {
+  opacity: 1;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Tema claro - estilos de ordenação */
+body.light-theme .table-container table thead th.sortable .sort-icon.active,
+body.light-theme #data-table thead th.sortable .sort-icon.active {
+  color: #ffd700;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================================== */
+
 /* Correção para cabeçalho fixo das tabelas */
 .table-container {
-    overflow: auto !important;
-    max-height: 600px !important;
-    position: relative !important;
+  overflow: auto !important;
+  max-height: 600px !important;
+  position: relative !important;
 }
 
 .table-container table thead,
 #data-table thead {
-    background: linear-gradient(135deg, #2a2185 0%, #28a745 100%) !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1000 !important;
+  background: linear-gradient(135deg, #2a2185 0%, #28a745 100%) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
 }
 
 .table-container table thead th,
 #data-table thead th {
-    background: transparent !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    position: relative !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  position: relative !important;
 }
 
 /* Corpo da tabela limpo */
@@ -28,18 +73,18 @@
 #data-table tbody tr,
 table tbody tr,
 tbody tr {
-    background: #ffffff;
-    background-color: #ffffff;
-    background-image: none;
+  background: #ffffff;
+  background-color: #ffffff;
+  background-image: none;
 }
 
 .table-container table tbody tr:hover,
 #data-table tbody tr:hover,
 table tbody tr:hover,
 tbody tr:hover {
-    background: rgba(42, 33, 133, 0.03);
-    background-color: rgba(42, 33, 133, 0.03);
-    background-image: none;
+  background: rgba(42, 33, 133, 0.03);
+  background-color: rgba(42, 33, 133, 0.03);
+  background-image: none;
 }
 
 /* Tema claro - garantir fundo branco */
@@ -47,18 +92,18 @@ body.light-theme .table-container table tbody tr,
 body.light-theme #data-table tbody tr,
 body.light-theme table tbody tr,
 body.light-theme tbody tr {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    background-image: none !important;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
 }
 
 body.light-theme .table-container table tbody tr:hover,
 body.light-theme #data-table tbody tr:hover,
 body.light-theme table tbody tr:hover,
 body.light-theme tbody tr:hover {
-    background: rgba(42, 33, 133, 0.03) !important;
-    background-color: rgba(42, 33, 133, 0.03) !important;
-    background-image: none !important;
+  background: rgba(42, 33, 133, 0.03) !important;
+  background-color: rgba(42, 33, 133, 0.03) !important;
+  background-image: none !important;
 }
 
 /* Remove qualquer fundo do tbody */
@@ -66,692 +111,692 @@ body.light-theme tbody tr:hover {
 #data-table tbody,
 table tbody,
 tbody {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 /* Estilos específicos para tabelas de receitas */
 .receitas-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
 .receitas-table th,
 .receitas-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .receitas-table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Responsividade das tabelas */
 @media (max-width: 768px) {
-    .table-container {
-        max-height: 400px !important;
-    }
+  .table-container {
+    max-height: 400px !important;
+  }
 
-    .receitas-table th,
-    .receitas-table td {
-        padding: 8px;
-        font-size: 14px;
-    }
+  .receitas-table th,
+  .receitas-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
 }
 
 /* Estilos para botões de ação na tabela */
 .table-actions {
-    display: flex;
-    gap: 5px;
-    align-items: center;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .table-actions button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s ease;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
 }
 
 .table-actions .edit-btn {
-    background: linear-gradient(135deg, #17a2b8, #20c997);
-    color: white;
+  background: linear-gradient(135deg, #17a2b8, #20c997);
+  color: white;
 }
 
 .table-actions .delete-btn {
-    background: linear-gradient(135deg, #dc3545, #fd7e14);
-    color: white;
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
 }
 
 .table-actions button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Indicadores de status */
 .status-indicator {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .status-indicator.ativo {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
 }
 
 .status-indicator.pendente {
-    background: rgba(255, 193, 7, 0.1);
-    color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
 }
 
 .status-indicator.cancelado {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
 }
 
 /* Loading state para tabelas */
 .table-loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
+  text-align: center;
+  padding: 40px;
+  color: #666;
 }
 
 .table-loading .loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #f3f3f3;
-    border-radius: 50%;
-    border-top-color: #2a2185;
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 10px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-radius: 50%;
+  border-top-color: #2a2185;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 10px;
 }
 
 /* Empty state para tabelas */
 .table-empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: #999;
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
 }
 
 .table-empty ion-icon {
-    font-size: 48px;
-    color: #ddd;
-    margin-bottom: 15px;
+  font-size: 48px;
+  color: #ddd;
+  margin-bottom: 15px;
 }
 
 .table-empty h3 {
-    color: #666;
-    margin-bottom: 10px;
+  color: #666;
+  margin-bottom: 10px;
 }
 
 .table-empty p {
-    color: #999;
-    font-size: 14px;
+  color: #999;
+  font-size: 14px;
 }
 
 /* Filtros da tabela */
 .table-filters {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    align-items: center;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .filter-group label {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
 }
 
 .filter-group select,
 .filter-group input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 .filter-group select:focus,
 .filter-group input:focus {
-    outline: none;
-    border-color: #2a2185;
-    box-shadow: 0 0 0 2px rgba(42, 33, 133, 0.1);
+  outline: none;
+  border-color: #2a2185;
+  box-shadow: 0 0 0 2px rgba(42, 33, 133, 0.1);
 }
 
 /* Paginação */
 .table-pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    padding: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 15px 0;
 }
 
 .pagination-info {
-    color: #666;
-    font-size: 14px;
+  color: #666;
+  font-size: 14px;
 }
 
 .pagination-controls {
-    display: flex;
-    gap: 5px;
+  display: flex;
+  gap: 5px;
 }
 
 .pagination-btn {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    background: white;
-    color: #666;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .pagination-btn:hover {
-    border-color: #2a2185;
-    color: #2a2185;
+  border-color: #2a2185;
+  color: #2a2185;
 }
 
 .pagination-btn.active {
-    background: #2a2185;
-    border-color: #2a2185;
-    color: white;
+  background: #2a2185;
+  border-color: #2a2185;
+  color: white;
 }
 
 .pagination-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Busca na tabela */
 .table-search {
-    position: relative;
-    margin-bottom: 20px;
+  position: relative;
+  margin-bottom: 20px;
 }
 
 .table-search input {
-    width: 100%;
-    padding: 12px 40px 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 25px;
-    font-size: 14px;
-    transition: all 0.2s ease;
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
 .table-search input:focus {
-    outline: none;
-    border-color: #2a2185;
-    box-shadow: 0 0 0 3px rgba(42, 33, 133, 0.1);
+  outline: none;
+  border-color: #2a2185;
+  box-shadow: 0 0 0 3px rgba(42, 33, 133, 0.1);
 }
 
 .table-search ion-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
 }
 
 /* Ordenação de colunas */
 .sortable-header {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
 }
 
 .sortable-header:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .sortable-header::after {
-    content: "";
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border: 4px solid transparent;
-    border-bottom-color: rgba(255, 255, 255, 0.5);
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 .sortable-header.sort-asc::after {
-    border-bottom-color: white;
-    border-top: none;
+  border-bottom-color: white;
+  border-top: none;
 }
 
 .sortable-header.sort-desc::after {
-    border-top-color: white;
-    border-bottom: none;
+  border-top-color: white;
+  border-bottom: none;
 }
 
 /* Seleção múltipla */
 .table-checkbox {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
 
 .bulk-actions {
-    display: none;
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 4px solid #2a2185;
+  display: none;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #2a2185;
 }
 
 .bulk-actions.show {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .bulk-actions .selected-count {
-    color: #666;
-    font-weight: 500;
+  color: #666;
+  font-weight: 500;
 }
 
 .bulk-actions .bulk-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .bulk-btn.delete {
-    background: #dc3545;
-    color: white;
+  background: #dc3545;
+  color: white;
 }
 
 .bulk-btn.export {
-    background: #28a745;
-    color: white;
+  background: #28a745;
+  color: white;
 }
 
 /* Formatação de valores monetários */
 .currency-value {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .currency-value.positive {
-    color: #28a745;
+  color: #28a745;
 }
 
 .currency-value.negative {
-    color: #dc3545;
+  color: #dc3545;
 }
 
 /* Badges de categoria */
 .category-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    background: linear-gradient(135deg, var(--blue) 0%, var(--green2) 100%);
-    color: white;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
+  display: inline-block;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--green2) 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 /* Data formatting */
 .date-cell {
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* Performance indicators */
 .performance-positive {
-    color: #28a745;
-    font-weight: bold;
+  color: #28a745;
+  font-weight: bold;
 }
 
 .performance-negative {
-    color: #dc3545;
-    font-weight: bold;
+  color: #dc3545;
+  font-weight: bold;
 }
 
 /* Responsividade avançada */
 @media (max-width: 992px) {
-    .table-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .table-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .filter-group {
-        width: 100%;
-    }
+  .filter-group {
+    width: 100%;
+  }
 
-    .table-pagination {
-        flex-direction: column;
-        gap: 15px;
-    }
+  .table-pagination {
+    flex-direction: column;
+    gap: 15px;
+  }
 
-    .cardHeader {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
+  .cardHeader {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
 
-    .cardHeader .btn-primary {
-        width: 100%;
-    }
+  .cardHeader .btn-primary {
+    width: 100%;
+  }
 }
 
 /* Tablets (até 768px) */
 @media (max-width: 768px) {
-    .cardHeader h2 {
-        font-size: 20px;
-    }
+  .cardHeader h2 {
+    font-size: 20px;
+  }
 
-    .btn-primary,
-    .btn-secondary {
-        padding: 10px 15px;
-        font-size: 13px;
-    }
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
 
-    .table-filters {
-        gap: 10px;
-    }
+  .table-filters {
+    gap: 10px;
+  }
 
-    .filter-group input,
-    .filter-group select {
-        padding: 8px;
-        font-size: 13px;
-    }
+  .filter-group input,
+  .filter-group select {
+    padding: 8px;
+    font-size: 13px;
+  }
 
-    /* Tabelas em formato de cards para mobile */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+  /* Tabelas em formato de cards para mobile */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    .receitas-table,
-    #data-table {
-        min-width: 600px; /* Permite scroll horizontal */
-    }
+  .receitas-table,
+  #data-table {
+    min-width: 600px; /* Permite scroll horizontal */
+  }
 
-    .receitas-table th,
-    .receitas-table td,
-    #data-table th,
-    #data-table td {
-        padding: 10px 8px;
-        font-size: 13px;
-    }
+  .receitas-table th,
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
 }
 
 /* Smartphones (até 576px) */
 @media (max-width: 576px) {
-    /* Header do card */
-    .cardHeader {
-        padding: 15px;
-    }
+  /* Header do card */
+  .cardHeader {
+    padding: 15px;
+  }
 
-    .cardHeader h2 {
-        font-size: 18px;
-    }
+  .cardHeader h2 {
+    font-size: 18px;
+  }
 
-    /* Botões */
-    .btn-primary,
-    .btn-secondary {
-        padding: 8px 12px;
-        font-size: 12px;
-    }
+  /* Botões */
+  .btn-primary,
+  .btn-secondary {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 
-    /* Container da tabela */
-    .table-container {
-        font-size: 12px;
-        max-height: 500px;
-    }
+  /* Container da tabela */
+  .table-container {
+    font-size: 12px;
+    max-height: 500px;
+  }
 
-    /* Tabela */
-    .receitas-table,
-    #data-table {
-        min-width: 500px;
-    }
+  /* Tabela */
+  .receitas-table,
+  #data-table {
+    min-width: 500px;
+  }
 
-    .receitas-table th,
-    .receitas-table td,
-    #data-table th,
-    #data-table td {
-        padding: 8px 6px;
-        font-size: 12px;
-    }
+  .receitas-table th,
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
 
-    /* Ações da tabela */
-    .table-actions {
-        flex-direction: column;
-        gap: 3px;
-    }
+  /* Ações da tabela */
+  .table-actions {
+    flex-direction: column;
+    gap: 3px;
+  }
 
-    .table-actions button {
-        width: 100%;
-        font-size: 10px;
-        padding: 5px 8px;
-    }
+  .table-actions button {
+    width: 100%;
+    font-size: 10px;
+    padding: 5px 8px;
+  }
 
-    /* Paginação */
-    .pagination-controls {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 5px;
-    }
+  /* Paginação */
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
 
-    .pagination-controls button {
-        padding: 6px 10px;
-        font-size: 12px;
-    }
+  .pagination-controls button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
 
-    /* Filtros */
-    .table-filters {
-        padding: 10px;
-    }
+  /* Filtros */
+  .table-filters {
+    padding: 10px;
+  }
 
-    .filter-group {
-        margin-bottom: 8px;
-    }
+  .filter-group {
+    margin-bottom: 8px;
+  }
 
-    .filter-group label {
-        font-size: 12px;
-    }
+  .filter-group label {
+    font-size: 12px;
+  }
 
-    .filter-group input,
-    .filter-group select {
-        padding: 6px;
-        font-size: 12px;
-    }
+  .filter-group input,
+  .filter-group select {
+    padding: 6px;
+    font-size: 12px;
+  }
 }
 
 /* Smartphones pequenos (até 400px) */
 @media (max-width: 400px) {
-    .cardHeader {
-        padding: 12px;
-    }
+  .cardHeader {
+    padding: 12px;
+  }
 
-    .cardHeader h2 {
-        font-size: 16px;
-    }
+  .cardHeader h2 {
+    font-size: 16px;
+  }
 
-    .table-container {
-        font-size: 11px;
-        max-height: 450px;
-    }
+  .table-container {
+    font-size: 11px;
+    max-height: 450px;
+  }
 
-    .receitas-table,
-    #data-table {
-        min-width: 450px;
-    }
+  .receitas-table,
+  #data-table {
+    min-width: 450px;
+  }
 
-    .receitas-table th,
-    .receitas-table td,
-    #data-table th,
-    #data-table td {
-        padding: 6px 4px;
-        font-size: 11px;
-    }
+  .receitas-table th,
+  .receitas-table td,
+  #data-table th,
+  #data-table td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
 
-    .table-actions button {
-        font-size: 9px;
-        padding: 4px 6px;
-    }
+  .table-actions button {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
 
-    .pagination-controls button {
-        padding: 5px 8px;
-        font-size: 11px;
-    }
+  .pagination-controls button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
 
-    /* Info da paginação menor */
-    .pagination-info span {
-        font-size: 11px;
-    }
+  /* Info da paginação menor */
+  .pagination-info span {
+    font-size: 11px;
+  }
 }
 
 /* =============== TEMA ESCURO - TABELAS =============== */
 body:not(.light-theme) .table-container table thead,
 body:not(.light-theme) #data-table thead {
-    background: linear-gradient(135deg, #183d3d 0%, #005951 100%) !important;
+  background: linear-gradient(135deg, #183d3d 0%, #005951 100%) !important;
 }
 
 body:not(.light-theme) .table-container table tbody tr,
 body:not(.light-theme) #data-table tbody tr,
 body:not(.light-theme) table tbody tr,
 body:not(.light-theme) tbody tr {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    border-bottom: 1px solid #3a3a3a !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  border-bottom: 1px solid #3a3a3a !important;
 }
 
 body:not(.light-theme) .table-container table tbody tr:hover,
 body:not(.light-theme) #data-table tbody tr:hover,
 body:not(.light-theme) table tbody tr:hover,
 body:not(.light-theme) tbody tr:hover {
-    background: rgba(0, 0, 0, 0.3) !important;
-    background-color: rgba(0, 0, 0, 0.3) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
 }
 
 body:not(.light-theme) .table-container table td,
 body:not(.light-theme) #data-table td,
 body:not(.light-theme) table td {
-    color: #e0e0e0 !important;
-    border-color: #3a3a3a !important;
+  color: #e0e0e0 !important;
+  border-color: #3a3a3a !important;
 }
 
 body:not(.light-theme) .status-pago {
-    background: #1a4d3d !important;
-    color: #4ade80 !important;
+  background: #1a4d3d !important;
+  color: #4ade80 !important;
 }
 
 body:not(.light-theme) .status-pendente {
-    background: #4d3d1a !important;
-    color: #fbbf24 !important;
+  background: #4d3d1a !important;
+  color: #fbbf24 !important;
 }
 
 body:not(.light-theme) .status-atrasado {
-    background: #4d1a1a !important;
-    color: #f87171 !important;
+  background: #4d1a1a !important;
+  color: #f87171 !important;
 }
 
 body:not(.light-theme) .table-actions button {
-    background: #333 !important;
-    color: #e0e0e0 !important;
-    border-color: #444 !important;
+  background: #333 !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
 }
 
 body:not(.light-theme) .table-actions button:hover {
-    background: #3a3a3a !important;
+  background: #3a3a3a !important;
 }
 
 body:not(.light-theme) .btn-edit {
-    background: #1a4d3d !important;
+  background: #1a4d3d !important;
 }
 
 body:not(.light-theme) .btn-edit:hover {
-    background: #1a5d4d !important;
+  background: #1a5d4d !important;
 }
 
 body:not(.light-theme) .btn-delete {
-    background: #4d1a1a !important;
+  background: #4d1a1a !important;
 }
 
 body:not(.light-theme) .btn-delete:hover {
-    background: #5d1a1a !important;
+  background: #5d1a1a !important;
 }
 
 body:not(.light-theme) .pagination-controls {
-    background: #2a2a2a !important;
-    border-color: #3a3a3a !important;
+  background: #2a2a2a !important;
+  border-color: #3a3a3a !important;
 }
 
 body:not(.light-theme) .pagination-controls button {
-    background: #333 !important;
-    color: #e0e0e0 !important;
-    border-color: #444 !important;
+  background: #333 !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
 }
 
 body:not(.light-theme) .pagination-controls button:hover:not(:disabled) {
-    background: #3a3a3a !important;
+  background: #3a3a3a !important;
 }
 
 body:not(.light-theme) .pagination-controls button:disabled {
-    background: #2a2a2a !important;
-    color: #666 !important;
+  background: #2a2a2a !important;
+  color: #666 !important;
 }
 
 body:not(.light-theme) .pagination-info span {
-    color: #e0e0e0 !important;
+  color: #e0e0e0 !important;
 }
 
 body:not(.light-theme) .pagination-info select {
-    background: #333 !important;
-    color: #e0e0e0 !important;
-    border-color: #444 !important;
+  background: #333 !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
 }
 
 /* Garantir container preto e tabela cinza */
 body:not(.light-theme) .table-container,
 body:not(.light-theme) .details {
-    background: #1a1a1a !important;
-    border-radius: 10px !important;
-    padding: 15px !important;
+  background: #1a1a1a !important;
+  border-radius: 10px !important;
+  padding: 15px !important;
 }
 
 body:not(.light-theme) .table-container table,
 body:not(.light-theme) table {
-    background: #2a2a2a !important;
-    border-radius: 8px !important;
+  background: #2a2a2a !important;
+  border-radius: 8px !important;
 }
 body:not(.light-theme) thead {
-    background: linear-gradient(135deg, #183d3d 0%, #005951 100%) !important;
+  background: linear-gradient(135deg, #183d3d 0%, #005951 100%) !important;
 }
 
 body:not(.light-theme) thead th,
 body:not(.light-theme) thead td {
-    color: #fff !important;
+  color: #fff !important;
 }
 
 body:not(.light-theme) tbody {
-    background: #2a2a2a !important;
+  background: #2a2a2a !important;
 }
 
 /* Forçar fundo cinza nas linhas sobrescrevendo estilos padrão */
@@ -759,70 +804,70 @@ body:not(.light-theme) .table-container table tbody tr,
 body:not(.light-theme) #data-table tbody tr,
 body:not(.light-theme) table tbody tr,
 body:not(.light-theme) tbody tr {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    background-image: none !important;
-    border-bottom: 1px solid #3a3a3a !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  background-image: none !important;
+  border-bottom: 1px solid #3a3a3a !important;
 }
 
 body:not(.light-theme) .table-container table tbody tr:hover,
 body:not(.light-theme) #data-table tbody tr:hover,
 body:not(.light-theme) table tbody tr:hover,
 body:not(.light-theme) tbody tr:hover {
-    background: #3a3a3a !important;
-    background-color: #3a3a3a !important;
-    background-image: none !important;
+  background: #3a3a3a !important;
+  background-color: #3a3a3a !important;
+  background-image: none !important;
 }
 
 body:not(.light-theme) .table-container table tbody td,
 body:not(.light-theme) #data-table tbody td,
 body:not(.light-theme) table tbody td,
 body:not(.light-theme) tbody td {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
-    border-color: #3a3a3a !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
+  border-color: #3a3a3a !important;
 }
 
 /* Forçar container e recentOrders em preto */
 body:not(.light-theme) div[class*="table"],
 body:not(.light-theme) .recentOrders,
 body:not(.light-theme) .details .recentOrders {
-    background: #1a1a1a !important;
-    padding: 15px !important;
-    border-radius: 10px !important;
+  background: #1a1a1a !important;
+  padding: 15px !important;
+  border-radius: 10px !important;
 }
 
 body:not(.light-theme) .recentOrders table,
 body:not(.light-theme) .details .recentOrders table {
-    background: #2a2a2a !important;
-    border-radius: 8px !important;
+  background: #2a2a2a !important;
+  border-radius: 8px !important;
 }
 
 body:not(.light-theme) .cardHeader {
-    background: #1a1a1a !important;
+  background: #1a1a1a !important;
 }
 
 /* Preservar cores de status */
 body:not(.light-theme) .status-pago,
 body:not(.light-theme) td .status-pago,
 body:not(.light-theme) span.status-pago {
-    background: #1a4d3d !important;
-    color: #4ade80 !important;
+  background: #1a4d3d !important;
+  color: #4ade80 !important;
 }
 
 body:not(.light-theme) .status-pendente,
 body:not(.light-theme) td .status-pendente,
 body:not(.light-theme) span.status-pendente {
-    background: #4d3d1a !important;
-    color: #fbbf24 !important;
+  background: #4d3d1a !important;
+  color: #fbbf24 !important;
 }
 
 body:not(.light-theme) .status-atrasado,
 body:not(.light-theme) td .status-atrasado,
 body:not(.light-theme) span.status-atrasado {
-    background: #4d1a1a !important;
-    color: #f87171 !important;
+  background: #4d1a1a !important;
+  color: #f87171 !important;
 }
 
 /* Valores monetários - preservar cores */
@@ -830,65 +875,65 @@ body:not(.light-theme) .receita-value,
 body:not(.light-theme) .positive-value,
 body:not(.light-theme) td[style*="color: green"],
 body:not(.light-theme) td[style*="color:#28a745"] {
-    color: #4ade80 !important;
+  color: #4ade80 !important;
 }
 
 body:not(.light-theme) .despesa-value,
 body:not(.light-theme) .negative-value,
 body:not(.light-theme) td[style*="color: red"],
 body:not(.light-theme) td[style*="color:#dc3545"] {
-    color: #f87171 !important;
+  color: #f87171 !important;
 }
 
 /* Ações da tabela */
 body:not(.light-theme) .table-actions {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 /* ========== FORÇA MÁXIMA - CONTAINER PRETO, TABELA CINZA ========== */
 /* Aplicar com especificidade máxima para sobrescrever tudo */
 html body:not(.light-theme) .main .table-container,
 html body:not(.light-theme) .main div.table-container {
-    background: #1a1a1a !important;
-    background-color: #1a1a1a !important;
-    border-radius: 10px !important;
-    padding: 15px !important;
+  background: #1a1a1a !important;
+  background-color: #1a1a1a !important;
+  border-radius: 10px !important;
+  padding: 15px !important;
 }
 
 html body:not(.light-theme) .main .table-container table,
 html body:not(.light-theme) .main div.table-container table,
 html body:not(.light-theme) .main table#data-table {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    border-radius: 8px !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  border-radius: 8px !important;
 }
 
 html body:not(.light-theme) .main .table-container table tbody,
 html body:not(.light-theme) .main table#data-table tbody {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
 }
 
 html body:not(.light-theme) .main .table-container table tbody tr,
 html body:not(.light-theme) .main table#data-table tbody tr,
 html body:not(.light-theme) .main div.table-container table tbody tr {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    background-image: none !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  background-image: none !important;
 }
 
 html body:not(.light-theme) .main .table-container table tbody tr:hover,
 html body:not(.light-theme) .main table#data-table tbody tr:hover {
-    background: #3a3a3a !important;
-    background-color: #3a3a3a !important;
-    background-image: none !important;
+  background: #3a3a3a !important;
+  background-color: #3a3a3a !important;
+  background-image: none !important;
 }
 
 html body:not(.light-theme) .main .table-container table tbody tr td,
 html body:not(.light-theme) .main table#data-table tbody tr td {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
 }
 
 /* Células também precisam de fundo cinza */
@@ -896,7 +941,7 @@ body:not(.light-theme) td,
 body:not(.light-theme) tbody td,
 body:not(.light-theme) tr td,
 body:not(.light-theme) table td {
-    background: #2a2a2a !important;
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
+  background: #2a2a2a !important;
+  background-color: #2a2a2a !important;
+  color: #e0e0e0 !important;
 }

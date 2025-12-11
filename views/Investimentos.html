@@ -322,12 +322,48 @@
                 <table id="data-table">
                   <thead>
                     <tr>
-                      <th>Investimento</th>
-                      <th>Tipo</th>
-                      <th>Valor Investido</th>
-                      <th>Valor Atual</th>
-                      <th>Rentabilidade</th>
-                      <th>Data</th>
+                      <th
+                        class="sortable"
+                        data-column="investimento"
+                        onclick="sortTable('investimento')"
+                      >
+                        Investimento <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="tipo"
+                        onclick="sortTable('tipo')"
+                      >
+                        Tipo <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="valor_investido"
+                        onclick="sortTable('valor_investido')"
+                      >
+                        Valor Investido <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="valor_atual"
+                        onclick="sortTable('valor_atual')"
+                      >
+                        Valor Atual <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="rentabilidade"
+                        onclick="sortTable('rentabilidade')"
+                      >
+                        Rentabilidade <span class="sort-icon">⇅</span>
+                      </th>
+                      <th
+                        class="sortable"
+                        data-column="data"
+                        onclick="sortTable('data')"
+                      >
+                        Data <span class="sort-icon">⇅</span>
+                      </th>
                       <th>Editar</th>
                       <th>Excluir</th>
                     </tr>
@@ -800,6 +836,7 @@
     <!-- Supabase Guard -->
     <script src="../controllers/supabase-guard.env"></script>
 
+    <script src="../core/TableSorter.js"></script>
     <script src="../models/investimentos.js"></script>
 
     <script>
